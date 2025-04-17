@@ -2,22 +2,15 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { QuizQuestion } from "@/types";
 
 interface Step3Props {
   selectedModalities: string[];
   setSelectedModalities: (values: string[]) => void;
+  question: QuizQuestion;
 }
 
-const modalities = [
-  "Acceptance and Commitment (ACT)", "Adlerian", "Attachment-Based",
-  "Cognitive Behavioural Therapy (CBT)", "Dialectical Behavioural Therapy (DBT)",
-  "Emotion Focused", "Existential", "Gestalt", "Gottman",
-  "Internal Family Systems (IFS)", "Jungian", "Mindfulness",
-  "Narrative", "Person-Centred", "Psychodynamic",
-  "Psychospiritual Care", "Solution-Focused", "Somatic"
-];
-
-const Step3Modalities: React.FC<Step3Props> = ({ selectedModalities, setSelectedModalities }) => {
+const Step3Modalities: React.FC<Step3Props> = ({ selectedModalities, setSelectedModalities, question }) => {
   const toggleModality = (modality: string) => {
     if (selectedModalities.includes(modality)) {
       setSelectedModalities(selectedModalities.filter(item => item !== modality));
@@ -28,26 +21,26 @@ const Step3Modalities: React.FC<Step3Props> = ({ selectedModalities, setSelected
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-2xl font-medium text-cwcp-blue mb-6">What therapy modalities interest you?</h2>
-      <p className="mb-6 text-cwcp-darkgray">Select all that apply to you.</p>
+      <h2 className="text-2xl font-medium text-cwcp-blue mb-6">{question.title}</h2>
+      {question.description && <p className="mb-6 text-cwcp-darkgray">{question.description}</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        {modalities.map((modality) => (
+        {question.options.map((option) => (
           <div 
-            key={modality}
-            className={`option-card ${selectedModalities.includes(modality) ? 'selected' : ''}`}
-            onClick={() => toggleModality(modality)}
+            key={option.id}
+            className={`option-card ${selectedModalities.includes(option.value) ? 'selected' : ''}`}
+            onClick={() => toggleModality(option.value)}
           >
             <div className="flex items-start gap-3">
               <Checkbox 
-                id={`modality-${modality}`} 
-                checked={selectedModalities.includes(modality)} 
-                onCheckedChange={() => toggleModality(modality)}
+                id={`modality-${option.id}`} 
+                checked={selectedModalities.includes(option.value)} 
+                onCheckedChange={() => toggleModality(option.value)}
               />
               <Label 
-                htmlFor={`modality-${modality}`}
+                htmlFor={`modality-${option.id}`}
                 className="cursor-pointer font-normal"
               >
-                {modality}
+                {option.label}
               </Label>
             </div>
           </div>

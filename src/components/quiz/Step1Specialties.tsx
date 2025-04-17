@@ -2,21 +2,15 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { QuizQuestion } from "@/types";
 
 interface Step1Props {
   selectedSpecialties: string[];
   setSelectedSpecialties: (values: string[]) => void;
+  question: QuizQuestion;
 }
 
-const specialties = [
-  "Addiction", "ADHD", "Aging", "Anger", "Anxiety", "Coping Skills and Strategies",
-  "Depression", "Eating Disorders", "Grief", "LGBTQ+ Support", "Life Transitions",
-  "Mood Disorders", "Non-Monogamy", "OCD", "Personality Disorders", "Post-Partum",
-  "Psychedelic Integration", "PTSD", "Relationship Issues", "Self Esteem", "Self Harm",
-  "Sex Therapy", "Spirituality", "Stress", "Suicidal Ideation", "Trans & Non-Binary", "Trauma"
-];
-
-const Step1Specialties: React.FC<Step1Props> = ({ selectedSpecialties, setSelectedSpecialties }) => {
+const Step1Specialties: React.FC<Step1Props> = ({ selectedSpecialties, setSelectedSpecialties, question }) => {
   const toggleSpecialty = (specialty: string) => {
     if (selectedSpecialties.includes(specialty)) {
       setSelectedSpecialties(selectedSpecialties.filter(item => item !== specialty));
@@ -27,26 +21,26 @@ const Step1Specialties: React.FC<Step1Props> = ({ selectedSpecialties, setSelect
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-2xl font-medium text-cwcp-blue mb-6">What brings you to therapy?</h2>
-      <p className="mb-6 text-cwcp-darkgray">Select all that apply to you.</p>
+      <h2 className="text-2xl font-medium text-cwcp-blue mb-6">{question.title}</h2>
+      {question.description && <p className="mb-6 text-cwcp-darkgray">{question.description}</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {specialties.map((specialty) => (
+        {question.options.map((option) => (
           <div 
-            key={specialty}
-            className={`option-card ${selectedSpecialties.includes(specialty) ? 'selected' : ''}`}
-            onClick={() => toggleSpecialty(specialty)}
+            key={option.id}
+            className={`option-card ${selectedSpecialties.includes(option.value) ? 'selected' : ''}`}
+            onClick={() => toggleSpecialty(option.value)}
           >
             <div className="flex items-start gap-3">
               <Checkbox 
-                id={`specialty-${specialty}`} 
-                checked={selectedSpecialties.includes(specialty)} 
-                onCheckedChange={() => toggleSpecialty(specialty)}
+                id={`specialty-${option.id}`} 
+                checked={selectedSpecialties.includes(option.value)} 
+                onCheckedChange={() => toggleSpecialty(option.value)}
               />
               <Label 
-                htmlFor={`specialty-${specialty}`}
+                htmlFor={`specialty-${option.id}`}
                 className="cursor-pointer font-normal"
               >
-                {specialty}
+                {option.label}
               </Label>
             </div>
           </div>

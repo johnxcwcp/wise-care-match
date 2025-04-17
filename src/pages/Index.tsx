@@ -4,15 +4,17 @@ import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
 import { QuizAnswers, Therapist } from "@/types";
-import { therapists as allTherapists } from "@/data/therapists";
 import { matchTherapists } from "@/utils/matchTherapists";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { therapists as defaultTherapists } from "@/data/therapists";
 
 const Index: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [matchedTherapists, setMatchedTherapists] = useState<Therapist[]>([]);
+  const [therapists] = useLocalStorage<Therapist[]>("therapists", defaultTherapists);
 
   const handleQuizComplete = (answers: QuizAnswers) => {
-    const matches = matchTherapists(allTherapists, answers);
+    const matches = matchTherapists(therapists, answers);
     setMatchedTherapists(matches);
     setQuizCompleted(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });

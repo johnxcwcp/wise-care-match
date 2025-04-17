@@ -25,3 +25,18 @@ export interface QuizAnswers {
   sessionType: string;
   clientType: string;
 }
+
+export interface QuizQuestion {
+  id: string;
+  title: string;
+  description?: string;
+  type: 'single' | 'multiple';
+  options: QuizQuestionOption[];
+  fieldName: keyof QuizAnswers;
+}
+
+export interface QuizQuestionOption {
+  id: string;
+  label: string;
+  value: string;
+}
