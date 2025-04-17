@@ -1,12 +1,62 @@
-// Update this page (the content is just a fallback if you fail to update the page)
 
-const Index = () => {
+import React, { useState } from "react";
+import Header from "@/components/Header";
+import Quiz from "@/components/Quiz";
+import Results from "@/components/Results";
+import { QuizAnswers, Therapist } from "@/types";
+import { therapists as allTherapists } from "@/data/therapists";
+import { matchTherapists } from "@/utils/matchTherapists";
+
+const Index: React.FC = () => {
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [matchedTherapists, setMatchedTherapists] = useState<Therapist[]>([]);
+
+  const handleQuizComplete = (answers: QuizAnswers) => {
+    const matches = matchTherapists(allTherapists, answers);
+    setMatchedTherapists(matches);
+    setQuizCompleted(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleRestartQuiz = () => {
+    setQuizCompleted(false);
+    setMatchedTherapists([]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col bg-cwcp-lightgray">
+      <Header />
+      
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {!quizCompleted ? (
+            <div className="mb-8 text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl font-medium text-cwcp-blue mb-4">Find Your Perfect Therapist</h1>
+              <p className="text-cwcp-darkgray text-lg mb-8">
+                Answer a few questions to help us match you with the right therapist for your needs.
+              </p>
+            </div>
+          ) : null}
+          
+          {quizCompleted ? (
+            <Results 
+              matchedTherapists={matchedTherapists} 
+              onRestartQuiz={handleRestartQuiz}
+            />
+          ) : (
+            <Quiz onComplete={handleQuizComplete} />
+          )}
+        </div>
+      </main>
+      
+      <footer className="bg-white border-t border-cwcp-gray py-6">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-cwcp-darkgray">
+            © {new Date().getFullYear()} Centre for Wise Care Psychotherapy. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
