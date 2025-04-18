@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
@@ -55,7 +54,7 @@ const Index: React.FC = () => {
       <footer className="bg-white border-t border-cwcp-gray py-6">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-cwcp-darkgray">
-            © {new Date().getFullYear()} Centre for Wise Care Psychotherapy. All rights reserved.
+            © 2025 Church Wellesley Counselling and Psychotherapy. All rights reserved.
           </p>
         </div>
       </footer>

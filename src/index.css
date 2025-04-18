@@ -100,10 +100,20 @@
   }
 }
 
-.option-card {
-  @apply border border-cwcp-gray p-4 rounded-md hover:border-cwcp-blue transition-colors duration-200 cursor-pointer;
-}
+@layer components {
+  .glass {
+    @apply backdrop-blur-md bg-white/30 border border-white/20;
+  }
+  
+  .glass-card {
+    @apply glass rounded-lg shadow-lg;
+  }
+  
+  .option-card {
+    @apply glass border p-4 rounded-md hover:border-cwcp-blue transition-colors duration-200 cursor-pointer;
+  }
 
-.option-card.selected {
-  @apply border-2 border-cwcp-blue bg-blue-50;
+  .option-card.selected {
+    @apply border-2 border-cwcp-blue bg-white/50;
+  }
 }
