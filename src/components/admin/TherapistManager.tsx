@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -10,12 +9,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TherapistForm from "./therapist/TherapistForm";
 import TherapistCard from "./therapist/TherapistCard";
 
-interface TherapistManagerProps {
-  therapists: Therapist[];
-  setTherapists: React.Dispatch<React.SetStateAction<Therapist[]>>;
-}
-
-const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, setTherapists }) => {
+const TherapistManager: React.FC = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingTherapist, setEditingTherapist] = useState<Therapist | null>(null);
@@ -40,7 +34,7 @@ const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, setTher
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch therapists
-  const { data: supabaseTherapists = [], isLoading } = useQuery({
+  const { data: therapists = [], isLoading } = useQuery({
     queryKey: ['therapists'],
     queryFn: async () => {
       const { data: therapistsData, error: therapistsError } = await supabase

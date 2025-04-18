@@ -7,13 +7,11 @@ import TherapistManager from "@/components/admin/TherapistManager";
 import QuizManager from "@/components/admin/QuizManager";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { defaultQuestions } from "@/data/defaultQuestions";
-import { QuizQuestion, Therapist } from "@/types";
-import { therapists as defaultTherapists } from "@/data/therapists";
+import { QuizQuestion } from "@/types";
 
 const Admin: React.FC = () => {
-  // Load data from localStorage or use defaults
+  // Load quiz questions from localStorage or use defaults
   const [questions, setQuestions] = useLocalStorage<QuizQuestion[]>("quizQuestions", defaultQuestions);
-  const [therapists, setTherapists] = useLocalStorage<Therapist[]>("therapists", defaultTherapists);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     localStorage.getItem("cms_authenticated") === "true"
   );
@@ -98,10 +96,7 @@ const Admin: React.FC = () => {
           </TabsList>
           
           <TabsContent value="therapists">
-            <TherapistManager 
-              therapists={therapists} 
-              setTherapists={setTherapists} 
-            />
+            <TherapistManager />
           </TabsContent>
           
           <TabsContent value="quiz">

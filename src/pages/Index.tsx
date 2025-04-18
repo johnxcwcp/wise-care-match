@@ -1,16 +1,57 @@
+
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
 import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists } from "@/utils/matchTherapists";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { therapists as defaultTherapists } from "@/data/therapists";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const Index: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [matchedTherapists, setMatchedTherapists] = useState<Therapist[]>([]);
-  const [therapists] = useLocalStorage<Therapist[]>("therapists", defaultTherapists);
+
+  const { data: therapists = [] } = useQuery({
+    queryKey: ['therapists-public'],
+    queryFn: async () => {
+      const { data: therapistsData, error: therapistsError } = await supabase
+        .from('therapists')
+        .select(`
+          *,
+          therapist_availability(availability),
+          therapist_modalities(modality),
+          therapist_specialties(specialty),
+          therapist_languages(language),
+          therapist_session_types(session_type),
+          therapist_client_types(client_type)
+        `);
+
+      if (therapistsError) {
+        toast.error('Error fetching therapists');
+        console.error(therapistsError);
+        return [];
+      }
+
+      return therapistsData.map(therapist => ({
+        id: therapist.id,
+        name: therapist.name,
+        pronouns: therapist.pronouns || '',
+        designation: therapist.designation || '',
+        bio: therapist.bio || '',
+        photo: therapist.photo || '',
+        gender: therapist.gender || '',
+        bookingLink: therapist.booking_link || '',
+        availability: therapist.therapist_availability?.map(a => a.availability) || [],
+        modalities: therapist.therapist_modalities?.map(m => m.modality) || [],
+        specialties: therapist.therapist_specialties?.map(s => s.specialty) || [],
+        languages: therapist.therapist_languages?.map(l => l.language) || [],
+        sessionType: therapist.therapist_session_types?.map(st => st.session_type) || [],
+        clientTypes: therapist.therapist_client_types?.map(ct => ct.client_type) || []
+      }));
+    }
+  });
 
   const handleQuizComplete = (answers: QuizAnswers) => {
     const matches = matchTherapists(therapists, answers);
