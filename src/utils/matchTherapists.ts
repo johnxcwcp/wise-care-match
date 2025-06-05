@@ -11,9 +11,28 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
     return [];
   }
 
+  // First, filter therapists based on hard requirements
+  const filteredTherapists = therapists.filter(therapist => {
+    // Gender filter - if specific genders are selected (not "No Preference"), therapist must match
+    if (answers.gender.length > 0 && !answers.gender.includes("No Preference")) {
+      if (!answers.gender.includes(therapist.gender)) {
+        return false; // Exclude therapists that don't match gender preference
+      }
+    }
+
+    // You can add other hard filters here if needed
+    return true;
+  });
+
+  // If no therapists pass the filters, return empty array or fallback
+  if (filteredTherapists.length === 0) {
+    console.log('No therapists match the selected criteria');
+    return [];
+  }
+
   const matches: TherapistMatch[] = [];
 
-  for (const therapist of therapists) {
+  for (const therapist of filteredTherapists) {
     let score = 0;
     
     // Check specialties - higher weight (35%)
@@ -27,15 +46,8 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
       score += 15;
     }
 
-    // Check gender - if "No Preference" is selected or empty, give full score (15%)
-    if (answers.gender.length === 0 || answers.gender.includes("No Preference")) {
-      score += 15;
-    } else {
-      // Check if therapist's gender matches any selected preference
-      if (answers.gender.includes(therapist.gender)) {
-        score += 15;
-      }
-    }
+    // Gender matching - since we already filtered, give full score (15%)
+    score += 15;
 
     // Check modalities - moderate weight (20%)
     if (answers.modalities.length === 0 || answers.modalities.includes("Not sure")) {
@@ -71,16 +83,6 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
   // Sort by score in descending order
   const sortedMatches = matches.sort((a, b) => b.score - a.score);
   
-  // If no therapists have a score above 0, return all therapists to ensure at least one result
-  const hasMatchesAboveZero = sortedMatches.some(match => match.score > 0);
-  if (!hasMatchesAboveZero) {
-    // Return all therapists when no good matches are found
-    return therapists;
-  }
-  
-  // Return therapists with scores above 0, or if none exist, return all
-  const validMatches = sortedMatches.filter(match => match.score > 0);
-  return validMatches.length > 0 
-    ? validMatches.map(match => match.therapist)
-    : therapists;
+  // Return all filtered therapists, sorted by score
+  return sortedMatches.map(match => match.therapist);
 };
