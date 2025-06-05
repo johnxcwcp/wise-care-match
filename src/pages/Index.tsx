@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
@@ -16,7 +15,7 @@ const Index: React.FC = () => {
   const { data: therapists = [] } = useQuery({
     queryKey: ['therapists-public'],
     queryFn: async () => {
-      const { data: therapistsData, error: therapistsError } = await supabase
+      const { data: therapistsData, error: therapistsError } = await (supabase as any)
         .from('therapists')
         .select(`
           *,
@@ -34,7 +33,7 @@ const Index: React.FC = () => {
         return [];
       }
 
-      return therapistsData.map(therapist => ({
+      return therapistsData.map((therapist: any) => ({
         id: therapist.id,
         name: therapist.name,
         pronouns: therapist.pronouns || '',
@@ -43,12 +42,12 @@ const Index: React.FC = () => {
         photo: therapist.photo || '',
         gender: therapist.gender || '',
         bookingLink: therapist.booking_link || '',
-        availability: therapist.therapist_availability?.map(a => a.availability) || [],
-        modalities: therapist.therapist_modalities?.map(m => m.modality) || [],
-        specialties: therapist.therapist_specialties?.map(s => s.specialty) || [],
-        languages: therapist.therapist_languages?.map(l => l.language) || [],
-        sessionType: therapist.therapist_session_types?.map(st => st.session_type) || [],
-        clientTypes: therapist.therapist_client_types?.map(ct => ct.client_type) || []
+        availability: therapist.therapist_availability?.map((a: any) => a.availability) || [],
+        modalities: therapist.therapist_modalities?.map((m: any) => m.modality) || [],
+        specialties: therapist.therapist_specialties?.map((s: any) => s.specialty) || [],
+        languages: therapist.therapist_languages?.map((l: any) => l.language) || [],
+        sessionType: therapist.therapist_session_types?.map((st: any) => st.session_type) || [],
+        clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || []
       }));
     }
   });

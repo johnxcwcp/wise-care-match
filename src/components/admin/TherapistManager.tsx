@@ -37,7 +37,7 @@ const TherapistManager: React.FC = () => {
   const { data: therapists = [], isLoading } = useQuery({
     queryKey: ['therapists'],
     queryFn: async () => {
-      const { data: therapistsData, error: therapistsError } = await supabase
+      const { data: therapistsData, error: therapistsError } = await (supabase as any)
         .from('therapists')
         .select(`
           *,
@@ -54,7 +54,7 @@ const TherapistManager: React.FC = () => {
         throw therapistsError;
       }
 
-      return therapistsData.map(therapist => ({
+      return therapistsData.map((therapist: any) => ({
         id: therapist.id,
         name: therapist.name,
         pronouns: therapist.pronouns || '',
@@ -63,12 +63,12 @@ const TherapistManager: React.FC = () => {
         photo: therapist.photo || '',
         gender: therapist.gender || '',
         bookingLink: therapist.booking_link || '',
-        availability: therapist.therapist_availability?.map(a => a.availability) || [],
-        modalities: therapist.therapist_modalities?.map(m => m.modality) || [],
-        specialties: therapist.therapist_specialties?.map(s => s.specialty) || [],
-        languages: therapist.therapist_languages?.map(l => l.language) || [],
-        sessionType: therapist.therapist_session_types?.map(st => st.session_type) || [],
-        clientTypes: therapist.therapist_client_types?.map(ct => ct.client_type) || []
+        availability: therapist.therapist_availability?.map((a: any) => a.availability) || [],
+        modalities: therapist.therapist_modalities?.map((m: any) => m.modality) || [],
+        specialties: therapist.therapist_specialties?.map((s: any) => s.specialty) || [],
+        languages: therapist.therapist_languages?.map((l: any) => l.language) || [],
+        sessionType: therapist.therapist_session_types?.map((st: any) => st.session_type) || [],
+        clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || []
       }));
     }
   });
@@ -77,7 +77,7 @@ const TherapistManager: React.FC = () => {
   const addTherapistMutation = useMutation({
     mutationFn: async (therapist: Therapist) => {
       // Insert main therapist record
-      const { data: therapistData, error: therapistError } = await supabase
+      const { data: therapistData, error: therapistError } = await (supabase as any)
         .from('therapists')
         .insert({
           name: therapist.name,
@@ -96,22 +96,22 @@ const TherapistManager: React.FC = () => {
       // Insert related records
       const relatedPromises = [
         ...therapist.availability.map(item => 
-          supabase.from('therapist_availability').insert({ therapist_id: therapistData.id, availability: item })
+          (supabase as any).from('therapist_availability').insert({ therapist_id: therapistData.id, availability: item })
         ),
         ...therapist.modalities.map(item => 
-          supabase.from('therapist_modalities').insert({ therapist_id: therapistData.id, modality: item })
+          (supabase as any).from('therapist_modalities').insert({ therapist_id: therapistData.id, modality: item })
         ),
         ...therapist.specialties.map(item => 
-          supabase.from('therapist_specialties').insert({ therapist_id: therapistData.id, specialty: item })
+          (supabase as any).from('therapist_specialties').insert({ therapist_id: therapistData.id, specialty: item })
         ),
         ...therapist.languages.map(item => 
-          supabase.from('therapist_languages').insert({ therapist_id: therapistData.id, language: item })
+          (supabase as any).from('therapist_languages').insert({ therapist_id: therapistData.id, language: item })
         ),
         ...therapist.sessionType.map(item => 
-          supabase.from('therapist_session_types').insert({ therapist_id: therapistData.id, session_type: item })
+          (supabase as any).from('therapist_session_types').insert({ therapist_id: therapistData.id, session_type: item })
         ),
         ...therapist.clientTypes.map(item => 
-          supabase.from('therapist_client_types').insert({ therapist_id: therapistData.id, client_type: item })
+          (supabase as any).from('therapist_client_types').insert({ therapist_id: therapistData.id, client_type: item })
         )
       ];
 
@@ -149,7 +149,7 @@ const TherapistManager: React.FC = () => {
   const updateTherapistMutation = useMutation({
     mutationFn: async (therapist: Therapist) => {
       // Update main therapist record
-      const { error: therapistError } = await supabase
+      const { error: therapistError } = await (supabase as any)
         .from('therapists')
         .update({
           name: therapist.name,
@@ -166,12 +166,12 @@ const TherapistManager: React.FC = () => {
 
       // Delete existing related records
       const deletePromises = [
-        supabase.from('therapist_availability').delete().eq('therapist_id', therapist.id),
-        supabase.from('therapist_modalities').delete().eq('therapist_id', therapist.id),
-        supabase.from('therapist_specialties').delete().eq('therapist_id', therapist.id),
-        supabase.from('therapist_languages').delete().eq('therapist_id', therapist.id),
-        supabase.from('therapist_session_types').delete().eq('therapist_id', therapist.id),
-        supabase.from('therapist_client_types').delete().eq('therapist_id', therapist.id)
+        (supabase as any).from('therapist_availability').delete().eq('therapist_id', therapist.id),
+        (supabase as any).from('therapist_modalities').delete().eq('therapist_id', therapist.id),
+        (supabase as any).from('therapist_specialties').delete().eq('therapist_id', therapist.id),
+        (supabase as any).from('therapist_languages').delete().eq('therapist_id', therapist.id),
+        (supabase as any).from('therapist_session_types').delete().eq('therapist_id', therapist.id),
+        (supabase as any).from('therapist_client_types').delete().eq('therapist_id', therapist.id)
       ];
 
       await Promise.all(deletePromises);
@@ -179,22 +179,22 @@ const TherapistManager: React.FC = () => {
       // Insert new related records
       const insertPromises = [
         ...therapist.availability.map(item => 
-          supabase.from('therapist_availability').insert({ therapist_id: therapist.id, availability: item })
+          (supabase as any).from('therapist_availability').insert({ therapist_id: therapist.id, availability: item })
         ),
         ...therapist.modalities.map(item => 
-          supabase.from('therapist_modalities').insert({ therapist_id: therapist.id, modality: item })
+          (supabase as any).from('therapist_modalities').insert({ therapist_id: therapist.id, modality: item })
         ),
         ...therapist.specialties.map(item => 
-          supabase.from('therapist_specialties').insert({ therapist_id: therapist.id, specialty: item })
+          (supabase as any).from('therapist_specialties').insert({ therapist_id: therapist.id, specialty: item })
         ),
         ...therapist.languages.map(item => 
-          supabase.from('therapist_languages').insert({ therapist_id: therapist.id, language: item })
+          (supabase as any).from('therapist_languages').insert({ therapist_id: therapist.id, language: item })
         ),
         ...therapist.sessionType.map(item => 
-          supabase.from('therapist_session_types').insert({ therapist_id: therapist.id, session_type: item })
+          (supabase as any).from('therapist_session_types').insert({ therapist_id: therapist.id, session_type: item })
         ),
         ...therapist.clientTypes.map(item => 
-          supabase.from('therapist_client_types').insert({ therapist_id: therapist.id, client_type: item })
+          (supabase as any).from('therapist_client_types').insert({ therapist_id: therapist.id, client_type: item })
         )
       ];
 
@@ -215,7 +215,7 @@ const TherapistManager: React.FC = () => {
   // Delete therapist mutation
   const deleteTherapistMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('therapists')
         .delete()
         .eq('id', id);

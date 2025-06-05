@@ -9,7 +9,260 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      quiz_question_options: {
+        Row: {
+          id: string
+          label: string
+          question_id: string | null
+          value: string
+        }
+        Insert: {
+          id?: string
+          label: string
+          question_id?: string | null
+          value: string
+        }
+        Update: {
+          id?: string
+          label?: string
+          question_id?: string | null
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_question_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          field_name: string
+          id: string
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          field_name: string
+          id?: string
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          field_name?: string
+          id?: string
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      therapist_availability: {
+        Row: {
+          availability: string
+          id: string
+          therapist_id: string | null
+        }
+        Insert: {
+          availability: string
+          id?: string
+          therapist_id?: string | null
+        }
+        Update: {
+          availability?: string
+          id?: string
+          therapist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_availability_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapist_client_types: {
+        Row: {
+          client_type: string
+          id: string
+          therapist_id: string | null
+        }
+        Insert: {
+          client_type: string
+          id?: string
+          therapist_id?: string | null
+        }
+        Update: {
+          client_type?: string
+          id?: string
+          therapist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_client_types_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapist_languages: {
+        Row: {
+          id: string
+          language: string
+          therapist_id: string | null
+        }
+        Insert: {
+          id?: string
+          language: string
+          therapist_id?: string | null
+        }
+        Update: {
+          id?: string
+          language?: string
+          therapist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_languages_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapist_modalities: {
+        Row: {
+          id: string
+          modality: string
+          therapist_id: string | null
+        }
+        Insert: {
+          id?: string
+          modality: string
+          therapist_id?: string | null
+        }
+        Update: {
+          id?: string
+          modality?: string
+          therapist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_modalities_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapist_session_types: {
+        Row: {
+          id: string
+          session_type: string
+          therapist_id: string | null
+        }
+        Insert: {
+          id?: string
+          session_type: string
+          therapist_id?: string | null
+        }
+        Update: {
+          id?: string
+          session_type?: string
+          therapist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_session_types_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapist_specialties: {
+        Row: {
+          specialty: string
+          specialty_addiction: string
+          therapist_id: string | null
+        }
+        Insert: {
+          specialty: string
+          specialty_addiction?: string
+          therapist_id?: string | null
+        }
+        Update: {
+          specialty?: string
+          specialty_addiction?: string
+          therapist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_specialties_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapists: {
+        Row: {
+          bio: string | null
+          booking_link: string | null
+          created_at: string | null
+          designation: string | null
+          gender: string | null
+          id: string
+          name: string
+          photo: string | null
+          pronouns: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          booking_link?: string | null
+          created_at?: string | null
+          designation?: string | null
+          gender?: string | null
+          id?: string
+          name: string
+          photo?: string | null
+          pronouns?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          booking_link?: string | null
+          created_at?: string | null
+          designation?: string | null
+          gender?: string | null
+          id?: string
+          name?: string
+          photo?: string | null
+          pronouns?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
