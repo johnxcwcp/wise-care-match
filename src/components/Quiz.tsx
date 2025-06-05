@@ -5,7 +5,6 @@ import QuizHeader from "./QuizHeader";
 import Step1Specialties from "./quiz/Step1Specialties";
 import Step2Gender from "./quiz/Step2Gender";
 import Step3Modalities from "./quiz/Step3Modalities";
-import Step4Language from "./quiz/Step4Language";
 import Step5Availability from "./quiz/Step5Availability";
 import Step6SessionType from "./quiz/Step6SessionType";
 import Step7AgeRange from "./quiz/Step7AgeRange";
@@ -25,9 +24,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   
   // State for answers
   const [specialties, setSpecialties] = useState<string[]>([]);
-  const [gender, setGender] = useState<string>("No Preference");
+  const [gender, setGender] = useState<string[]>([]);
   const [modalities, setModalities] = useState<string[]>([]);
-  const [language, setLanguage] = useState<string>("English");
   const [availability, setAvailability] = useState<string>("Weekdays");
   const [sessionType, setSessionType] = useState<string>("No Preference");
   const [ageRange, setAgeRange] = useState<string>("Adults (18-65)");
@@ -37,11 +35,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     if (questions.length > 0) {
       questions.forEach(question => {
         if (question.options.length > 0) {
-          if (question.fieldName === 'gender' && question.type === 'single') {
-            setGender(question.options.find(o => o.value === 'No Preference')?.value || question.options[0].value);
-          } else if (question.fieldName === 'language' && question.type === 'single') {
-            setLanguage(question.options.find(o => o.value === 'English')?.value || question.options[0].value);
-          } else if (question.fieldName === 'availability' && question.type === 'single') {
+          if (question.fieldName === 'availability' && question.type === 'single') {
             setAvailability(question.options.find(o => o.value === 'Weekdays')?.value || question.options[0].value);
           } else if (question.fieldName === 'sessionType' && question.type === 'single') {
             setSessionType(question.options.find(o => o.value === 'No Preference')?.value || question.options[0].value);
@@ -62,7 +56,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
         specialties,
         gender,
         modalities,
-        language,
         availability,
         sessionType,
         clientType: ageRange,
@@ -85,9 +78,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     if (currentQuestion.type === 'multiple') {
       if (currentQuestion.fieldName === 'specialties') {
         return specialties.length === 0;
-      } else if (currentQuestion.fieldName === 'modalities') {
-        return modalities.length === 0;
       }
+      // Allow modalities and gender to be empty
     }
     return false;
   };
@@ -118,14 +110,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
           <Step3Modalities 
             selectedModalities={modalities} 
             setSelectedModalities={setModalities}
-            question={currentQuestion}
-          />
-        );
-      case 'language':
-        return (
-          <Step4Language 
-            selectedLanguage={language} 
-            setSelectedLanguage={setLanguage}
             question={currentQuestion}
           />
         );

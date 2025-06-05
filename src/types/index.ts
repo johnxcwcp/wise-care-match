@@ -18,9 +18,8 @@ export interface Therapist {
 
 export interface QuizAnswers {
   specialties: string[];
-  gender: string;
+  gender: string[];
   modalities: string[];
-  language: string;
   availability: string;
   sessionType: string;
   clientType: string;

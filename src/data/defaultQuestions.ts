@@ -41,7 +41,8 @@ export const defaultQuestions: QuizQuestion[] = [
   {
     id: "2",
     title: "Do you have a preference for your therapist's gender?",
-    type: "single",
+    description: "Select all that apply to you.",
+    type: "multiple",
     fieldName: "gender",
     options: [
       { id: "2-1", label: "Man", value: "Man" },
@@ -53,7 +54,7 @@ export const defaultQuestions: QuizQuestion[] = [
   {
     id: "3",
     title: "What therapy modalities interest you?",
-    description: "Select all that apply to you.",
+    description: "Select all that apply to you, or skip if you're not sure.",
     type: "multiple",
     fieldName: "modalities",
     options: [
@@ -74,53 +75,43 @@ export const defaultQuestions: QuizQuestion[] = [
       { id: "3-15", label: "Psychodynamic", value: "Psychodynamic" },
       { id: "3-16", label: "Psychospiritual Care", value: "Psychospiritual Care" },
       { id: "3-17", label: "Solution-Focused", value: "Solution-Focused" },
-      { id: "3-18", label: "Somatic", value: "Somatic" }
+      { id: "3-18", label: "Somatic", value: "Somatic" },
+      { id: "3-19", label: "Not sure", value: "Not sure" }
     ]
   },
   {
     id: "4",
-    title: "What is your preferred language?",
-    type: "single",
-    fieldName: "language",
-    options: [
-      { id: "4-1", label: "English", value: "English" },
-      { id: "4-2", label: "Italian", value: "Italian" },
-      { id: "4-3", label: "Arabic", value: "Arabic" }
-    ]
-  },
-  {
-    id: "5",
     title: "What is your availability?",
     type: "single",
     fieldName: "availability",
     options: [
-      { id: "5-1", label: "Weekdays", value: "Weekdays" },
-      { id: "5-2", label: "Evenings", value: "Evenings" },
-      { id: "5-3", label: "Weekends", value: "Weekends" }
+      { id: "4-1", label: "Weekdays", value: "Weekdays" },
+      { id: "4-2", label: "Evenings", value: "Evenings" },
+      { id: "4-3", label: "Weekends", value: "Weekends" }
     ]
   },
   {
-    id: "6",
+    id: "5",
     title: "Do you prefer to see your therapist in-person or virtually?",
     type: "single",
     fieldName: "sessionType",
     options: [
-      { id: "6-1", label: "In-person", value: "In-person" },
-      { id: "6-2", label: "Virtually", value: "Virtually" },
-      { id: "6-3", label: "No Preference", value: "No Preference" }
+      { id: "5-1", label: "In-person", value: "In-person" },
+      { id: "5-2", label: "Virtually", value: "Virtually" },
+      { id: "5-3", label: "No Preference", value: "No Preference" }
     ]
   },
   {
-    id: "7",
+    id: "6",
     title: "What is your age range?",
     type: "single",
     fieldName: "clientType",
     options: [
-      { id: "7-1", label: "Adults (18-65)", value: "Adults (18-65)" },
-      { id: "7-2", label: "Seniors (65+)", value: "Seniors (65+)" },
-      { id: "7-3", label: "Teens (13-18)", value: "Teens (13-18)" },
-      { id: "7-4", label: "Pre-Teens (11-13)", value: "Pre-Teens (11-13)" },
-      { id: "7-5", label: "Children (6-11)", value: "Children (6-11)" }
+      { id: "6-1", label: "Adults (18-65)", value: "Adults (18-65)" },
+      { id: "6-2", label: "Seniors (65+)", value: "Seniors (65+)" },
+      { id: "6-3", label: "Teens (13-18)", value: "Teens (13-18)" },
+      { id: "6-4", label: "Pre-Teens (11-13)", value: "Pre-Teens (11-13)" },
+      { id: "6-5", label: "Children (6-11)", value: "Children (6-11)" }
     ]
   }
 ];

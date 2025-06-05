@@ -54,7 +54,9 @@ const Index: React.FC = () => {
   });
 
   const handleQuizComplete = (answers: QuizAnswers) => {
+    console.log('Quiz answers:', answers);
     const matches = matchTherapists(therapists, answers);
+    console.log('Matched therapists:', matches);
     setMatchedTherapists(matches);
     setQuizCompleted(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
