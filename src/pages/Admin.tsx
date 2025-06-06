@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import AdminHeader from "@/components/admin/AdminHeader";
 import TherapistManager from "@/components/admin/TherapistManager";
 import QuizManager from "@/components/admin/QuizManager";
+import AssetManager from "@/components/admin/AssetManager";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { defaultQuestions } from "@/data/defaultQuestions";
 import { QuizQuestion } from "@/types";
@@ -93,6 +94,7 @@ const Admin: React.FC = () => {
           <TabsList className="mb-8">
             <TabsTrigger value="therapists">Therapists</TabsTrigger>
             <TabsTrigger value="quiz">Quiz Questions</TabsTrigger>
+            <TabsTrigger value="assets">Assets</TabsTrigger>
           </TabsList>
           
           <TabsContent value="therapists">
@@ -104,6 +106,10 @@ const Admin: React.FC = () => {
               questions={questions} 
               setQuestions={setQuestions} 
             />
+          </TabsContent>
+          
+          <TabsContent value="assets">
+            <AssetManager />
           </TabsContent>
         </Tabs>
       </div>
