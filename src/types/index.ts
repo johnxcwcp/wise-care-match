@@ -23,6 +23,7 @@ export interface QuizAnswers {
   availability: string;
   sessionType: string;
   clientType: string;
+  services: string[];
 }
 
 export interface QuizQuestion {

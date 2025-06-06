@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,7 +41,7 @@ const QuizManager: React.FC<QuizManagerProps> = ({ questions, setQuestions }) =>
     description: '',
     type: 'single',
     options: [],
-    fieldName: 'specialties'
+    fieldName: 'services'
   });
   const [newOption, setNewOption] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,7 +65,7 @@ const QuizManager: React.FC<QuizManagerProps> = ({ questions, setQuestions }) =>
       description: '',
       type: 'single',
       options: [],
-      fieldName: 'specialties'
+      fieldName: 'services'
     });
     setIsAddDialogOpen(false);
   };
@@ -244,6 +243,7 @@ const QuizManager: React.FC<QuizManagerProps> = ({ questions, setQuestions }) =>
           onChange={(e) => setQuestion({...question, fieldName: e.target.value as any})}
           className="w-full p-2 border border-cwcp-gray rounded"
         >
+          <option value="services">services</option>
           <option value="specialties">specialties</option>
           <option value="gender">gender</option>
           <option value="modalities">modalities</option>

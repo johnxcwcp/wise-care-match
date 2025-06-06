@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import QuizHeader from "./QuizHeader";
+import Step0Services from "./quiz/Step0Services";
 import Step1Specialties from "./quiz/Step1Specialties";
 import Step2Gender from "./quiz/Step2Gender";
 import Step3Modalities from "./quiz/Step3Modalities";
@@ -23,6 +24,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const totalSteps = questions.length;
   
   // State for answers
+  const [services, setServices] = useState<string[]>([]);
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [gender, setGender] = useState<string[]>([]);
   const [modalities, setModalities] = useState<string[]>([]);
@@ -53,6 +55,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       const answers: QuizAnswers = {
+        services,
         specialties,
         gender,
         modalities,
@@ -76,6 +79,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     if (!currentQuestion) return false;
     
     if (currentQuestion.type === 'multiple') {
+      if (currentQuestion.fieldName === 'services') {
+        return services.length === 0;
+      }
       if (currentQuestion.fieldName === 'specialties') {
         return specialties.length === 0;
       }
@@ -89,6 +95,14 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     if (!currentQuestion) return null;
 
     switch (currentQuestion.fieldName) {
+      case 'services':
+        return (
+          <Step0Services 
+            selectedServices={services} 
+            setSelectedServices={setServices}
+            question={currentQuestion}
+          />
+        );
       case 'specialties':
         return (
           <Step1Specialties 

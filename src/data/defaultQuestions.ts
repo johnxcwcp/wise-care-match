@@ -1,7 +1,23 @@
-
 import { QuizQuestion } from "@/types";
 
 export const defaultQuestions: QuizQuestion[] = [
+  {
+    id: "0",
+    title: "What service(s) are you interested in?",
+    description: "Select all that apply to you.",
+    type: "multiple",
+    fieldName: "services",
+    options: [
+      { id: "0-1", label: "Individual Counselling and Psychotherapy", value: "Individual Counselling and Psychotherapy" },
+      { id: "0-2", label: "Relationship and Couples Counselling and Psychotherapy", value: "Relationship and Couples Counselling and Psychotherapy" },
+      { id: "0-3", label: "ADHD Assessments", value: "ADHD Assessments" },
+      { id: "0-4", label: "Autism Assessments", value: "Autism Assessments" },
+      { id: "0-5", label: "Secondary Assessments for Transition-Related Surgery", value: "Secondary Assessments for Transition-Related Surgery" },
+      { id: "0-6", label: "Non-Insured Benefits (NIHB) for First Nations and Inuit", value: "Non-Insured Benefits (NIHB) for First Nations and Inuit" },
+      { id: "0-7", label: "Indian Residential Schools Resolution Health Support Program", value: "Indian Residential Schools Resolution Health Support Program" },
+      { id: "0-8", label: "WSIB Community Mental Health Program", value: "WSIB Community Mental Health Program" }
+    ]
+  },
   {
     id: "1",
     title: "What brings you to therapy?",
@@ -11,10 +27,10 @@ export const defaultQuestions: QuizQuestion[] = [
     options: [
       { id: "1-1", label: "Addiction", value: "Addiction" },
       { id: "1-2", label: "ADHD", value: "ADHD" },
-      { id: "1-3", label: "Aging", value: "Aging" },
+      { id: "1-3", label: "Autism", value: "Autism" },
       { id: "1-4", label: "Anger", value: "Anger" },
       { id: "1-5", label: "Anxiety", value: "Anxiety" },
-      { id: "1-6", label: "Coping Skills and Strategies", value: "Coping Skills and Strategies" },
+      { id: "1-6", label: "Coping Skills", value: "Coping Skills" },
       { id: "1-7", label: "Depression", value: "Depression" },
       { id: "1-8", label: "Eating Disorders", value: "Eating Disorders" },
       { id: "1-9", label: "Grief", value: "Grief" },
@@ -24,11 +40,11 @@ export const defaultQuestions: QuizQuestion[] = [
       { id: "1-13", label: "Non-Monogamy", value: "Non-Monogamy" },
       { id: "1-14", label: "OCD", value: "OCD" },
       { id: "1-15", label: "Personality Disorders", value: "Personality Disorders" },
-      { id: "1-16", label: "Post-Partum", value: "Post-Partum" },
+      { id: "1-16", label: "Postpartum", value: "Postpartum" },
       { id: "1-17", label: "Psychedelic Integration", value: "Psychedelic Integration" },
       { id: "1-18", label: "PTSD", value: "PTSD" },
       { id: "1-19", label: "Relationship Issues", value: "Relationship Issues" },
-      { id: "1-20", label: "Self Esteem", value: "Self Esteem" },
+      { id: "1-20", label: "Self-Esteem", value: "Self-Esteem" },
       { id: "1-21", label: "Self Harm", value: "Self Harm" },
       { id: "1-22", label: "Sex Therapy", value: "Sex Therapy" },
       { id: "1-23", label: "Spirituality", value: "Spirituality" },
