@@ -1,7 +1,7 @@
 
 import React from "react";
 import { QuizQuestion } from "@/types";
-import { ClickableOption } from "@/components/ui/clickable-option";
+import ClickableOption from "@/components/ui/clickable-option";
 
 interface Step0ServicesProps {
   selectedServices: string[];
@@ -37,8 +37,10 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
         {question.options.map((option) => (
           <ClickableOption
             key={option.id}
-            selected={selectedServices.includes(option.value)}
-            onClick={() => handleServiceToggle(option.value)}
+            value={option.value}
+            isSelected={selectedServices.includes(option.value)}
+            onClick={handleServiceToggle}
+            type="checkbox"
           >
             {option.label}
           </ClickableOption>
