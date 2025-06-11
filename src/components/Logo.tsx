@@ -8,7 +8,7 @@ interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({ 
-  src = "https://ukapxotdkjkqgarwehva.supabase.co/storage/v1/object/public/assets/your-logo.png", 
+  src = "https://ukapxotdkjkqgarwehva.supabase.co/storage/v1/object/public/assets/cwcp_logo.png", 
   alt = "CWCP Logo", 
   className = "h-10 w-auto" 
 }) => {
