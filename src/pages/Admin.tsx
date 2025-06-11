@@ -1,14 +1,18 @@
 
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import AdminHeader from "@/components/admin/AdminHeader";
 import TherapistManager from "@/components/admin/TherapistManager";
 import QuizManager from "@/components/admin/QuizManager";
 import AssetManager from "@/components/admin/AssetManager";
+import TwoFactorSetup from "@/components/admin/TwoFactorSetup";
+import TwoFactorVerification from "@/components/admin/TwoFactorVerification";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { defaultQuestions } from "@/data/defaultQuestions";
 import { QuizQuestion } from "@/types";
+import { Shield } from "lucide-react";
 
 const Admin: React.FC = () => {
   // Load quiz questions from localStorage or use defaults
@@ -16,6 +20,10 @@ const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     localStorage.getItem("cms_authenticated") === "true"
   );
+  const [twoFactorSecret, setTwoFactorSecret] = useLocalStorage<string | null>("admin_2fa_secret", null);
+  const [showTwoFactorSetup, setShowTwoFactorSetup] = useState(false);
+  const [showTwoFactorVerification, setShowTwoFactorVerification] = useState(false);
+  const [pendingLogin, setPendingLogin] = useState(false);
   
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,12 +32,33 @@ const Admin: React.FC = () => {
     e.preventDefault();
     // Simple authentication - in a real app, use a proper authentication system
     if (username === "admin" && password === "cwcp2025") {
-      setIsAuthenticated(true);
-      localStorage.setItem("cms_authenticated", "true");
-      toast.success("Successfully logged in");
+      if (twoFactorSecret) {
+        // 2FA is enabled, show verification
+        setPendingLogin(true);
+        setShowTwoFactorVerification(true);
+      } else {
+        // No 2FA, login directly
+        setIsAuthenticated(true);
+        localStorage.setItem("cms_authenticated", "true");
+        toast.success("Successfully logged in");
+      }
     } else {
       toast.error("Invalid credentials");
     }
+  };
+
+  const handleTwoFactorSetupComplete = (secret: string) => {
+    setTwoFactorSecret(secret);
+    setShowTwoFactorSetup(false);
+    toast.success("Two-factor authentication has been enabled for your account");
+  };
+
+  const handleTwoFactorVerificationSuccess = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem("cms_authenticated", "true");
+    setShowTwoFactorVerification(false);
+    setPendingLogin(false);
+    toast.success("Successfully logged in with 2FA");
   };
 
   const handleLogout = () => {
@@ -37,6 +66,48 @@ const Admin: React.FC = () => {
     localStorage.removeItem("cms_authenticated");
     toast.success("Logged out successfully");
   };
+
+  const handleDisable2FA = () => {
+    setTwoFactorSecret(null);
+    toast.success("Two-factor authentication has been disabled");
+  };
+
+  const handleCancel2FA = () => {
+    setShowTwoFactorSetup(false);
+    setShowTwoFactorVerification(false);
+    setPendingLogin(false);
+    setUsername("");
+    setPassword("");
+  };
+
+  if (showTwoFactorSetup) {
+    return (
+      <div className="min-h-screen bg-cwcp-lightgray">
+        <AdminHeader />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <TwoFactorSetup
+            onSetupComplete={handleTwoFactorSetupComplete}
+            onCancel={handleCancel2FA}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (showTwoFactorVerification) {
+    return (
+      <div className="min-h-screen bg-cwcp-lightgray">
+        <AdminHeader />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <TwoFactorVerification
+            secret={twoFactorSecret!}
+            onVerificationSuccess={handleTwoFactorVerificationSuccess}
+            onCancel={handleCancel2FA}
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -88,7 +159,35 @@ const Admin: React.FC = () => {
       <AdminHeader onLogout={handleLogout} />
       
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-medium text-cwcp-blue mb-8">CWCP Admin Dashboard</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-medium text-cwcp-blue">CWCP Admin Dashboard</h1>
+          
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-sm text-cwcp-darkgray">
+              <Shield size={16} />
+              <span>2FA: {twoFactorSecret ? "Enabled" : "Disabled"}</span>
+            </div>
+            {twoFactorSecret ? (
+              <Button
+                onClick={handleDisable2FA}
+                variant="outline"
+                size="sm"
+                className="border-red-300 text-red-600 hover:bg-red-50"
+              >
+                Disable 2FA
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setShowTwoFactorSetup(true)}
+                variant="outline"
+                size="sm"
+                className="border-cwcp-blue text-cwcp-blue hover:bg-blue-50"
+              >
+                Enable 2FA
+              </Button>
+            )}
+          </div>
+        </div>
         
         <Tabs defaultValue="therapists" className="w-full">
           <TabsList className="mb-8">
