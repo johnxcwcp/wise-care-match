@@ -50,15 +50,30 @@ const TwoFactorSetup: React.FC<TwoFactorSetupProps> = ({ onSetupComplete, onCanc
         secret: Secret.fromBase32(secret),
       });
 
-      const isValid = totp.validate({ token: verificationCode, window: 1 });
+      console.log("Debug - Setup verification:");
+      console.log("- Entered code:", verificationCode);
+      console.log("- Secret (first 10 chars):", secret.substring(0, 10) + "...");
+      console.log("- Current timestamp:", Math.floor(Date.now() / 1000));
+      console.log("- Current TOTP period:", Math.floor(Date.now() / 1000 / 30));
+      
+      // Generate current expected token for debugging
+      const expectedToken = totp.generate();
+      console.log("- Expected token:", expectedToken);
+
+      // Increase window to 2 (allows ±2 time steps = ±60 seconds)
+      const isValid = totp.validate({ token: verificationCode, window: 2 });
+      console.log("- Validation result:", isValid);
       
       if (isValid !== null) {
+        console.log("✅ 2FA setup verification successful");
         toast.success("2FA setup completed successfully!");
         onSetupComplete(secret);
       } else {
-        toast.error("Invalid verification code. Please try again.");
+        console.log("❌ 2FA setup verification failed");
+        toast.error(`Invalid verification code. Expected: ${expectedToken}, Got: ${verificationCode}`);
       }
     } catch (error) {
+      console.error("2FA setup verification error:", error);
       toast.error("Error verifying code. Please try again.");
     }
     
@@ -95,7 +110,7 @@ const TwoFactorSetup: React.FC<TwoFactorSetupProps> = ({ onSetupComplete, onCanc
           <Input
             type="text"
             value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
+            onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ""))}
             placeholder="123456"
             maxLength={6}
             className="text-center font-mono text-lg"

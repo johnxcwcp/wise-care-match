@@ -32,16 +32,31 @@ const TwoFactorVerification: React.FC<TwoFactorVerificationProps> = ({
         secret: Secret.fromBase32(secret),
       });
 
-      const isValid = totp.validate({ token: verificationCode, window: 1 });
+      console.log("Debug - Login verification:");
+      console.log("- Entered code:", verificationCode);
+      console.log("- Secret (first 10 chars):", secret.substring(0, 10) + "...");
+      console.log("- Current timestamp:", Math.floor(Date.now() / 1000));
+      console.log("- Current TOTP period:", Math.floor(Date.now() / 1000 / 30));
+      
+      // Generate current expected token for debugging
+      const expectedToken = totp.generate();
+      console.log("- Expected token:", expectedToken);
+
+      // Increase window to 2 (allows ±2 time steps = ±60 seconds)
+      const isValid = totp.validate({ token: verificationCode, window: 2 });
+      console.log("- Validation result:", isValid);
       
       if (isValid !== null) {
+        console.log("✅ 2FA login verification successful");
         toast.success("2FA verification successful!");
         onVerificationSuccess();
       } else {
-        toast.error("Invalid verification code. Please try again.");
+        console.log("❌ 2FA login verification failed");
+        toast.error(`Invalid verification code. Expected: ${expectedToken}, Got: ${verificationCode}`);
         setVerificationCode("");
       }
     } catch (error) {
+      console.error("2FA login verification error:", error);
       toast.error("Error verifying code. Please try again.");
       setVerificationCode("");
     }
