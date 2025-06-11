@@ -10,7 +10,10 @@ const Header: React.FC = () => {
     <header className="bg-white border-b border-cwcp-gray">
       <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Logo className="h-12 w-auto" />
+          <Logo 
+            src="https://ukapxotdkjkqgarwehva.supabase.co/storage/v1/object/public/assets/your-actual-filename.png"
+            className="h-12 w-auto" 
+          />
           <a href="/" className="text-2xl font-medium text-cwcp-blue flex items-center">
             <span className="mr-2">CWCP</span>
             <span className="text-cwcp-darkgray text-lg">Therapist Matching</span>
