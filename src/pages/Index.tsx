@@ -5,14 +5,15 @@ import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
 import CliniciansCarousel from "@/components/CliniciansCarousel";
 import { QuizAnswers, Therapist } from "@/types";
-import { matchTherapists } from "@/utils/matchTherapists";
+import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Index: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [matchedTherapists, setMatchedTherapists] = useState<Therapist[]>([]);
+  const [matchResult, setMatchResult] = useState<MatchResult>({ bestMatches: [], otherMatches: [] });
+  const [quizAnswers, setQuizAnswers] = useState<QuizAnswers | null>(null);
 
   const { data: therapists = [] } = useQuery({
     queryKey: ['therapists-public'],
@@ -44,6 +45,9 @@ const Index: React.FC = () => {
         photo: therapist.photo || '',
         gender: therapist.gender || '',
         bookingLink: therapist.booking_link || '',
+        customMessage: therapist.custom_message || '',
+        extendedBio: therapist.extended_bio || '',
+        introVideoUrl: therapist.intro_video_url || '',
         availability: therapist.therapist_availability?.map((a: any) => a.availability) || [],
         modalities: therapist.therapist_modalities?.map((m: any) => m.modality) || [],
         specialties: therapist.therapist_specialties?.map((s: any) => s.specialty) || [],
@@ -58,14 +62,16 @@ const Index: React.FC = () => {
     console.log('Quiz answers:', answers);
     const matches = matchTherapists(therapists, answers);
     console.log('Matched therapists:', matches);
-    setMatchedTherapists(matches);
+    setMatchResult(matches);
+    setQuizAnswers(answers);
     setQuizCompleted(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleRestartQuiz = () => {
     setQuizCompleted(false);
-    setMatchedTherapists([]);
+    setMatchResult({ bestMatches: [], otherMatches: [] });
+    setQuizAnswers(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -84,9 +90,10 @@ const Index: React.FC = () => {
             </div>
           ) : null}
           
-          {quizCompleted ? (
+          {quizCompleted && quizAnswers ? (
             <Results 
-              matchedTherapists={matchedTherapists} 
+              matchedTherapists={[...matchResult.bestMatches, ...matchResult.otherMatches]}
+              answers={quizAnswers}
               onRestartQuiz={handleRestartQuiz}
             />
           ) : (

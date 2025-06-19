@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -22,15 +22,19 @@ const SiteSettingsManager: React.FC = () => {
       
       if (error) throw error;
       return data;
-    },
-    onSuccess: (data) => {
-      const terms = data?.find(setting => setting.setting_key === 'terms_of_use');
-      const privacy = data?.find(setting => setting.setting_key === 'privacy_policy');
+    }
+  });
+
+  // Use useEffect instead of onSuccess
+  useEffect(() => {
+    if (siteSettings) {
+      const terms = siteSettings.find(setting => setting.setting_key === 'terms_of_use');
+      const privacy = siteSettings.find(setting => setting.setting_key === 'privacy_policy');
       
       if (terms) setTermsOfUse(terms.setting_value || '');
       if (privacy) setPrivacyPolicy(privacy.setting_value || '');
     }
-  });
+  }, [siteSettings]);
 
   const updateSettingMutation = useMutation({
     mutationFn: async ({ key, value }: { key: string; value: string }) => {
@@ -85,10 +89,10 @@ const SiteSettingsManager: React.FC = () => {
             </div>
             <Button 
               onClick={handleSaveTerms}
-              disabled={updateSettingMutation.isLoading}
+              disabled={updateSettingMutation.isPending}
               className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white"
             >
-              {updateSettingMutation.isLoading ? 'Saving...' : 'Save Terms of Use'}
+              {updateSettingMutation.isPending ? 'Saving...' : 'Save Terms of Use'}
             </Button>
           </CardContent>
         </Card>
@@ -110,10 +114,10 @@ const SiteSettingsManager: React.FC = () => {
             </div>
             <Button 
               onClick={handleSavePrivacy}
-              disabled={updateSettingMutation.isLoading}
+              disabled={updateSettingMutation.isPending}
               className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white"
             >
-              {updateSettingMutation.isLoading ? 'Saving...' : 'Save Privacy Policy'}
+              {updateSettingMutation.isPending ? 'Saving...' : 'Save Privacy Policy'}
             </Button>
           </CardContent>
         </Card>
