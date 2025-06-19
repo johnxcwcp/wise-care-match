@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Therapist } from "@/types";
-import { X } from "lucide-react";
 
 interface TherapistBioModalProps {
   therapist: Therapist;
@@ -33,14 +32,9 @@ const TherapistBioModal: React.FC<TherapistBioModalProps> = ({ therapist, isOpen
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl font-medium text-cwcp-blue">
-              {therapist.name}
-            </DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <DialogTitle className="text-2xl font-medium text-cwcp-blue">
+            {therapist.name}
+          </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6">
