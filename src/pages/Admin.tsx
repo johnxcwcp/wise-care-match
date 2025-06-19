@@ -7,6 +7,7 @@ import AdminHeader from "@/components/admin/AdminHeader";
 import TherapistManager from "@/components/admin/TherapistManager";
 import QuizManager from "@/components/admin/QuizManager";
 import AssetManager from "@/components/admin/AssetManager";
+import SiteSettingsManager from "@/components/admin/SiteSettingsManager";
 import TwoFactorSetup from "@/components/admin/TwoFactorSetup";
 import TwoFactorVerification from "@/components/admin/TwoFactorVerification";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -194,6 +195,7 @@ const Admin: React.FC = () => {
             <TabsTrigger value="therapists">Therapists</TabsTrigger>
             <TabsTrigger value="quiz">Quiz Questions</TabsTrigger>
             <TabsTrigger value="assets">Assets</TabsTrigger>
+            <TabsTrigger value="settings">Site Settings</TabsTrigger>
           </TabsList>
           
           <TabsContent value="therapists">
@@ -209,6 +211,10 @@ const Admin: React.FC = () => {
           
           <TabsContent value="assets">
             <AssetManager />
+          </TabsContent>
+          
+          <TabsContent value="settings">
+            <SiteSettingsManager />
           </TabsContent>
         </Tabs>
       </div>

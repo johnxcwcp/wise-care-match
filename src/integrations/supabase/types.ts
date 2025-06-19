@@ -68,6 +68,30 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          created_at: string
+          id: string
+          setting_key: string
+          setting_value: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          setting_key: string
+          setting_value?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          setting_key?: string
+          setting_value?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       therapist_availability: {
         Row: {
           availability: string
@@ -229,9 +253,12 @@ export type Database = {
           bio: string | null
           booking_link: string | null
           created_at: string | null
+          custom_message: string | null
           designation: string | null
+          extended_bio: string | null
           gender: string | null
           id: string
+          intro_video_url: string | null
           name: string
           photo: string | null
           pronouns: string | null
@@ -241,9 +268,12 @@ export type Database = {
           bio?: string | null
           booking_link?: string | null
           created_at?: string | null
+          custom_message?: string | null
           designation?: string | null
+          extended_bio?: string | null
           gender?: string | null
           id?: string
+          intro_video_url?: string | null
           name: string
           photo?: string | null
           pronouns?: string | null
@@ -253,9 +283,12 @@ export type Database = {
           bio?: string | null
           booking_link?: string | null
           created_at?: string | null
+          custom_message?: string | null
           designation?: string | null
+          extended_bio?: string | null
           gender?: string | null
           id?: string
+          intro_video_url?: string | null
           name?: string
           photo?: string | null
           pronouns?: string | null

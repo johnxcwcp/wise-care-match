@@ -14,13 +14,16 @@ export interface Therapist {
   sessionType: string[];
   clientTypes: string[];
   bookingLink: string;
+  customMessage?: string;
+  extendedBio?: string;
+  introVideoUrl?: string;
 }
 
 export interface QuizAnswers {
   specialties: string[];
   gender: string[];
   modalities: string[];
-  availability: string;
+  availability: string[];
   sessionType: string;
   clientType: string;
   services: string[];
@@ -39,4 +42,12 @@ export interface QuizQuestionOption {
   id: string;
   label: string;
   value: string;
+}
+
+export interface SiteSettings {
+  id: string;
+  settingKey: string;
+  settingValue: string | null;
+  createdAt: string;
+  updatedAt: string;
 }

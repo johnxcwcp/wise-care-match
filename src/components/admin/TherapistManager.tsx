@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -27,7 +28,10 @@ const TherapistManager: React.FC = () => {
     languages: [],
     sessionType: [],
     clientTypes: [],
-    bookingLink: ''
+    bookingLink: '',
+    customMessage: '',
+    extendedBio: '',
+    introVideoUrl: ''
   });
 
   const queryClient = useQueryClient();
@@ -63,6 +67,9 @@ const TherapistManager: React.FC = () => {
         photo: therapist.photo || '',
         gender: therapist.gender || '',
         bookingLink: therapist.booking_link || '',
+        customMessage: therapist.custom_message || '',
+        extendedBio: therapist.extended_bio || '',
+        introVideoUrl: therapist.intro_video_url || '',
         availability: therapist.therapist_availability?.map((a: any) => a.availability) || [],
         modalities: therapist.therapist_modalities?.map((m: any) => m.modality) || [],
         specialties: therapist.therapist_specialties?.map((s: any) => s.specialty) || [],
@@ -86,7 +93,10 @@ const TherapistManager: React.FC = () => {
           bio: therapist.bio,
           photo: therapist.photo,
           gender: therapist.gender,
-          booking_link: therapist.bookingLink
+          booking_link: therapist.bookingLink,
+          custom_message: therapist.customMessage,
+          extended_bio: therapist.extendedBio,
+          intro_video_url: therapist.introVideoUrl
         })
         .select()
         .single();
@@ -136,7 +146,10 @@ const TherapistManager: React.FC = () => {
         languages: [],
         sessionType: [],
         clientTypes: [],
-        bookingLink: ''
+        bookingLink: '',
+        customMessage: '',
+        extendedBio: '',
+        introVideoUrl: ''
       });
     },
     onError: (error) => {
@@ -158,7 +171,10 @@ const TherapistManager: React.FC = () => {
           bio: therapist.bio,
           photo: therapist.photo,
           gender: therapist.gender,
-          booking_link: therapist.bookingLink
+          booking_link: therapist.bookingLink,
+          custom_message: therapist.customMessage,
+          extended_bio: therapist.extendedBio,
+          intro_video_url: therapist.introVideoUrl
         })
         .eq('id', therapist.id);
 

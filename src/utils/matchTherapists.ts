@@ -1,88 +1,109 @@
 
-import { QuizAnswers, Therapist } from "@/types";
+import { Therapist, QuizAnswers } from "@/types";
 
-interface TherapistMatch {
-  therapist: Therapist;
-  score: number;
+export interface MatchResult {
+  bestMatches: Therapist[];
+  otherMatches: Therapist[];
 }
 
-export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): Therapist[] => {
-  if (therapists.length === 0) {
-    return [];
-  }
+export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): MatchResult => {
+  console.log("Matching therapists with answers:", answers);
+  
+  const bestMatches: Therapist[] = [];
+  const otherMatches: Therapist[] = [];
 
-  // First, filter therapists based on hard requirements
-  const filteredTherapists = therapists.filter(therapist => {
-    // Gender filter - if specific genders are selected (not "No Preference"), therapist must match
-    if (answers.gender.length > 0 && !answers.gender.includes("No Preference")) {
-      if (!answers.gender.includes(therapist.gender)) {
-        return false; // Exclude therapists that don't match gender preference
+  therapists.forEach(therapist => {
+    let score = 0;
+    let maxScore = 0;
+    let isExactMatch = true;
+
+    // Check specialties (required match)
+    if (answers.specialties.length > 0) {
+      maxScore += 1;
+      const hasSpecialty = answers.specialties.some(specialty => 
+        therapist.specialties.includes(specialty)
+      );
+      if (hasSpecialty) {
+        score += 1;
+      } else {
+        isExactMatch = false;
       }
     }
 
-    // You can add other hard filters here if needed
-    return true;
+    // Check gender (if specified)
+    if (answers.gender.length > 0) {
+      maxScore += 1;
+      const hasGender = answers.gender.includes(therapist.gender);
+      if (hasGender) {
+        score += 1;
+      } else {
+        isExactMatch = false;
+      }
+    }
+
+    // Check modalities (if specified)
+    if (answers.modalities.length > 0) {
+      maxScore += 1;
+      const hasModality = answers.modalities.some(modality => 
+        therapist.modalities.includes(modality)
+      );
+      if (hasModality) {
+        score += 1;
+      } else {
+        isExactMatch = false;
+      }
+    }
+
+    // Check availability (required match)
+    if (answers.availability.length > 0) {
+      maxScore += 1;
+      const hasAvailability = answers.availability.some(availability => 
+        therapist.availability.includes(availability)
+      );
+      if (hasAvailability) {
+        score += 1;
+      } else {
+        isExactMatch = false;
+      }
+    }
+
+    // Check session type (if not "No Preference")
+    if (answers.sessionType !== "No Preference") {
+      maxScore += 1;
+      const hasSessionType = therapist.sessionType.includes(answers.sessionType);
+      if (hasSessionType) {
+        score += 1;
+      } else {
+        isExactMatch = false;
+      }
+    }
+
+    // Check client type
+    if (answers.clientType) {
+      maxScore += 1;
+      const hasClientType = therapist.clientTypes.includes(answers.clientType);
+      if (hasClientType) {
+        score += 1;
+      } else {
+        isExactMatch = false;
+      }
+    }
+
+    console.log(`Therapist ${therapist.name}: score ${score}/${maxScore}, exact match: ${isExactMatch}`);
+
+    // If exact match on all criteria, add to best matches
+    if (isExactMatch && maxScore > 0) {
+      bestMatches.push(therapist);
+    } else if (score > 0) {
+      // If partial match, add to other matches
+      otherMatches.push(therapist);
+    }
   });
 
-  // If no therapists pass the filters, return empty array or fallback
-  if (filteredTherapists.length === 0) {
-    console.log('No therapists match the selected criteria');
-    return [];
-  }
+  console.log(`Found ${bestMatches.length} best matches and ${otherMatches.length} other matches`);
 
-  const matches: TherapistMatch[] = [];
-
-  for (const therapist of filteredTherapists) {
-    let score = 0;
-    
-    // Check specialties - higher weight (35%)
-    if (answers.specialties.length > 0) {
-      const specialtyMatches = answers.specialties.filter(specialty => 
-        therapist.specialties.includes(specialty)
-      ).length;
-      score += (specialtyMatches / answers.specialties.length) * 35;
-    } else {
-      // If no specialties selected, give partial score
-      score += 15;
-    }
-
-    // Gender matching - since we already filtered, give full score (15%)
-    score += 15;
-
-    // Check modalities - moderate weight (20%)
-    if (answers.modalities.length === 0 || answers.modalities.includes("Not sure")) {
-      // If no modalities selected or "Not sure" selected, give partial score
-      score += 10;
-    } else {
-      const modalityMatches = answers.modalities.filter(modality => 
-        therapist.modalities.includes(modality)
-      ).length;
-      score += (modalityMatches / answers.modalities.length) * 20;
-    }
-
-    // Check availability - if matches then points (10%)
-    if (answers.availability === "No Preference" || therapist.availability.includes(answers.availability)) {
-      score += 10;
-    }
-
-    // Check session type - if matches or no preference then points (10%)
-    if (answers.sessionType === "No Preference" || 
-        therapist.sessionType.includes(answers.sessionType)) {
-      score += 10;
-    }
-
-    // Check client type - if matches or no preference then points (10%)
-    if (answers.clientType === "No Preference" || 
-        therapist.clientTypes.includes(answers.clientType)) {
-      score += 10;
-    }
-
-    matches.push({ therapist, score });
-  }
-
-  // Sort by score in descending order
-  const sortedMatches = matches.sort((a, b) => b.score - a.score);
-  
-  // Return all filtered therapists, sorted by score
-  return sortedMatches.map(match => match.therapist);
+  return {
+    bestMatches,
+    otherMatches
+  };
 };

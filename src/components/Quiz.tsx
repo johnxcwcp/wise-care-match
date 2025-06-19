@@ -28,7 +28,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [gender, setGender] = useState<string[]>([]);
   const [modalities, setModalities] = useState<string[]>([]);
-  const [availability, setAvailability] = useState<string>("Weekdays");
+  const [availability, setAvailability] = useState<string[]>([]);
   const [sessionType, setSessionType] = useState<string>("No Preference");
   const [ageRange, setAgeRange] = useState<string>("Adults (18-65)");
 
@@ -37,9 +37,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     if (questions.length > 0) {
       questions.forEach(question => {
         if (question.options.length > 0) {
-          if (question.fieldName === 'availability' && question.type === 'single') {
-            setAvailability(question.options.find(o => o.value === 'Weekdays')?.value || question.options[0].value);
-          } else if (question.fieldName === 'sessionType' && question.type === 'single') {
+          if (question.fieldName === 'sessionType' && question.type === 'single') {
             setSessionType(question.options.find(o => o.value === 'No Preference')?.value || question.options[0].value);
           } else if (question.fieldName === 'clientType' && question.type === 'single') {
             setAgeRange(question.options.find(o => o.value === 'Adults (18-65)')?.value || question.options[0].value);
@@ -84,6 +82,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       }
       if (currentQuestion.fieldName === 'specialties') {
         return specialties.length === 0;
+      }
+      if (currentQuestion.fieldName === 'availability') {
+        return availability.length === 0;
       }
       // Allow modalities and gender to be empty
     }
