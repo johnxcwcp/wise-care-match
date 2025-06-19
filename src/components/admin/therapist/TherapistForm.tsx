@@ -98,6 +98,36 @@ const TherapistForm: React.FC<TherapistFormProps> = ({
       </div>
       
       <div>
+        <Label htmlFor="extendedBio">Extended Bio</Label>
+        <Textarea 
+          id="extendedBio" 
+          value={therapist.extendedBio || ''} 
+          onChange={(e) => setTherapist({...therapist, extendedBio: e.target.value})} 
+          placeholder="Additional bio content for the expanded bio modal"
+        />
+      </div>
+      
+      <div>
+        <Label htmlFor="introVideoUrl">Introduction Video URL (YouTube)</Label>
+        <Input 
+          id="introVideoUrl" 
+          value={therapist.introVideoUrl || ''} 
+          onChange={(e) => setTherapist({...therapist, introVideoUrl: e.target.value})} 
+          placeholder="https://www.youtube.com/watch?v=..."
+        />
+      </div>
+      
+      <div>
+        <Label htmlFor="customMessage">Custom Message</Label>
+        <Textarea 
+          id="customMessage" 
+          value={therapist.customMessage || ''} 
+          onChange={(e) => setTherapist({...therapist, customMessage: e.target.value})} 
+          placeholder="Special message to display on therapist card"
+        />
+      </div>
+      
+      <div>
         <Label htmlFor="bookingLink">Booking Link</Label>
         <Input 
           id="bookingLink" 
