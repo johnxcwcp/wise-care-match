@@ -1,3 +1,4 @@
+
 import { QuizQuestion } from "@/types";
 
 export const defaultQuestions: QuizQuestion[] = [
@@ -74,6 +75,7 @@ export const defaultQuestions: QuizQuestion[] = [
     type: "multiple",
     fieldName: "modalities",
     options: [
+      { id: "3-19", label: "Not sure", value: "Not sure" },
       { id: "3-1", label: "Acceptance and Commitment (ACT)", value: "Acceptance and Commitment (ACT)" },
       { id: "3-2", label: "Adlerian", value: "Adlerian" },
       { id: "3-3", label: "Attachment-Based", value: "Attachment-Based" },
@@ -91,8 +93,7 @@ export const defaultQuestions: QuizQuestion[] = [
       { id: "3-15", label: "Psychodynamic", value: "Psychodynamic" },
       { id: "3-16", label: "Psychospiritual Care", value: "Psychospiritual Care" },
       { id: "3-17", label: "Solution-Focused", value: "Solution-Focused" },
-      { id: "3-18", label: "Somatic", value: "Somatic" },
-      { id: "3-19", label: "Not sure", value: "Not sure" }
+      { id: "3-18", label: "Somatic", value: "Somatic" }
     ]
   },
   {

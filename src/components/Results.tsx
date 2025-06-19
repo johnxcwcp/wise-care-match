@@ -3,38 +3,43 @@ import { Button } from "@/components/ui/button";
 import { Therapist, QuizAnswers } from "@/types";
 import TherapistCard from "./TherapistCard";
 import { RefreshCw } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { MatchResult } from "@/utils/matchTherapists";
 
 interface ResultsProps {
-  matchedTherapists: Therapist[];
+  matchResult: MatchResult;
   answers: QuizAnswers;
   onRestartQuiz: () => void;
 }
 
-const Results: React.FC<ResultsProps> = ({ matchedTherapists, answers, onRestartQuiz }) => {
-  // Simple matching logic for now - in a real app this would be more sophisticated
-  const bestMatches = matchedTherapists.filter(therapist => {
-    // Check if therapist matches all specified criteria
-    const matchesSpecialties = answers.specialties.length === 0 || 
-      answers.specialties.some(specialty => therapist.specialties.includes(specialty));
-    
-    const matchesGender = answers.gender.length === 0 || 
-      answers.gender.includes(therapist.gender);
-    
-    const matchesModalities = answers.modalities.length === 0 || 
-      answers.modalities.some(modality => therapist.modalities.includes(modality));
-    
-    const matchesAvailability = answers.availability.length === 0 || 
-      answers.availability.some(availability => therapist.availability.includes(availability));
-    
-    const matchesSessionType = answers.sessionType === "No Preference" || 
-      therapist.sessionType.includes(answers.sessionType);
+const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }) => {
+  const { bestMatches, otherMatches } = matchResult;
 
-    return matchesSpecialties && matchesGender && matchesModalities && 
-           matchesAvailability && matchesSessionType;
+  const { data: siteSettings } = useQuery({
+    queryKey: ['siteSettings'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*');
+      
+      if (error) throw error;
+      return data;
+    }
   });
 
-  const otherMatches = matchedTherapists.filter(therapist => 
-    !bestMatches.includes(therapist)
+  const getSettingValue = (key: string, defaultValue: string) => {
+    return siteSettings?.find(setting => setting.setting_key === key)?.setting_value || defaultValue;
+  };
+
+  const noMatchesMessage = getSettingValue(
+    'no_matches_message',
+    'No Perfect Matches Found. None of our clinicians match your selected criteria. Please contact us for further support. Here are some clinicians that meet some of your criteria.'
+  );
+
+  const otherMatchesMessage = getSettingValue(
+    'other_matches_message',
+    'Other Clinicians You May Be Interested In: The clinicians below may still be a good fit for you but don\'t necessarily align with all of your input for "Gender", "Modalities", and "Virtual or in-person" preferences.'
   );
 
   return (
@@ -71,8 +76,7 @@ const Results: React.FC<ResultsProps> = ({ matchedTherapists, answers, onRestart
           <div className="text-center p-8 bg-white rounded-lg border border-cwcp-gray">
             <h3 className="text-xl font-medium text-cwcp-blue mb-3">No Perfect Matches Found</h3>
             <p className="text-cwcp-darkgray mb-4">
-              None of our clinicians match your selected criteria. Please contact us for further support. 
-              Here are some clinicians that meet some of your criteria.
+              {noMatchesMessage}
             </p>
           </div>
         </div>
@@ -85,8 +89,7 @@ const Results: React.FC<ResultsProps> = ({ matchedTherapists, answers, onRestart
             Other Clinicians You May Be Interested In
           </h3>
           <p className="text-cwcp-darkgray mb-6">
-            The clinicians below may still be a good fit for you but don't necessarily align with 
-            all of your input for "Gender", "Modalities", and "Virtual or in-person" preferences.
+            {otherMatchesMessage}
           </p>
           <div className="space-y-6">
             {otherMatches.map(therapist => (

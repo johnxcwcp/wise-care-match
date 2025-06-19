@@ -11,6 +11,8 @@ import { toast } from "sonner";
 const SiteSettingsManager: React.FC = () => {
   const [termsOfUse, setTermsOfUse] = useState("");
   const [privacyPolicy, setPrivacyPolicy] = useState("");
+  const [noMatchesMessage, setNoMatchesMessage] = useState("");
+  const [otherMatchesMessage, setOtherMatchesMessage] = useState("");
   const queryClient = useQueryClient();
 
   const { data: siteSettings, isLoading } = useQuery({
@@ -25,14 +27,17 @@ const SiteSettingsManager: React.FC = () => {
     }
   });
 
-  // Use useEffect instead of onSuccess
   useEffect(() => {
     if (siteSettings) {
       const terms = siteSettings.find(setting => setting.setting_key === 'terms_of_use');
       const privacy = siteSettings.find(setting => setting.setting_key === 'privacy_policy');
+      const noMatches = siteSettings.find(setting => setting.setting_key === 'no_matches_message');
+      const otherMatches = siteSettings.find(setting => setting.setting_key === 'other_matches_message');
       
       if (terms) setTermsOfUse(terms.setting_value || '');
       if (privacy) setPrivacyPolicy(privacy.setting_value || '');
+      if (noMatches) setNoMatchesMessage(noMatches.setting_value || '');
+      if (otherMatches) setOtherMatchesMessage(otherMatches.setting_value || '');
     }
   }, [siteSettings]);
 
@@ -40,8 +45,13 @@ const SiteSettingsManager: React.FC = () => {
     mutationFn: async ({ key, value }: { key: string; value: string }) => {
       const { error } = await supabase
         .from('site_settings')
-        .update({ setting_value: value, updated_at: new Date().toISOString() })
-        .eq('setting_key', key);
+        .upsert({ 
+          setting_key: key, 
+          setting_value: value, 
+          updated_at: new Date().toISOString() 
+        }, {
+          onConflict: 'setting_key'
+        });
       
       if (error) throw error;
     },
@@ -61,6 +71,14 @@ const SiteSettingsManager: React.FC = () => {
 
   const handleSavePrivacy = () => {
     updateSettingMutation.mutate({ key: 'privacy_policy', value: privacyPolicy });
+  };
+
+  const handleSaveNoMatches = () => {
+    updateSettingMutation.mutate({ key: 'no_matches_message', value: noMatchesMessage });
+  };
+
+  const handleSaveOtherMatches = () => {
+    updateSettingMutation.mutate({ key: 'other_matches_message', value: otherMatchesMessage });
   };
 
   if (isLoading) {
@@ -119,6 +137,49 @@ const SiteSettingsManager: React.FC = () => {
             >
               {updateSettingMutation.isPending ? 'Saving...' : 'Save Privacy Policy'}
             </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Quiz Results Messages</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Label htmlFor="noMatches">No Perfect Matches Message</Label>
+              <Textarea
+                id="noMatches"
+                value={noMatchesMessage}
+                onChange={(e) => setNoMatchesMessage(e.target.value)}
+                placeholder="Message to display when no perfect matches are found..."
+                className="min-h-[100px]"
+              />
+              <Button 
+                onClick={handleSaveNoMatches}
+                disabled={updateSettingMutation.isPending}
+                className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
+              >
+                {updateSettingMutation.isPending ? 'Saving...' : 'Save No Matches Message'}
+              </Button>
+            </div>
+            
+            <div>
+              <Label htmlFor="otherMatches">Other Matches Message</Label>
+              <Textarea
+                id="otherMatches"
+                value={otherMatchesMessage}
+                onChange={(e) => setOtherMatchesMessage(e.target.value)}
+                placeholder="Message to display for other potential matches..."
+                className="min-h-[100px]"
+              />
+              <Button 
+                onClick={handleSaveOtherMatches}
+                disabled={updateSettingMutation.isPending}
+                className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
+              >
+                {updateSettingMutation.isPending ? 'Saving...' : 'Save Other Matches Message'}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

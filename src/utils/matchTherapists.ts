@@ -12,6 +12,28 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
   const bestMatches: Therapist[] = [];
   const otherMatches: Therapist[] = [];
 
+  // Define all possible modalities except "Not sure"
+  const allModalities = [
+    "Acceptance and Commitment (ACT)", "Adlerian", "Attachment-Based",
+    "Cognitive Behavioural Therapy (CBT)", "Dialectical Behavioural Therapy (DBT)",
+    "Emotion Focused", "Existential", "Gestalt", "Gottman",
+    "Internal Family Systems (IFS)", "Jungian", "Mindfulness", "Narrative", 
+    "Person-Centred", "Psychodynamic", "Psychospiritual Care", 
+    "Solution-Focused", "Somatic"
+  ];
+
+  // Process modalities - if "Not sure" is selected or empty, include all modalities
+  let processedModalities = answers.modalities;
+  if (answers.modalities.includes("Not sure") || answers.modalities.length === 0) {
+    processedModalities = allModalities;
+  }
+
+  // Process gender - if empty, include all genders
+  let processedGender = answers.gender;
+  if (answers.gender.length === 0 || answers.gender.includes("No Preference")) {
+    processedGender = ["Man", "Woman", "Non-Binary"];
+  }
+
   therapists.forEach(therapist => {
     let score = 0;
     let maxScore = 0;
@@ -28,30 +50,30 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
       } else {
         isExactMatch = false;
       }
+    } else {
+      // If no specialties selected, consider it a match
+      maxScore += 1;
+      score += 1;
     }
 
-    // Check gender (if specified)
-    if (answers.gender.length > 0) {
-      maxScore += 1;
-      const hasGender = answers.gender.includes(therapist.gender);
-      if (hasGender) {
-        score += 1;
-      } else {
-        isExactMatch = false;
-      }
+    // Check gender (using processed gender)
+    maxScore += 1;
+    const hasGender = processedGender.includes(therapist.gender);
+    if (hasGender) {
+      score += 1;
+    } else {
+      isExactMatch = false;
     }
 
-    // Check modalities (if specified)
-    if (answers.modalities.length > 0) {
-      maxScore += 1;
-      const hasModality = answers.modalities.some(modality => 
-        therapist.modalities.includes(modality)
-      );
-      if (hasModality) {
-        score += 1;
-      } else {
-        isExactMatch = false;
-      }
+    // Check modalities (using processed modalities)
+    maxScore += 1;
+    const hasModality = processedModalities.some(modality => 
+      therapist.modalities.includes(modality)
+    );
+    if (hasModality) {
+      score += 1;
+    } else {
+      isExactMatch = false;
     }
 
     // Check availability (required match)
@@ -65,6 +87,10 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
       } else {
         isExactMatch = false;
       }
+    } else {
+      // If no availability selected, consider it a match
+      maxScore += 1;
+      score += 1;
     }
 
     // Check session type (if not "No Preference")
@@ -76,6 +102,10 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
       } else {
         isExactMatch = false;
       }
+    } else {
+      // If "No Preference" selected, consider it a match
+      maxScore += 1;
+      score += 1;
     }
 
     // Check client type
@@ -87,6 +117,10 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
       } else {
         isExactMatch = false;
       }
+    } else {
+      // If no client type selected, consider it a match
+      maxScore += 1;
+      score += 1;
     }
 
     console.log(`Therapist ${therapist.name}: score ${score}/${maxScore}, exact match: ${isExactMatch}`);
