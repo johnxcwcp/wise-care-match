@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
 import CliniciansVideoCarousel from "@/components/CliniciansVideoCarousel";
+import SEOHead from "@/components/SEOHead";
 import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
@@ -76,6 +78,7 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-cwcp-lightgray">
+      <SEOHead />
       <Header />
       
       <main className="flex-1">

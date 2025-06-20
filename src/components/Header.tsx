@@ -16,7 +16,7 @@ const Header: React.FC = () => {
           />
           <a href="/" className="text-2xl font-medium text-cwcp-blue flex items-center">
             <span className="mr-2">CWCP</span>
-            <span className="text-cwcp-darkgray text-lg">Therapist Matching</span>
+            <span className="text-cwcp-darkgray text-lg">Therapist Matching Quiz</span>
           </a>
         </div>
         <nav>

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,6 +14,9 @@ const SiteSettingsManager: React.FC = () => {
   const [privacyPolicy, setPrivacyPolicy] = useState("");
   const [noMatchesMessage, setNoMatchesMessage] = useState("");
   const [otherMatchesMessage, setOtherMatchesMessage] = useState("");
+  const [seoTitle, setSeoTitle] = useState("");
+  const [seoDescription, setSeoDescription] = useState("");
+  const [seoImageUrl, setSeoImageUrl] = useState("");
   const queryClient = useQueryClient();
 
   const { data: siteSettings, isLoading } = useQuery({
@@ -33,11 +37,17 @@ const SiteSettingsManager: React.FC = () => {
       const privacy = siteSettings.find(setting => setting.setting_key === 'privacy_policy');
       const noMatches = siteSettings.find(setting => setting.setting_key === 'no_matches_message');
       const otherMatches = siteSettings.find(setting => setting.setting_key === 'other_matches_message');
+      const seoTitleSetting = siteSettings.find(setting => setting.setting_key === 'seo_title');
+      const seoDescSetting = siteSettings.find(setting => setting.setting_key === 'seo_description');
+      const seoImageSetting = siteSettings.find(setting => setting.setting_key === 'seo_image_url');
       
       if (terms) setTermsOfUse(terms.setting_value || '');
       if (privacy) setPrivacyPolicy(privacy.setting_value || '');
       if (noMatches) setNoMatchesMessage(noMatches.setting_value || '');
       if (otherMatches) setOtherMatchesMessage(otherMatches.setting_value || '');
+      if (seoTitleSetting) setSeoTitle(seoTitleSetting.setting_value || '');
+      if (seoDescSetting) setSeoDescription(seoDescSetting.setting_value || '');
+      if (seoImageSetting) setSeoImageUrl(seoImageSetting.setting_value || '');
     }
   }, [siteSettings]);
 
@@ -81,6 +91,18 @@ const SiteSettingsManager: React.FC = () => {
     updateSettingMutation.mutate({ key: 'other_matches_message', value: otherMatchesMessage });
   };
 
+  const handleSaveSeoTitle = () => {
+    updateSettingMutation.mutate({ key: 'seo_title', value: seoTitle });
+  };
+
+  const handleSaveSeoDescription = () => {
+    updateSettingMutation.mutate({ key: 'seo_description', value: seoDescription });
+  };
+
+  const handleSaveSeoImage = () => {
+    updateSettingMutation.mutate({ key: 'seo_image_url', value: seoImageUrl });
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -90,6 +112,65 @@ const SiteSettingsManager: React.FC = () => {
       <h2 className="text-2xl font-medium text-cwcp-blue">Site Settings</h2>
       
       <div className="grid gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>SEO Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Label htmlFor="seoTitle">Page Title</Label>
+              <Input
+                id="seoTitle"
+                value={seoTitle}
+                onChange={(e) => setSeoTitle(e.target.value)}
+                placeholder="Enter the page title for search engines..."
+              />
+              <Button 
+                onClick={handleSaveSeoTitle}
+                disabled={updateSettingMutation.isPending}
+                className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
+              >
+                {updateSettingMutation.isPending ? 'Saving...' : 'Save Title'}
+              </Button>
+            </div>
+            
+            <div>
+              <Label htmlFor="seoDescription">Meta Description</Label>
+              <Textarea
+                id="seoDescription"
+                value={seoDescription}
+                onChange={(e) => setSeoDescription(e.target.value)}
+                placeholder="Enter the meta description for search engines..."
+                className="min-h-[100px]"
+              />
+              <Button 
+                onClick={handleSaveSeoDescription}
+                disabled={updateSettingMutation.isPending}
+                className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
+              >
+                {updateSettingMutation.isPending ? 'Saving...' : 'Save Description'}
+              </Button>
+            </div>
+            
+            <div>
+              <Label htmlFor="seoImage">Link Preview Image URL</Label>
+              <Input
+                id="seoImage"
+                value={seoImageUrl}
+                onChange={(e) => setSeoImageUrl(e.target.value)}
+                placeholder="Enter the URL for the link preview image..."
+              />
+              <Button 
+                onClick={handleSaveSeoImage}
+                disabled={updateSettingMutation.isPending}
+                className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
+              >
+                {updateSettingMutation.isPending ? 'Saving...' : 'Save Image URL'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Terms of Use</CardTitle>
