@@ -68,6 +68,39 @@ export type Database = {
         }
         Relationships: []
       }
+      service_cards: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          illustration_url: string | null
+          service_description: string
+          service_title: string
+          service_value: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          illustration_url?: string | null
+          service_description: string
+          service_title: string
+          service_value: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          illustration_url?: string | null
+          service_description?: string
+          service_title?: string
+          service_value?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           created_at: string

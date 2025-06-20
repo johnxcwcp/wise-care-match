@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
-import CliniciansCarousel from "@/components/CliniciansCarousel";
+import CliniciansVideoCarousel from "@/components/CliniciansVideoCarousel";
 import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
@@ -101,10 +100,10 @@ const Index: React.FC = () => {
           )}
         </div>
 
-        {/* Clinicians Carousel - only show when quiz is not completed */}
+        {/* Clinicians Video Carousel - only show when quiz is not completed */}
         {!quizCompleted && (
           <div className="bg-white border-t border-cwcp-gray">
-            <CliniciansCarousel therapists={therapists} />
+            <CliniciansVideoCarousel therapists={therapists} />
           </div>
         )}
       </main>

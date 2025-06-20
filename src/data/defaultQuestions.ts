@@ -1,4 +1,3 @@
-
 import { QuizQuestion } from "@/types";
 
 export const defaultQuestions: QuizQuestion[] = [
@@ -10,13 +9,7 @@ export const defaultQuestions: QuizQuestion[] = [
     fieldName: "services",
     options: [
       { id: "0-1", label: "Individual Counselling and Psychotherapy", value: "Individual Counselling and Psychotherapy" },
-      { id: "0-2", label: "Relationship and Couples Counselling and Psychotherapy", value: "Relationship and Couples Counselling and Psychotherapy" },
-      { id: "0-3", label: "ADHD Assessments", value: "ADHD Assessments" },
-      { id: "0-4", label: "Autism Assessments", value: "Autism Assessments" },
-      { id: "0-5", label: "Secondary Assessments for Transition-Related Surgery", value: "Secondary Assessments for Transition-Related Surgery" },
-      { id: "0-6", label: "Non-Insured Benefits (NIHB) for First Nations and Inuit", value: "Non-Insured Benefits (NIHB) for First Nations and Inuit" },
-      { id: "0-7", label: "Indian Residential Schools Resolution Health Support Program", value: "Indian Residential Schools Resolution Health Support Program" },
-      { id: "0-8", label: "WSIB Community Mental Health Program", value: "WSIB Community Mental Health Program" }
+      { id: "0-2", label: "Relationship and Couples Counselling and Psychotherapy", value: "Relationship and Couples Counselling and Psychotherapy" }
     ]
   },
   {

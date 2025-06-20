@@ -1,7 +1,9 @@
 
 import React from "react";
 import { QuizQuestion } from "@/types";
-import ClickableOption from "@/components/ui/clickable-option";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Step0ServicesProps {
   selectedServices: string[];
@@ -14,6 +16,19 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
   setSelectedServices,
   question
 }) => {
+  const { data: serviceCards = [] } = useQuery({
+    queryKey: ['serviceCards'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('service_cards')
+        .select('*')
+        .order('display_order');
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
   const handleServiceToggle = (service: string) => {
     if (selectedServices.includes(service)) {
       setSelectedServices(selectedServices.filter(s => s !== service));
@@ -33,17 +48,44 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
         </p>
       )}
       
-      <div className="grid grid-cols-1 gap-3">
-        {question.options.map((option) => (
-          <ClickableOption
-            key={option.id}
-            value={option.value}
-            isSelected={selectedServices.includes(option.value)}
-            onClick={handleServiceToggle}
-            type="checkbox"
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {serviceCards.map((serviceCard) => (
+          <Card
+            key={serviceCard.id}
+            className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 ${
+              selectedServices.includes(serviceCard.service_value)
+                ? 'border-cwcp-blue bg-blue-50'
+                : 'border-cwcp-gray hover:border-cwcp-blue'
+            }`}
+            onClick={() => handleServiceToggle(serviceCard.service_value)}
           >
-            {option.label}
-          </ClickableOption>
+            <CardContent className="p-0">
+              {/* Illustration section with 16:9 aspect ratio */}
+              <div className="w-full aspect-video bg-gray-100 rounded-t-lg overflow-hidden">
+                {serviceCard.illustration_url ? (
+                  <img
+                    src={serviceCard.illustration_url}
+                    alt={serviceCard.service_title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cwcp-lightgray to-gray-200">
+                    <div className="text-cwcp-darkgray text-sm">No image</div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Content section */}
+              <div className="p-6">
+                <h4 className="text-lg font-medium text-cwcp-blue mb-2">
+                  {serviceCard.service_title}
+                </h4>
+                <p className="text-sm text-cwcp-darkgray leading-relaxed">
+                  {serviceCard.service_description}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
