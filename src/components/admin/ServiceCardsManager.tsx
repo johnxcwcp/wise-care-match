@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,16 +90,29 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
   const [description, setDescription] = useState(card.service_description);
   const [illustrationUrl, setIllustrationUrl] = useState(card.illustration_url || '');
 
+  // Update local state when card data changes
+  useEffect(() => {
+    setTitle(card.service_title);
+    setDescription(card.service_description);
+    setIllustrationUrl(card.illustration_url || '');
+  }, [card.service_title, card.service_description, card.illustration_url]);
+
   const handleSaveTitle = () => {
-    onUpdate(card.id, 'service_title', title);
+    if (title.trim() !== card.service_title) {
+      onUpdate(card.id, 'service_title', title.trim());
+    }
   };
 
   const handleSaveDescription = () => {
-    onUpdate(card.id, 'service_description', description);
+    if (description.trim() !== card.service_description) {
+      onUpdate(card.id, 'service_description', description.trim());
+    }
   };
 
   const handleSaveIllustration = () => {
-    onUpdate(card.id, 'illustration_url', illustrationUrl);
+    if (illustrationUrl.trim() !== (card.illustration_url || '')) {
+      onUpdate(card.id, 'illustration_url', illustrationUrl.trim());
+    }
   };
 
   return (
@@ -114,7 +127,7 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
         />
         <Button 
           onClick={handleSaveTitle}
-          disabled={isUpdating}
+          disabled={isUpdating || title.trim() === card.service_title}
           className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
           size="sm"
         >
@@ -133,7 +146,7 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
         />
         <Button 
           onClick={handleSaveDescription}
-          disabled={isUpdating}
+          disabled={isUpdating || description.trim() === card.service_description}
           className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
           size="sm"
         >
@@ -151,7 +164,7 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
         />
         <Button 
           onClick={handleSaveIllustration}
-          disabled={isUpdating}
+          disabled={isUpdating || illustrationUrl.trim() === (card.illustration_url || '')}
           className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
           size="sm"
         >
@@ -167,7 +180,15 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
               src={illustrationUrl} 
               alt="Service illustration preview"
               className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.nextElementSibling?.classList.remove('hidden');
+              }}
             />
+            <div className="hidden w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 text-sm">
+              Failed to load image
+            </div>
           </div>
         </div>
       )}
