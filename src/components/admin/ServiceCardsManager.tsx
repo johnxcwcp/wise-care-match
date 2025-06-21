@@ -41,16 +41,19 @@ const ServiceCardsManager: React.FC = () => {
           updated_at: new Date().toISOString() 
         })
         .eq('id', id)
-        .select()
-        .single();
+        .select();
       
       if (error) {
         console.error('Error updating service card:', error);
         throw error;
       }
       
-      console.log('Update successful:', data);
-      return data;
+      if (!data || data.length === 0) {
+        throw new Error('No rows were updated');
+      }
+      
+      console.log('Update successful:', data[0]);
+      return data[0];
     },
     onSuccess: (data, variables) => {
       // Update the cache immediately with the new data
