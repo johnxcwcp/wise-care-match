@@ -13,6 +13,7 @@ export interface Therapist {
   languages: string[];
   sessionType: string[];
   clientTypes: string[];
+  services: string[];
   bookingLink: string;
   customMessage?: string;
   extendedBio?: string;

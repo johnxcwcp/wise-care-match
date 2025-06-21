@@ -39,6 +39,23 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
     let maxScore = 0;
     let isExactMatch = true;
 
+    // Check services (required match if selected)
+    if (answers.services.length > 0) {
+      maxScore += 1;
+      const hasService = answers.services.some(service => 
+        therapist.services.includes(service)
+      );
+      if (hasService) {
+        score += 1;
+      } else {
+        isExactMatch = false;
+      }
+    } else {
+      // If no services selected, consider it a match
+      maxScore += 1;
+      score += 1;
+    }
+
     // Check specialties (required match)
     if (answers.specialties.length > 0) {
       maxScore += 1;

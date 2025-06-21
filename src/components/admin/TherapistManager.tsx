@@ -28,6 +28,7 @@ const TherapistManager: React.FC = () => {
     languages: [],
     sessionType: [],
     clientTypes: [],
+    services: [],
     bookingLink: '',
     customMessage: '',
     extendedBio: '',
@@ -50,7 +51,8 @@ const TherapistManager: React.FC = () => {
           therapist_specialties(specialty),
           therapist_languages(language),
           therapist_session_types(session_type),
-          therapist_client_types(client_type)
+          therapist_client_types(client_type),
+          therapist_services(service)
         `);
 
       if (therapistsError) {
@@ -75,7 +77,8 @@ const TherapistManager: React.FC = () => {
         specialties: therapist.therapist_specialties?.map((s: any) => s.specialty) || [],
         languages: therapist.therapist_languages?.map((l: any) => l.language) || [],
         sessionType: therapist.therapist_session_types?.map((st: any) => st.session_type) || [],
-        clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || []
+        clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || [],
+        services: therapist.therapist_services?.map((s: any) => s.service) || []
       }));
     }
   });
@@ -122,6 +125,9 @@ const TherapistManager: React.FC = () => {
         ),
         ...therapist.clientTypes.map(item => 
           (supabase as any).from('therapist_client_types').insert({ therapist_id: therapistData.id, client_type: item })
+        ),
+        ...therapist.services.map(item => 
+          (supabase as any).from('therapist_services').insert({ therapist_id: therapistData.id, service: item })
         )
       ];
 
@@ -146,6 +152,7 @@ const TherapistManager: React.FC = () => {
         languages: [],
         sessionType: [],
         clientTypes: [],
+        services: [],
         bookingLink: '',
         customMessage: '',
         extendedBio: '',
@@ -187,7 +194,8 @@ const TherapistManager: React.FC = () => {
         (supabase as any).from('therapist_specialties').delete().eq('therapist_id', therapist.id),
         (supabase as any).from('therapist_languages').delete().eq('therapist_id', therapist.id),
         (supabase as any).from('therapist_session_types').delete().eq('therapist_id', therapist.id),
-        (supabase as any).from('therapist_client_types').delete().eq('therapist_id', therapist.id)
+        (supabase as any).from('therapist_client_types').delete().eq('therapist_id', therapist.id),
+        (supabase as any).from('therapist_services').delete().eq('therapist_id', therapist.id)
       ];
 
       await Promise.all(deletePromises);
@@ -211,6 +219,9 @@ const TherapistManager: React.FC = () => {
         ),
         ...therapist.clientTypes.map(item => 
           (supabase as any).from('therapist_client_types').insert({ therapist_id: therapist.id, client_type: item })
+        ),
+        ...therapist.services.map(item => 
+          (supabase as any).from('therapist_services').insert({ therapist_id: therapist.id, service: item })
         )
       ];
 

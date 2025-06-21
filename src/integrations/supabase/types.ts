@@ -229,6 +229,32 @@ export type Database = {
           },
         ]
       }
+      therapist_services: {
+        Row: {
+          id: string
+          service: string
+          therapist_id: string | null
+        }
+        Insert: {
+          id?: string
+          service: string
+          therapist_id?: string | null
+        }
+        Update: {
+          id?: string
+          service?: string
+          therapist_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapist_services_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       therapist_session_types: {
         Row: {
           id: string

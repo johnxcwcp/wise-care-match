@@ -28,6 +28,10 @@ const TherapistForm: React.FC<TherapistFormProps> = ({
   };
 
   // Options arrays
+  const serviceOptions = [
+    "Individual Counselling and Psychotherapy",
+    "Relationship and Couples Counselling and Psychotherapy"
+  ];
   const availabilityOptions = ["Weekdays", "Evenings", "Weekends"];
   const modalityOptions = [
     "Acceptance and Commitment (ACT)", "Adlerian", "Attachment-Based",
@@ -148,6 +152,27 @@ const TherapistForm: React.FC<TherapistFormProps> = ({
                 onChange={() => setTherapist({...therapist, gender: option})}
               />
               <Label htmlFor={`gender-${option}`}>{option}</Label>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div>
+        <Label className="mb-2 block">Services Offered</Label>
+        <div className="grid grid-cols-1 gap-2 mb-4">
+          {serviceOptions.map(option => (
+            <div key={option} className="flex items-center gap-2">
+              <Checkbox
+                id={`service-${option}`}
+                checked={therapist.services.includes(option)}
+                onCheckedChange={() => 
+                  setTherapist({
+                    ...therapist, 
+                    services: toggleArrayItem(therapist.services, option)
+                  })
+                }
+              />
+              <Label htmlFor={`service-${option}`} className="text-sm">{option}</Label>
             </div>
           ))}
         </div>

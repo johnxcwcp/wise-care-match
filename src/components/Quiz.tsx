@@ -15,7 +15,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { defaultQuestions } from "@/data/defaultQuestions";
 
 interface QuizProps {
-  onComplete: (answers: QuizAnswers) => void;
+  onComplete: (answers: QuizAnswers)  => void;
 }
 
 const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
@@ -76,18 +76,16 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     const currentQuestion = questions[currentStep - 1];
     if (!currentQuestion) return false;
     
-    if (currentQuestion.type === 'multiple') {
-      if (currentQuestion.fieldName === 'services') {
-        return services.length === 0;
-      }
-      if (currentQuestion.fieldName === 'specialties') {
-        return specialties.length === 0;
-      }
-      if (currentQuestion.fieldName === 'availability') {
-        return availability.length === 0;
-      }
-      // Allow modalities and gender to be empty
+    if (currentQuestion.fieldName === 'services') {
+      return services.length === 0;
     }
+    if (currentQuestion.fieldName === 'specialties') {
+      return specialties.length === 0;
+    }
+    if (currentQuestion.fieldName === 'availability') {
+      return availability.length === 0;
+    }
+    // Allow modalities and gender to be empty
     return false;
   };
 

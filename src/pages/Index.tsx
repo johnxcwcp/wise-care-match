@@ -28,7 +28,8 @@ const Index: React.FC = () => {
           therapist_specialties(specialty),
           therapist_languages(language),
           therapist_session_types(session_type),
-          therapist_client_types(client_type)
+          therapist_client_types(client_type),
+          therapist_services(service)
         `);
 
       if (therapistsError) {
@@ -54,7 +55,8 @@ const Index: React.FC = () => {
         specialties: therapist.therapist_specialties?.map((s: any) => s.specialty) || [],
         languages: therapist.therapist_languages?.map((l: any) => l.language) || [],
         sessionType: therapist.therapist_session_types?.map((st: any) => st.session_type) || [],
-        clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || []
+        clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || [],
+        services: therapist.therapist_services?.map((s: any) => s.service) || []
       }));
     }
   });
