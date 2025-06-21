@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import QuizHeader from "./QuizHeader";
@@ -21,6 +20,7 @@ interface QuizProps {
 const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [questions] = useLocalStorage<QuizQuestion[]>("quizQuestions", defaultQuestions);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const totalSteps = questions.length;
   
   // State for answers
@@ -49,8 +49,12 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+        setIsTransitioning(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 150);
     } else {
       const answers: QuizAnswers = {
         services,
@@ -67,8 +71,12 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStep(currentStep - 1);
+        setIsTransitioning(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 150);
     }
   };
 
@@ -159,13 +167,15 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     <div className="max-w-3xl mx-auto px-4 py-8">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-cwcp-gray">
+      <div className={`bg-white p-6 rounded-xl shadow-sm border border-cwcp-gray transition-all duration-300 ${
+        isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
+      }`}>
         {renderQuestion()}
         
         <div className="flex justify-between mt-8">
           <Button 
             onClick={prevStep} 
-            disabled={currentStep === 1}
+            disabled={currentStep === 1 || isTransitioning}
             variant="outline"
             className="border-cwcp-blue text-cwcp-blue hover:text-cwcp-blue hover:bg-blue-50"
           >
@@ -175,7 +185,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
           
           <Button 
             onClick={nextStep}
-            disabled={isNextDisabled()}
+            disabled={isNextDisabled() || isTransitioning}
             className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white"
           >
             {currentStep === totalSteps ? "Find Therapists" : "Next"}

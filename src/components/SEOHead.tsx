@@ -27,58 +27,45 @@ const SEOHead: React.FC = () => {
         document.title = seoTitle;
       }
 
-      // Update meta description
-      if (seoDescription) {
-        let metaDescription = document.querySelector('meta[name="description"]');
-        if (!metaDescription) {
-          metaDescription = document.createElement('meta');
-          metaDescription.setAttribute('name', 'description');
-          document.head.appendChild(metaDescription);
-        }
-        metaDescription.setAttribute('content', seoDescription);
+      // Update or create meta description
+      let metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+      if (!metaDescription) {
+        metaDescription = document.createElement('meta');
+        metaDescription.setAttribute('name', 'description');
+        document.head.appendChild(metaDescription);
       }
+      metaDescription.setAttribute('content', seoDescription || 'Find your perfect therapist with our matching quiz');
 
       // Update Open Graph meta tags
-      if (seoTitle) {
-        let ogTitle = document.querySelector('meta[property="og:title"]');
-        if (!ogTitle) {
-          ogTitle = document.createElement('meta');
-          ogTitle.setAttribute('property', 'og:title');
-          document.head.appendChild(ogTitle);
+      const updateOrCreateMeta = (property: string, content: string, attribute: string = 'property') => {
+        let meta = document.querySelector(`meta[${attribute}="${property}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute(attribute, property);
+          document.head.appendChild(meta);
         }
-        ogTitle.setAttribute('content', seoTitle);
+        meta.setAttribute('content', content);
+      };
+
+      if (seoTitle) {
+        updateOrCreateMeta('og:title', seoTitle);
+        updateOrCreateMeta('twitter:title', seoTitle, 'name');
       }
 
       if (seoDescription) {
-        let ogDescription = document.querySelector('meta[property="og:description"]');
-        if (!ogDescription) {
-          ogDescription = document.createElement('meta');
-          ogDescription.setAttribute('property', 'og:description');
-          document.head.appendChild(ogDescription);
-        }
-        ogDescription.setAttribute('content', seoDescription);
+        updateOrCreateMeta('og:description', seoDescription);
+        updateOrCreateMeta('twitter:description', seoDescription, 'name');
       }
 
       if (seoImageUrl) {
-        let ogImage = document.querySelector('meta[property="og:image"]');
-        if (!ogImage) {
-          ogImage = document.createElement('meta');
-          ogImage.setAttribute('property', 'og:image');
-          document.head.appendChild(ogImage);
-        }
-        ogImage.setAttribute('content', seoImageUrl);
+        updateOrCreateMeta('og:image', seoImageUrl);
+        updateOrCreateMeta('twitter:image', seoImageUrl, 'name');
       }
 
-      // Update Twitter meta tags
-      if (seoImageUrl) {
-        let twitterImage = document.querySelector('meta[name="twitter:image"]');
-        if (!twitterImage) {
-          twitterImage = document.createElement('meta');
-          twitterImage.setAttribute('name', 'twitter:image');
-          document.head.appendChild(twitterImage);
-        }
-        twitterImage.setAttribute('content', seoImageUrl);
-      }
+      // Set additional Open Graph properties
+      updateOrCreateMeta('og:type', 'website');
+      updateOrCreateMeta('og:url', window.location.href);
+      updateOrCreateMeta('twitter:card', 'summary_large_image', 'name');
     }
   }, [siteSettings]);
 

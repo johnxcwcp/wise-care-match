@@ -1,11 +1,11 @@
+
 import { QuizQuestion } from "@/types";
 
 export const defaultQuestions: QuizQuestion[] = [
   {
     id: "0",
-    title: "What service(s) are you interested in?",
-    description: "Select all that apply to you.",
-    type: "multiple",
+    title: "Which service are you interested in?",
+    type: "single",
     fieldName: "services",
     options: [
       { id: "0-1", label: "Individual Counselling and Psychotherapy", value: "Individual Counselling and Psychotherapy" },
