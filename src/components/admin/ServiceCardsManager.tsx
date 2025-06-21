@@ -12,47 +12,78 @@ import { toast } from "sonner";
 const ServiceCardsManager: React.FC = () => {
   const queryClient = useQueryClient();
 
-  const { data: serviceCards, isLoading } = useQuery({
+  const { data: serviceCards, isLoading, error } = useQuery({
     queryKey: ['serviceCards'],
     queryFn: async () => {
+      console.log('Fetching service cards...');
       const { data, error } = await supabase
         .from('service_cards')
         .select('*')
         .order('display_order');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching service cards:', error);
+        throw error;
+      }
+      console.log('Fetched service cards:', data);
       return data;
     }
   });
 
   const updateServiceCardMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
-      const { error } = await supabase
-        .from('service_cards')
-        .update({ ...updates, updated_at: new Date().toISOString() })
-        .eq('id', id);
+    mutationFn: async ({ id, field, value }: { id: string; field: string; value: string }) => {
+      console.log(`Updating service card ${id}: ${field} = ${value}`);
       
-      if (error) throw error;
+      const { data, error } = await supabase
+        .from('service_cards')
+        .update({ 
+          [field]: value, 
+          updated_at: new Date().toISOString() 
+        })
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Error updating service card:', error);
+        throw error;
+      }
+      
+      console.log('Update successful:', data);
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // Update the cache immediately with the new data
+      queryClient.setQueryData(['serviceCards'], (oldData: any[]) => {
+        if (!oldData) return oldData;
+        return oldData.map(card => 
+          card.id === variables.id 
+            ? { ...card, [variables.field]: variables.value, updated_at: new Date().toISOString() }
+            : card
+        );
+      });
+      
+      // Also invalidate to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ['serviceCards'] });
-      toast.success('Service card updated successfully');
+      toast.success(`${variables.field.replace('_', ' ')} updated successfully`);
     },
-    onError: (error) => {
+    onError: (error, variables) => {
       console.error('Error updating service card:', error);
-      toast.error('Error updating service card');
+      toast.error(`Error updating ${variables.field.replace('_', ' ')}: ${error.message}`);
     }
   });
 
   const handleUpdate = (id: string, field: string, value: string) => {
-    updateServiceCardMutation.mutate({ 
-      id, 
-      updates: { [field]: value } 
-    });
+    console.log('handleUpdate called:', { id, field, value });
+    updateServiceCardMutation.mutate({ id, field, value });
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading service cards...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading service cards: {error.message}</div>;
   }
 
   return (
@@ -86,34 +117,49 @@ interface ServiceCardFormProps {
 }
 
 const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpdating }) => {
-  const [title, setTitle] = useState(card.service_title);
-  const [description, setDescription] = useState(card.service_description);
+  const [title, setTitle] = useState(card.service_title || '');
+  const [description, setDescription] = useState(card.service_description || '');
   const [illustrationUrl, setIllustrationUrl] = useState(card.illustration_url || '');
 
-  // Update local state when card data changes
+  // Update local state when card data changes from the server
   useEffect(() => {
-    setTitle(card.service_title);
-    setDescription(card.service_description);
+    console.log('Card data changed:', card);
+    setTitle(card.service_title || '');
+    setDescription(card.service_description || '');
     setIllustrationUrl(card.illustration_url || '');
-  }, [card.service_title, card.service_description, card.illustration_url]);
+  }, [card.service_title, card.service_description, card.illustration_url, card.updated_at]);
 
   const handleSaveTitle = () => {
-    if (title.trim() !== card.service_title) {
-      onUpdate(card.id, 'service_title', title.trim());
+    const trimmedTitle = title.trim();
+    if (trimmedTitle && trimmedTitle !== card.service_title) {
+      console.log('Saving title:', trimmedTitle);
+      onUpdate(card.id, 'service_title', trimmedTitle);
+    } else if (!trimmedTitle) {
+      toast.error('Title cannot be empty');
     }
   };
 
   const handleSaveDescription = () => {
-    if (description.trim() !== card.service_description) {
-      onUpdate(card.id, 'service_description', description.trim());
+    const trimmedDescription = description.trim();
+    if (trimmedDescription && trimmedDescription !== card.service_description) {
+      console.log('Saving description:', trimmedDescription);
+      onUpdate(card.id, 'service_description', trimmedDescription);
+    } else if (!trimmedDescription) {
+      toast.error('Description cannot be empty');
     }
   };
 
   const handleSaveIllustration = () => {
-    if (illustrationUrl.trim() !== (card.illustration_url || '')) {
-      onUpdate(card.id, 'illustration_url', illustrationUrl.trim());
+    const trimmedUrl = illustrationUrl.trim();
+    if (trimmedUrl !== (card.illustration_url || '')) {
+      console.log('Saving illustration URL:', trimmedUrl);
+      onUpdate(card.id, 'illustration_url', trimmedUrl);
     }
   };
+
+  const isTitleChanged = title.trim() !== card.service_title && title.trim() !== '';
+  const isDescriptionChanged = description.trim() !== card.service_description && description.trim() !== '';
+  const isIllustrationChanged = illustrationUrl.trim() !== (card.illustration_url || '');
 
   return (
     <div className="space-y-4">
@@ -127,7 +173,7 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
         />
         <Button 
           onClick={handleSaveTitle}
-          disabled={isUpdating || title.trim() === card.service_title}
+          disabled={isUpdating || !isTitleChanged}
           className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
           size="sm"
         >
@@ -146,7 +192,7 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
         />
         <Button 
           onClick={handleSaveDescription}
-          disabled={isUpdating || description.trim() === card.service_description}
+          disabled={isUpdating || !isDescriptionChanged}
           className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
           size="sm"
         >
@@ -164,7 +210,7 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
         />
         <Button 
           onClick={handleSaveIllustration}
-          disabled={isUpdating || illustrationUrl.trim() === (card.illustration_url || '')}
+          disabled={isUpdating || !isIllustrationChanged}
           className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
           size="sm"
         >
@@ -175,7 +221,7 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
       {illustrationUrl && (
         <div className="mt-4">
           <Label>Preview:</Label>
-          <div className="mt-2 aspect-video w-48 border rounded overflow-hidden">
+          <div className="mt-2 aspect-video w-48 border rounded overflow-hidden relative">
             <img 
               src={illustrationUrl} 
               alt="Service illustration preview"
@@ -183,10 +229,13 @@ const ServiceCardForm: React.FC<ServiceCardFormProps> = ({ card, onUpdate, isUpd
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
-                target.nextElementSibling?.classList.remove('hidden');
+                const errorDiv = target.nextElementSibling as HTMLElement;
+                if (errorDiv) {
+                  errorDiv.classList.remove('hidden');
+                }
               }}
             />
-            <div className="hidden w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 text-sm">
+            <div className="hidden absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500 text-sm">
               Failed to load image
             </div>
           </div>
