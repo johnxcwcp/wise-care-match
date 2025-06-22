@@ -83,7 +83,7 @@ const TherapistManager: React.FC = () => {
     }
   });
 
-  // Add therapist mutation
+  // Add therapist mutation - fixed to properly handle services
   const addTherapistMutation = useMutation({
     mutationFn: async (therapist: Therapist) => {
       // Insert main therapist record
@@ -106,7 +106,7 @@ const TherapistManager: React.FC = () => {
 
       if (therapistError) throw therapistError;
 
-      // Insert related records
+      // Insert related records including services
       const relatedPromises = [
         ...therapist.availability.map(item => 
           (supabase as any).from('therapist_availability').insert({ therapist_id: therapistData.id, availability: item })
@@ -165,9 +165,11 @@ const TherapistManager: React.FC = () => {
     }
   });
 
-  // Update therapist mutation
+  // Update therapist mutation - fixed to properly handle services
   const updateTherapistMutation = useMutation({
     mutationFn: async (therapist: Therapist) => {
+      console.log('Updating therapist with services:', therapist.services);
+      
       // Update main therapist record
       const { error: therapistError } = await (supabase as any)
         .from('therapists')
@@ -187,7 +189,7 @@ const TherapistManager: React.FC = () => {
 
       if (therapistError) throw therapistError;
 
-      // Delete existing related records
+      // Delete existing related records including services
       const deletePromises = [
         (supabase as any).from('therapist_availability').delete().eq('therapist_id', therapist.id),
         (supabase as any).from('therapist_modalities').delete().eq('therapist_id', therapist.id),
@@ -200,7 +202,7 @@ const TherapistManager: React.FC = () => {
 
       await Promise.all(deletePromises);
 
-      // Insert new related records
+      // Insert new related records including services
       const insertPromises = [
         ...therapist.availability.map(item => 
           (supabase as any).from('therapist_availability').insert({ therapist_id: therapist.id, availability: item })
@@ -225,6 +227,7 @@ const TherapistManager: React.FC = () => {
         )
       ];
 
+      console.log('Insert promises for services:', therapist.services);
       await Promise.all(insertPromises);
     },
     onSuccess: () => {

@@ -12,11 +12,16 @@ interface TherapistCardProps {
 
 const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
   const [isBioModalOpen, setIsBioModalOpen] = useState(false);
+  const [showAllSpecialties, setShowAllSpecialties] = useState(false);
   
   const initials = therapist.name
     .split(" ")
     .map((n) => n[0])
     .join("");
+
+  const displayedSpecialties = showAllSpecialties 
+    ? therapist.specialties 
+    : therapist.specialties.slice(0, 3);
 
   return (
     <>
@@ -77,22 +82,31 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
                 <div>
                   <h4 className="font-medium text-cwcp-blue mb-1">Specialties</h4>
                   <div className="flex flex-wrap gap-1">
-                    {therapist.specialties.map(specialty => (
-                      <Badge key={specialty} className="bg-cwcp-lightgray text-cwcp-text hover:bg-cwcp-gray">
+                    {displayedSpecialties.map(specialty => (
+                      <Badge key={specialty} className="bg-cwcp-lightgray text-cwcp-text hover:bg-cwcp-gray font-normal">
                         {specialty}
                       </Badge>
                     ))}
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-cwcp-blue mb-1">Modalities</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {therapist.modalities.map(modality => (
-                      <Badge key={modality} className="bg-cwcp-lightgray text-cwcp-text hover:bg-cwcp-gray">
-                        {modality}
-                      </Badge>
-                    ))}
+                    {therapist.specialties.length > 3 && !showAllSpecialties && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowAllSpecialties(true)}
+                        className="text-cwcp-blue hover:text-cwcp-lightblue px-2 py-1 h-auto text-xs"
+                      >
+                        Expand (+{therapist.specialties.length - 3} more)
+                      </Button>
+                    )}
+                    {showAllSpecialties && therapist.specialties.length > 3 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowAllSpecialties(false)}
+                        className="text-cwcp-blue hover:text-cwcp-lightblue px-2 py-1 h-auto text-xs"
+                      >
+                        Collapse
+                      </Button>
+                    )}
                   </div>
                 </div>
                 
