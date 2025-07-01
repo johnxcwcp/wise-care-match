@@ -8,9 +8,10 @@ import TherapistBioModal from "./TherapistBioModal";
 
 interface TherapistCardProps {
   therapist: Therapist;
+  specialtiesDisplayCount?: number;
 }
 
-const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
+const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, specialtiesDisplayCount = 3 }) => {
   const [isBioModalOpen, setIsBioModalOpen] = useState(false);
   const [showAllSpecialties, setShowAllSpecialties] = useState(false);
   
@@ -21,15 +22,15 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
 
   const displayedSpecialties = showAllSpecialties 
     ? therapist.specialties 
-    : therapist.specialties.slice(0, 3);
+    : therapist.specialties.slice(0, specialtiesDisplayCount);
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden border border-cwcp-gray">
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-white/20 backdrop-blur-xl">
         <div className="p-6">
           <div className="flex flex-col sm:flex-row gap-6">
             <div className="flex-shrink-0">
-              <div className="w-24 h-24 rounded-xl overflow-hidden">
+              <div className="w-32 h-32 rounded-xl overflow-hidden">
                 <img 
                   src={therapist.photo} 
                   alt={therapist.name} 
@@ -81,8 +82,8 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
               
               {/* Custom Message */}
               {therapist.customMessage && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800">{therapist.customMessage}</p>
+                <div className="mb-4 p-3 bg-green-50 border border-cwcp-blue rounded-lg">
+                  <p className="text-sm text-cwcp-blue">{therapist.customMessage}</p>
                 </div>
               )}
               
@@ -97,17 +98,17 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
                         {specialty}
                       </Badge>
                     ))}
-                    {therapist.specialties.length > 3 && !showAllSpecialties && (
+                    {therapist.specialties.length > specialtiesDisplayCount && !showAllSpecialties && (
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowAllSpecialties(true)}
                         className="text-cwcp-blue hover:text-cwcp-lightblue px-2 py-1 h-auto text-xs"
                       >
-                        Expand (+{therapist.specialties.length - 3} more)
+                        Expand (+{therapist.specialties.length - specialtiesDisplayCount} more)
                       </Button>
                     )}
-                    {showAllSpecialties && therapist.specialties.length > 3 && (
+                    {showAllSpecialties && therapist.specialties.length > specialtiesDisplayCount && (
                       <Button
                         variant="ghost"
                         size="sm"

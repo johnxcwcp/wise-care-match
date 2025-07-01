@@ -43,6 +43,8 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
     'Other Clinicians You May Be Interested In: The clinicians below may still be a good fit for you but don\'t necessarily align with all of your input for "Gender", "Modalities", and "Virtual or in-person" preferences.'
   );
 
+  const specialtiesDisplayCount = parseInt(getSettingValue('specialties_display_count', '3'));
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-12 animate-fade-in">
       <div className="mb-12">
@@ -63,8 +65,8 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
       {/* Best Matches Section */}
       {bestMatches.length > 0 ? (
         <div className="mb-16">
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 p-8 mb-8">
-            <h3 className="text-3xl font-light text-slate-800 mb-4 tracking-tight">Best Matches</h3>
+          <div className="mb-8">
+            <h3 className="text-3xl font-semibold text-cwcp-blue mb-4 tracking-tight font-jost">Best Matches</h3>
             <p className="text-slate-600 text-lg mb-4 leading-relaxed">
               These clinicians match all of your specified criteria.
             </p>
@@ -74,7 +76,11 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
           </div>
           <div className="space-y-8">
             {bestMatches.map(therapist => (
-              <TherapistCard key={therapist.id} therapist={therapist} />
+              <TherapistCard 
+                key={therapist.id} 
+                therapist={therapist} 
+                specialtiesDisplayCount={specialtiesDisplayCount}
+              />
             ))}
           </div>
         </div>
@@ -92,8 +98,8 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
       {/* Other Matches Section */}
       {otherMatches.length > 0 && (
         <div>
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 p-8 mb-8">
-            <h3 className="text-3xl font-light text-slate-800 mb-4 tracking-tight">
+          <div className="mb-8">
+            <h3 className="text-3xl font-semibold text-cwcp-blue mb-4 tracking-tight font-jost">
               Other Clinicians You May Be Interested In
             </h3>
             <p className="text-slate-600 text-lg leading-relaxed">
@@ -102,7 +108,11 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
           </div>
           <div className="space-y-8">
             {otherMatches.map(therapist => (
-              <TherapistCard key={therapist.id} therapist={therapist} />
+              <TherapistCard 
+                key={therapist.id} 
+                therapist={therapist}
+                specialtiesDisplayCount={specialtiesDisplayCount}
+              />
             ))}
           </div>
         </div>
