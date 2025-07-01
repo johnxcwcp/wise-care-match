@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Therapist, QuizAnswers } from "@/types";
@@ -43,16 +44,17 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
-      <div className="mb-8">
-        <h2 className="text-3xl font-medium text-cwcp-blue mb-4">Your Therapist Recommendations</h2>
-        <div className="flex flex-wrap gap-3">
+    <div className="max-w-5xl mx-auto px-6 py-12 animate-fade-in">
+      <div className="mb-12">
+        <h2 className="text-4xl font-light text-slate-800 mb-6 tracking-tight">Your Therapist Recommendations</h2>
+        <div className="flex flex-wrap gap-4">
           <Button 
             onClick={onRestartQuiz}
             variant="outline"
-            className="border-cwcp-blue text-cwcp-blue hover:bg-blue-50 hover:text-cwcp-blue"
+            size="lg"
+            className="border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-slate-700 rounded-full px-6 py-3 font-medium transition-all duration-200"
           >
-            <RefreshCw className="mr-2 h-4 w-4" />
+            <RefreshCw className="mr-2 h-5 w-5" />
             Start Over
           </Button>
         </div>
@@ -60,22 +62,27 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
 
       {/* Best Matches Section */}
       {bestMatches.length > 0 ? (
-        <div className="mb-12">
-          <h3 className="text-2xl font-medium text-cwcp-blue mb-4">Best Matches</h3>
-          <p className="text-cwcp-darkgray mb-6">
-            These clinicians match all of your specified criteria.
-          </p>
-          <div className="space-y-6">
+        <div className="mb-16">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 p-8 mb-8">
+            <h3 className="text-3xl font-light text-slate-800 mb-4 tracking-tight">Best Matches</h3>
+            <p className="text-slate-600 text-lg mb-4 leading-relaxed">
+              These clinicians match all of your specified criteria.
+            </p>
+            <p className="text-slate-500 text-base leading-relaxed">
+              You may also choose any therapist outside of the suggestion shown here.
+            </p>
+          </div>
+          <div className="space-y-8">
             {bestMatches.map(therapist => (
               <TherapistCard key={therapist.id} therapist={therapist} />
             ))}
           </div>
         </div>
       ) : (
-        <div className="mb-12">
-          <div className="text-center p-8 bg-white rounded-lg border border-cwcp-gray">
-            <h3 className="text-xl font-medium text-cwcp-blue mb-3">No Perfect Matches Found</h3>
-            <p className="text-cwcp-darkgray mb-4">
+        <div className="mb-16">
+          <div className="text-center p-12 bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20">
+            <h3 className="text-2xl font-light text-slate-800 mb-4 tracking-tight">No Perfect Matches Found</h3>
+            <p className="text-slate-600 text-lg leading-relaxed">
               {noMatchesMessage}
             </p>
           </div>
@@ -85,13 +92,15 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
       {/* Other Matches Section */}
       {otherMatches.length > 0 && (
         <div>
-          <h3 className="text-2xl font-medium text-cwcp-blue mb-4">
-            Other Clinicians You May Be Interested In
-          </h3>
-          <p className="text-cwcp-darkgray mb-6">
-            {otherMatchesMessage}
-          </p>
-          <div className="space-y-6">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 p-8 mb-8">
+            <h3 className="text-3xl font-light text-slate-800 mb-4 tracking-tight">
+              Other Clinicians You May Be Interested In
+            </h3>
+            <p className="text-slate-600 text-lg leading-relaxed">
+              {otherMatchesMessage}
+            </p>
+          </div>
+          <div className="space-y-8">
             {otherMatches.map(therapist => (
               <TherapistCard key={therapist.id} therapist={therapist} />
             ))}
@@ -100,9 +109,9 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
       )}
 
       {bestMatches.length === 0 && otherMatches.length === 0 && (
-        <div className="text-center p-12 bg-white rounded-lg border border-cwcp-gray">
-          <h3 className="text-xl font-medium text-cwcp-blue mb-3">No Therapists Found</h3>
-          <p className="text-cwcp-darkgray mb-6">
+        <div className="text-center p-16 bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20">
+          <h3 className="text-2xl font-light text-slate-800 mb-4 tracking-tight">No Therapists Found</h3>
+          <p className="text-slate-600 text-lg mb-8 leading-relaxed">
             We couldn't find any therapists at this time. Please contact us directly for assistance.
           </p>
         </div>
