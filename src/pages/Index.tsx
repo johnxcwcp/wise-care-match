@@ -61,6 +61,22 @@ const Index: React.FC = () => {
     }
   });
 
+  const { data: siteSettings } = useQuery({
+    queryKey: ['siteSettings'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*');
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const getSettingValue = (key: string, defaultValue: string) => {
+    return siteSettings?.find(setting => setting.setting_key === key)?.setting_value || defaultValue;
+  };
+
   const handleQuizComplete = (answers: QuizAnswers) => {
     console.log('Quiz answers:', answers);
     const matches = matchTherapists(therapists, answers);
@@ -78,17 +94,19 @@ const Index: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const mainHeading = getSettingValue('main_heading', 'Find Your Perfect Therapist');
+
   return (
-    <div className="min-h-screen flex flex-col bg-cwcp-lightgray">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-blue-50">
       <SEOHead />
       <Header />
       
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-6 py-12">
           {!quizCompleted ? (
-            <div className="mb-8 text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl font-medium text-cwcp-blue mb-4">Find Your Perfect Therapist</h1>
-              <p className="text-cwcp-darkgray text-lg mb-8">
+            <div className="mb-12 text-center max-w-4xl mx-auto">
+              <h1 className="text-5xl font-light text-slate-800 mb-6 tracking-tight">{mainHeading}</h1>
+              <p className="text-slate-600 text-xl mb-12 leading-relaxed">
                 Answer a few questions to help us match you with the right therapist for your needs.
               </p>
             </div>
@@ -107,7 +125,7 @@ const Index: React.FC = () => {
 
         {/* Clinicians Video Carousel - only show when quiz is not completed */}
         {!quizCompleted && (
-          <div className="bg-white border-t border-cwcp-gray">
+          <div className="bg-white/80 backdrop-blur-sm border-t border-slate-200">
             <CliniciansVideoCarousel therapists={therapists} />
           </div>
         )}
