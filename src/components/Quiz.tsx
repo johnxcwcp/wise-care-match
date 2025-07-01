@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import QuizHeader from "./QuizHeader";
@@ -192,7 +191,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
               onClick={nextStep}
               disabled={isNextDisabled() || isTransitioning}
               size="lg"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-full px-8 py-3 font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+              className="bg-gradient-to-r from-cwcp-blue to-cwcp-lightblue hover:from-cwcp-lightblue hover:to-cwcp-blue text-white rounded-full px-8 py-3 font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
             >
               {currentStep === totalSteps ? "Find Therapists" : "Next"}
               {currentStep !== totalSteps && <ArrowRight className="ml-2 h-5 w-5" />}
