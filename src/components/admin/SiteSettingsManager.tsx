@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,7 +17,6 @@ const SiteSettingsManager: React.FC = () => {
   const [seoTitle, setSeoTitle] = useState("");
   const [seoDescription, setSeoDescription] = useState("");
   const [seoImageUrl, setSeoImageUrl] = useState("");
-  const [mainHeading, setMainHeading] = useState("");
   const queryClient = useQueryClient();
 
   const { data: siteSettings, isLoading } = useQuery({
@@ -40,7 +40,6 @@ const SiteSettingsManager: React.FC = () => {
       const seoTitleSetting = siteSettings.find(setting => setting.setting_key === 'seo_title');
       const seoDescSetting = siteSettings.find(setting => setting.setting_key === 'seo_description');
       const seoImageSetting = siteSettings.find(setting => setting.setting_key === 'seo_image_url');
-      const mainHeadingSetting = siteSettings.find(setting => setting.setting_key === 'main_heading');
       
       if (terms) setTermsOfUse(terms.setting_value || '');
       if (privacy) setPrivacyPolicy(privacy.setting_value || '');
@@ -49,7 +48,6 @@ const SiteSettingsManager: React.FC = () => {
       if (seoTitleSetting) setSeoTitle(seoTitleSetting.setting_value || '');
       if (seoDescSetting) setSeoDescription(seoDescSetting.setting_value || '');
       if (seoImageSetting) setSeoImageUrl(seoImageSetting.setting_value || '');
-      if (mainHeadingSetting) setMainHeading(mainHeadingSetting.setting_value || '');
     }
   }, [siteSettings]);
 
@@ -105,10 +103,6 @@ const SiteSettingsManager: React.FC = () => {
     updateSettingMutation.mutate({ key: 'seo_image_url', value: seoImageUrl });
   };
 
-  const handleSaveMainHeading = () => {
-    updateSettingMutation.mutate({ key: 'main_heading', value: mainHeading });
-  };
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -118,30 +112,6 @@ const SiteSettingsManager: React.FC = () => {
       <h2 className="text-2xl font-medium text-cwcp-blue">Site Settings</h2>
       
       <div className="grid gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Main Content</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor="mainHeading">Main Page Heading</Label>
-              <Input
-                id="mainHeading"
-                value={mainHeading}
-                onChange={(e) => setMainHeading(e.target.value)}
-                placeholder="Enter the main heading for the homepage..."
-              />
-              <Button 
-                onClick={handleSaveMainHeading}
-                disabled={updateSettingMutation.isPending}
-                className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
-              >
-                {updateSettingMutation.isPending ? 'Saving...' : 'Save Heading'}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
         <Card>
           <CardHeader>
             <CardTitle>SEO Settings</CardTitle>

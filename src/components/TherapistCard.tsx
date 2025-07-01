@@ -29,26 +29,16 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
         <div className="p-6">
           <div className="flex flex-col sm:flex-row gap-6">
             <div className="flex-shrink-0">
-              <div className="w-24 h-24 rounded-xl overflow-hidden">
-                <img 
+              <Avatar className="w-24 h-24 rounded-full">
+                <AvatarImage 
                   src={therapist.photo} 
                   alt={therapist.name} 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    // Fallback to avatar with initials if image fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const fallback = target.nextElementSibling as HTMLElement;
-                    if (fallback) fallback.style.display = 'flex';
-                  }}
+                  className="object-cover" 
                 />
-                <div 
-                  className="w-full h-full bg-cwcp-blue text-white text-xl font-medium flex items-center justify-center rounded-xl"
-                  style={{ display: 'none' }}
-                >
+                <AvatarFallback className="bg-cwcp-blue text-white text-xl font-medium">
                   {initials}
-                </div>
-              </div>
+                </AvatarFallback>
+              </Avatar>
             </div>
             <div className="flex-1">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
@@ -72,7 +62,7 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
                   <Button 
                     variant="outline"
                     onClick={() => setIsBioModalOpen(true)}
-                    className="border-cwcp-blue text-cwcp-blue hover:bg-green-50"
+                    className="border-cwcp-blue text-cwcp-blue hover:bg-blue-50"
                   >
                     Read Bio
                   </Button>
@@ -81,8 +71,8 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
               
               {/* Custom Message */}
               {therapist.customMessage && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800">{therapist.customMessage}</p>
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800">{therapist.customMessage}</p>
                 </div>
               )}
               
