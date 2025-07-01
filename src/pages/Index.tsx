@@ -5,7 +5,6 @@ import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
 import CliniciansVideoCarousel from "@/components/CliniciansVideoCarousel";
 import SEOHead from "@/components/SEOHead";
-import Footer from "@/components/Footer";
 import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
@@ -106,7 +105,7 @@ const Index: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 py-12">
           {!quizCompleted ? (
             <div className="mb-12 text-center max-w-4xl mx-auto">
-              <h1 className="text-5xl font-semibold text-slate-800 mb-6 tracking-tight font-jost">{mainHeading}</h1>
+              <h1 className="text-5xl font-light text-slate-800 mb-6 tracking-tight">{mainHeading}</h1>
               <p className="text-slate-600 text-xl mb-12 leading-relaxed">
                 Answer a few questions to help us match you with the right therapist for your needs.
               </p>
@@ -131,8 +130,6 @@ const Index: React.FC = () => {
           </div>
         )}
       </main>
-      
-      <Footer />
     </div>
   );
 };

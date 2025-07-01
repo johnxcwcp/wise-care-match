@@ -1,8 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -28,7 +27,7 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <footer className="bg-white border-t border-cwcp-gray py-8 mt-12">
+      <footer className="bg-cwcp-lightgray border-t border-cwcp-gray py-8 mt-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex justify-center gap-6">
             <Button 
@@ -54,12 +53,8 @@ const Footer: React.FC = () => {
 
       {/* Terms of Use Modal */}
       <Dialog open={termsOpen} onOpenChange={setTermsOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border-0 shadow-2xl">
-          <DialogHeader className="relative">
-            <DialogClose className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogClose>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
             <DialogTitle className="text-2xl font-medium text-cwcp-blue">
               Terms of Use
             </DialogTitle>
@@ -74,12 +69,8 @@ const Footer: React.FC = () => {
 
       {/* Privacy Policy Modal */}
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl border-0 shadow-2xl">
-          <DialogHeader className="relative">
-            <DialogClose className="absolute right-0 top-0 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogClose>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
             <DialogTitle className="text-2xl font-medium text-cwcp-blue">
               Privacy Policy
             </DialogTitle>

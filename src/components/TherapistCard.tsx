@@ -8,10 +8,9 @@ import TherapistBioModal from "./TherapistBioModal";
 
 interface TherapistCardProps {
   therapist: Therapist;
-  specialtiesDisplayCount?: number;
 }
 
-const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, specialtiesDisplayCount = 3 }) => {
+const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
   const [isBioModalOpen, setIsBioModalOpen] = useState(false);
   const [showAllSpecialties, setShowAllSpecialties] = useState(false);
   
@@ -22,15 +21,15 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, specialtiesDis
 
   const displayedSpecialties = showAllSpecialties 
     ? therapist.specialties 
-    : therapist.specialties.slice(0, specialtiesDisplayCount);
+    : therapist.specialties.slice(0, 3);
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-white/20 backdrop-blur-xl">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden border border-cwcp-gray">
         <div className="p-6">
           <div className="flex flex-col sm:flex-row gap-6">
             <div className="flex-shrink-0">
-              <div className="w-32 h-32 rounded-xl overflow-hidden">
+              <div className="w-24 h-24 rounded-xl overflow-hidden">
                 <img 
                   src={therapist.photo} 
                   alt={therapist.name} 
@@ -82,8 +81,8 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, specialtiesDis
               
               {/* Custom Message */}
               {therapist.customMessage && (
-                <div className="mb-4 p-3 bg-green-50 border border-cwcp-blue rounded-lg">
-                  <p className="text-sm text-cwcp-blue">{therapist.customMessage}</p>
+                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm text-green-800">{therapist.customMessage}</p>
                 </div>
               )}
               
@@ -98,17 +97,17 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, specialtiesDis
                         {specialty}
                       </Badge>
                     ))}
-                    {therapist.specialties.length > specialtiesDisplayCount && !showAllSpecialties && (
+                    {therapist.specialties.length > 3 && !showAllSpecialties && (
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowAllSpecialties(true)}
                         className="text-cwcp-blue hover:text-cwcp-lightblue px-2 py-1 h-auto text-xs"
                       >
-                        Expand (+{therapist.specialties.length - specialtiesDisplayCount} more)
+                        Expand (+{therapist.specialties.length - 3} more)
                       </Button>
                     )}
-                    {showAllSpecialties && therapist.specialties.length > specialtiesDisplayCount && (
+                    {showAllSpecialties && therapist.specialties.length > 3 && (
                       <Button
                         variant="ghost"
                         size="sm"
