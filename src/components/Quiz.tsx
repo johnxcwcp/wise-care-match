@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import QuizHeader from "./QuizHeader";
@@ -55,7 +54,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
         setCurrentStep(currentStep + 1);
         setIsTransitioning(false);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 250);
+      }, 150);
     } else {
       const answers: QuizAnswers = {
         services,
@@ -77,7 +76,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
         setCurrentStep(currentStep - 1);
         setIsTransitioning(false);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 250);
+      }, 150);
     }
   };
 
@@ -165,39 +164,33 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className={`bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/20 transition-all duration-500 ease-out ${
-        isTransitioning ? 'opacity-60 scale-98 translate-y-2' : 'opacity-100 scale-100 translate-y-0'
+      <div className={`bg-white p-6 rounded-xl shadow-sm border border-cwcp-gray transition-all duration-300 ${
+        isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
       }`}>
-        <div className="min-h-[400px] flex flex-col justify-between">
-          <div className="flex-1">
-            {renderQuestion()}
-          </div>
+        {renderQuestion()}
+        
+        <div className="flex justify-between mt-8">
+          <Button 
+            onClick={prevStep} 
+            disabled={currentStep === 1 || isTransitioning}
+            variant="outline"
+            className="border-cwcp-blue text-cwcp-blue hover:text-cwcp-blue hover:bg-blue-50"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Previous
+          </Button>
           
-          <div className="flex justify-between items-center mt-12 pt-8 border-t border-slate-100">
-            <Button 
-              onClick={prevStep} 
-              disabled={currentStep === 1 || isTransitioning}
-              variant="outline"
-              size="lg"
-              className="border-slate-300 text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded-full px-8 py-3 font-medium transition-all duration-200"
-            >
-              <ArrowLeft className="mr-2 h-5 w-5" />
-              Previous
-            </Button>
-            
-            <Button 
-              onClick={nextStep}
-              disabled={isNextDisabled() || isTransitioning}
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-full px-8 py-3 font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-            >
-              {currentStep === totalSteps ? "Find Therapists" : "Next"}
-              {currentStep !== totalSteps && <ArrowRight className="ml-2 h-5 w-5" />}
-            </Button>
-          </div>
+          <Button 
+            onClick={nextStep}
+            disabled={isNextDisabled() || isTransitioning}
+            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white"
+          >
+            {currentStep === totalSteps ? "Find Therapists" : "Next"}
+            {currentStep !== totalSteps && <ArrowRight className="ml-2 h-4 w-4" />}
+          </Button>
         </div>
       </div>
     </div>
