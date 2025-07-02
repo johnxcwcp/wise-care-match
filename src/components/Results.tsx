@@ -70,7 +70,7 @@ const Results: React.FC<ResultsProps> = ({
           <h3 className="text-2xl font-medium text-cwcp-blue mb-4">
             Other Clinicians You May Be Interested In
           </h3>
-          <p className="text-cwcp-darkgray mb-6">
+          <p className="text-cwcp-darkgray mb-6 font-normal">
             {otherMatchesMessage}
           </p>
           <div className="space-y-6">
