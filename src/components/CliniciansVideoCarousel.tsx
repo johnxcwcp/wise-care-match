@@ -37,8 +37,8 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
     }
   };
   return <>
-      <div className="w-full max-w-7xl mx-auto py-12 px-0">
-        <h2 className="text-3xl font-medium text-cwcp-blue mb-8 text-center">Meet Our Clinicians</h2>
+      <div className="w-full max-w-7xl mx-auto py-12 px-0 bg-gray-900">
+        <h2 className="text-3xl font-medium mb-8 text-center text-neutral-50">Meet Our Clinicians</h2>
         
         {/* Increased padding significantly to prevent shadow clipping */}
         <div className="gap-x-12 space-x-16 px-0">
