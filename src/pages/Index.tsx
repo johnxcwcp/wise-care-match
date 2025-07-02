@@ -1,14 +1,17 @@
+
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
 import CliniciansVideoCarousel from "@/components/CliniciansVideoCarousel";
 import SEOHead from "@/components/SEOHead";
+import Footer from "@/components/Footer";
 import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
 const Index: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [matchResult, setMatchResult] = useState<MatchResult>({
@@ -16,15 +19,13 @@ const Index: React.FC = () => {
     otherMatches: []
   });
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers | null>(null);
-  const {
-    data: therapists = []
-  } = useQuery({
+
+  const { data: therapists = [] } = useQuery({
     queryKey: ['therapists-public'],
     queryFn: async () => {
-      const {
-        data: therapistsData,
-        error: therapistsError
-      } = await (supabase as any).from('therapists').select(`
+      const { data: therapistsData, error: therapistsError } = await (supabase as any)
+        .from('therapists')
+        .select(`
           *,
           therapist_availability(availability),
           therapist_modalities(modality),
@@ -34,11 +35,13 @@ const Index: React.FC = () => {
           therapist_client_types(client_type),
           therapist_services(service)
         `);
+
       if (therapistsError) {
         toast.error('Error fetching therapists');
         console.error(therapistsError);
         return [];
       }
+
       return therapistsData.map((therapist: any) => ({
         id: therapist.id,
         name: therapist.name,
@@ -61,6 +64,7 @@ const Index: React.FC = () => {
       }));
     }
   });
+
   const handleQuizComplete = (answers: QuizAnswers) => {
     console.log('Quiz answers:', answers);
     const matches = matchTherapists(therapists, answers);
@@ -68,42 +72,66 @@ const Index: React.FC = () => {
     setMatchResult(matches);
     setQuizAnswers(answers);
     setQuizCompleted(true);
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+    
+    // Smooth scroll to top with animation
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
     });
   };
+
   const handleRestartQuiz = () => {
     setQuizCompleted(false);
-    setMatchResult({
-      bestMatches: [],
-      otherMatches: []
-    });
+    setMatchResult({ bestMatches: [], otherMatches: [] });
     setQuizAnswers(null);
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+    
+    // Smooth scroll to top
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
     });
   };
-  return <div className="min-h-screen flex flex-col bg-cwcp-lightgray">
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
       <SEOHead />
       <Header />
       
-      <main className="flex-1 bg-gray-50">
+      <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          {!quizCompleted ? <div className="mb-8 text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl font-medium text-cwcp-blue mb-4">Explore Therapist Options With Ease</h1>
-              <p className="text-cwcp-darkgray text-lg mb-8">Answer a few questions to help us recommend you a therapist for your needs.</p>
-            </div> : null}
+          {!quizCompleted ? (
+            <div className="mb-8 text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl font-semibold text-cwcp-blue mb-4" style={{ fontFamily: 'Jost, sans-serif', fontWeight: 600 }}>
+                Explore Therapist Options With Ease
+              </h1>
+              <p className="text-cwcp-darkgray text-lg mb-8">
+                Answer a few questions to help us recommend you a therapist for your needs.
+              </p>
+            </div>
+          ) : null}
           
-          {quizCompleted && quizAnswers ? <Results matchResult={matchResult} answers={quizAnswers} onRestartQuiz={handleRestartQuiz} /> : <Quiz onComplete={handleQuizComplete} />}
+          {quizCompleted && quizAnswers ? (
+            <Results 
+              matchResult={matchResult} 
+              answers={quizAnswers} 
+              onRestartQuiz={handleRestartQuiz} 
+            />
+          ) : (
+            <Quiz onComplete={handleQuizComplete} />
+          )}
         </div>
 
         {/* Clinicians Video Carousel - only show when quiz is not completed */}
-        {!quizCompleted && <div className="bg-white border-t border-cwcp-gray">
+        {!quizCompleted && (
+          <div className="bg-white/80 backdrop-blur-sm border-t border-cwcp-gray">
             <CliniciansVideoCarousel therapists={therapists} />
-          </div>}
+          </div>
+        )}
       </main>
-    </div>;
+      
+      <Footer />
+    </div>
+  );
 };
+
 export default Index;

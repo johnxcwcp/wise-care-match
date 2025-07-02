@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +16,7 @@ const SiteSettingsManager: React.FC = () => {
   const [seoTitle, setSeoTitle] = useState("");
   const [seoDescription, setSeoDescription] = useState("");
   const [seoImageUrl, setSeoImageUrl] = useState("");
+  const [specialtiesDisplayCount, setSpecialtiesDisplayCount] = useState("3");
   const queryClient = useQueryClient();
 
   const { data: siteSettings, isLoading } = useQuery({
@@ -40,6 +40,7 @@ const SiteSettingsManager: React.FC = () => {
       const seoTitleSetting = siteSettings.find(setting => setting.setting_key === 'seo_title');
       const seoDescSetting = siteSettings.find(setting => setting.setting_key === 'seo_description');
       const seoImageSetting = siteSettings.find(setting => setting.setting_key === 'seo_image_url');
+      const specialtiesCount = siteSettings.find(setting => setting.setting_key === 'specialties_display_count');
       
       if (terms) setTermsOfUse(terms.setting_value || '');
       if (privacy) setPrivacyPolicy(privacy.setting_value || '');
@@ -48,6 +49,7 @@ const SiteSettingsManager: React.FC = () => {
       if (seoTitleSetting) setSeoTitle(seoTitleSetting.setting_value || '');
       if (seoDescSetting) setSeoDescription(seoDescSetting.setting_value || '');
       if (seoImageSetting) setSeoImageUrl(seoImageSetting.setting_value || '');
+      if (specialtiesCount) setSpecialtiesDisplayCount(specialtiesCount.setting_value || '3');
     }
   }, [siteSettings]);
 
@@ -103,6 +105,10 @@ const SiteSettingsManager: React.FC = () => {
     updateSettingMutation.mutate({ key: 'seo_image_url', value: seoImageUrl });
   };
 
+  const handleSaveSpecialtiesCount = () => {
+    updateSettingMutation.mutate({ key: 'specialties_display_count', value: specialtiesDisplayCount });
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -112,6 +118,33 @@ const SiteSettingsManager: React.FC = () => {
       <h2 className="text-2xl font-medium text-cwcp-blue">Site Settings</h2>
       
       <div className="grid gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Display Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Label htmlFor="specialtiesCount">Number of Specialties to Display by Default</Label>
+              <Input
+                id="specialtiesCount"
+                type="number"
+                min="1"
+                max="10"
+                value={specialtiesDisplayCount}
+                onChange={(e) => setSpecialtiesDisplayCount(e.target.value)}
+                placeholder="Enter number of specialties to show..."
+              />
+              <Button 
+                onClick={handleSaveSpecialtiesCount}
+                disabled={updateSettingMutation.isPending}
+                className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white mt-2"
+              >
+                {updateSettingMutation.isPending ? 'Saving...' : 'Save Count'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>SEO Settings</CardTitle>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import QuizHeader from "./QuizHeader";
@@ -14,7 +15,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { defaultQuestions } from "@/data/defaultQuestions";
 
 interface QuizProps {
-  onComplete: (answers: QuizAnswers)  => void;
+  onComplete: (answers: QuizAnswers) => void;
 }
 
 const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
@@ -47,14 +48,30 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     }
   }, [questions]);
 
+  const smoothScrollToTop = () => {
+    const quizContainer = document.querySelector('.quiz-container');
+    if (quizContainer) {
+      quizContainer.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    } else {
+      window.scrollTo({ 
+        top: 0, 
+        behavior: 'smooth' 
+      });
+    }
+  };
+
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setIsTransitioning(true);
       setTimeout(() => {
         setCurrentStep(currentStep + 1);
         setIsTransitioning(false);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 150);
+        smoothScrollToTop();
+      }, 200);
     } else {
       const answers: QuizAnswers = {
         services,
@@ -75,8 +92,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       setTimeout(() => {
         setCurrentStep(currentStep - 1);
         setIsTransitioning(false);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 150);
+        smoothScrollToTop();
+      }, 200);
     }
   };
 
@@ -164,33 +181,37 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8 quiz-container">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className={`bg-white p-6 rounded-xl shadow-sm border border-cwcp-gray transition-all duration-300 ${
-        isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
+      <div className={`glass-card p-8 rounded-3xl shadow-sophisticated transition-all duration-300 relative ${
+        isTransitioning ? 'opacity-70 scale-[0.98]' : 'opacity-100 scale-100 animate-smooth-scroll'
       }`}>
-        {renderQuestion()}
-        
-        <div className="flex justify-between mt-8">
+        {/* Navigation buttons in top right corner */}
+        <div className="absolute top-6 right-6 flex gap-2">
           <Button 
             onClick={prevStep} 
             disabled={currentStep === 1 || isTransitioning}
             variant="outline"
-            className="border-cwcp-blue text-cwcp-blue hover:text-cwcp-blue hover:bg-blue-50"
+            size="sm"
+            className="border-cwcp-blue/30 text-cwcp-blue hover:text-cwcp-blue hover:bg-blue-50/80 backdrop-blur-sm rounded-full px-3 py-2"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Previous
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           
           <Button 
             onClick={nextStep}
             disabled={isNextDisabled() || isTransitioning}
-            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white"
+            size="sm"
+            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white rounded-full px-3 py-2 shadow-elegant"
           >
-            {currentStep === totalSteps ? "Find Therapists" : "Next"}
-            {currentStep !== totalSteps && <ArrowRight className="ml-2 h-4 w-4" />}
+            {currentStep === totalSteps ? "Find" : <ArrowRight className="h-4 w-4" />}
           </Button>
+        </div>
+
+        {/* Question content */}
+        <div className="pr-24">
+          {renderQuestion()}
         </div>
       </div>
     </div>
