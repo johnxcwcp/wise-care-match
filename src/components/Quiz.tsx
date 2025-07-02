@@ -184,34 +184,40 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     <div className="max-w-3xl mx-auto px-4 py-8 quiz-container">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className={`glass-card p-8 rounded-3xl shadow-sophisticated transition-all duration-300 relative ${
+      <div className={`glass-card p-8 rounded-3xl shadow-sophisticated transition-all duration-300 ${
         isTransitioning ? 'opacity-70 scale-[0.98]' : 'opacity-100 scale-100 animate-smooth-scroll'
       }`}>
-        {/* Navigation buttons in top right corner */}
-        <div className="absolute top-6 right-6 flex gap-2">
+        {/* Question content */}
+        <div className="mb-8">
+          {renderQuestion()}
+        </div>
+
+        {/* Navigation buttons at bottom */}
+        <div className="flex justify-between pt-6 border-t border-gray-100">
           <Button 
             onClick={prevStep} 
             disabled={currentStep === 1 || isTransitioning}
             variant="outline"
-            size="sm"
-            className="border-cwcp-blue/30 text-cwcp-blue hover:text-cwcp-blue hover:bg-blue-50/80 backdrop-blur-sm rounded-full px-3 py-2"
+            className="border-cwcp-blue/30 text-cwcp-blue hover:text-cwcp-blue hover:bg-blue-50/80 backdrop-blur-sm rounded-2xl px-6 py-3 shadow-elegant"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Previous
           </Button>
           
           <Button 
             onClick={nextStep}
             disabled={isNextDisabled() || isTransitioning}
-            size="sm"
-            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white rounded-full px-3 py-2 shadow-elegant"
+            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white rounded-2xl px-6 py-3 shadow-sophisticated"
           >
-            {currentStep === totalSteps ? "Find" : <ArrowRight className="h-4 w-4" />}
+            {currentStep === totalSteps ? (
+              "Find Therapists"
+            ) : (
+              <>
+                Next
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </>
+            )}
           </Button>
-        </div>
-
-        {/* Question content */}
-        <div className="pr-24">
-          {renderQuestion()}
         </div>
       </div>
     </div>
