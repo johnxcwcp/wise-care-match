@@ -50,7 +50,7 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
               </div>
               
               {/* Content section */}
-              <div className="p-6 bg-neutral-50">
+              <div className="p-6 bg-zinc-50 rounded">
                 <h4 className="text-lg font-medium text-cwcp-blue mb-2">
                   {serviceCard.service_title}
                 </h4>
