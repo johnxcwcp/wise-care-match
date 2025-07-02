@@ -47,8 +47,8 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
       <div className="w-full max-w-7xl mx-auto px-4 py-12">
         <h2 className="text-3xl font-medium text-cwcp-blue mb-8 text-center">Meet Our Clinicians</h2>
         
-        {/* Add padding to prevent shadow clipping */}
-        <div className="px-8 py-4">
+        {/* Increased padding significantly to prevent shadow clipping */}
+        <div className="px-16 py-8">
           <Carousel
             opts={{
               align: "start",

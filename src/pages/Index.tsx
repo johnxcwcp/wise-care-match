@@ -5,7 +5,6 @@ import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
 import CliniciansVideoCarousel from "@/components/CliniciansVideoCarousel";
 import SEOHead from "@/components/SEOHead";
-import Footer from "@/components/Footer";
 import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
@@ -128,8 +127,6 @@ const Index: React.FC = () => {
           </div>
         )}
       </main>
-      
-      <Footer />
     </div>
   );
 };
