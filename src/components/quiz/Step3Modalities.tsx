@@ -22,7 +22,23 @@ const Step3Modalities: React.FC<Step3Props> = ({ selectedModalities, setSelected
   return (
     <div className="animate-fade-in">
       <h2 className="text-2xl font-medium text-cwcp-blue mb-6">{question.title}</h2>
-      {question.description && <p className="mb-6 text-cwcp-darkgray">{question.description}</p>}
+      {question.description && (
+        <div className="mb-6 text-cwcp-darkgray">
+          <p className="mb-2">{question.description}</p>
+          <p>
+            Want to find out more about therapy modalities?{" "}
+            <a 
+              href="https://cwcp.ca/therapy-types/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-cwcp-blue hover:text-cwcp-lightblue underline"
+            >
+              Click here
+            </a>{" "}
+            for an in-depth look at the different types.
+          </p>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {question.options.map((option) => (
           <div 
