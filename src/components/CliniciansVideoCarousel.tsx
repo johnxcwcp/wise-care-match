@@ -1,15 +1,12 @@
-
 import React, { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { Therapist } from "@/types";
 import FloatingVideoPlayer from "./FloatingVideoPlayer";
-
 interface CliniciansVideoCarouselProps {
   therapists: Therapist[];
 }
-
 const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
   therapists
 }) => {
@@ -20,7 +17,6 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
 
   // Filter therapists that have intro videos
   const therapistsWithVideos = therapists.filter(therapist => therapist.introVideoUrl);
-
   if (therapistsWithVideos.length === 0) {
     return null;
   }
@@ -31,7 +27,6 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
-
   const handlePlayVideo = (url: string, name: string) => {
     const videoId = getYouTubeVideoId(url);
     if (videoId) {
@@ -41,52 +36,35 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
       });
     }
   };
-
-  return (
-    <>
-      <div className="w-full max-w-7xl mx-auto py-12 px-0 bg-gray-900/95 backdrop-blur-lg border-t border-gray-700/50">
+  return <>
+      <div className="w-full max-w-7xl mx-auto py-12 px-0 bg-gray-900">
         <h2 className="text-3xl font-medium mb-8 text-center text-neutral-50">Meet Our Clinicians</h2>
         
         {/* Increased padding significantly to prevent shadow clipping */}
         <div className="gap-x-12 space-x-16 px-0">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true
-            }}
-            className="w-full"
-          >
+          <Carousel opts={{
+          align: "start",
+          loop: true
+        }} className="w-full">
             <CarouselContent className="-ml-2 md:-ml-4">
               {therapistsWithVideos.map(therapist => {
-                const videoId = getYouTubeVideoId(therapist.introVideoUrl);
-                return (
-                  <CarouselItem key={therapist.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                    <div className="glass-card backdrop-blur-xl rounded-3xl shadow-floating overflow-hidden border border-white/20 hover:shadow-[0_25px_70px_rgba(123,194,66,0.25)] transition-all duration-300 hover:scale-[1.02]">
-                      <div className="p-6 glass-light backdrop-blur-sm px-[20px] rounded-none mx-0">
+              const videoId = getYouTubeVideoId(therapist.introVideoUrl);
+              return <CarouselItem key={therapist.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                    <div className="bg-white rounded-3xl shadow-sophisticated overflow-hidden border border-cwcp-gray/20 hover:shadow-floating transition-all duration-300 glass-light backdrop-blur-xl">
+                      <div className="p-6 bg-zinc-50 px-[20px] rounded-none mx-0">
                         <div className="flex flex-col">
                           {/* Video thumbnail with play button */}
                           <div className="w-full aspect-video rounded-2xl overflow-hidden mb-4 relative group">
-                            {videoId ? (
-                              <>
-                                <img 
-                                  src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} 
-                                  alt={`${therapist.name} video thumbnail`} 
-                                  className="w-full h-full object-cover" 
-                                />
-                                <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                  <Button 
-                                    onClick={() => handlePlayVideo(therapist.introVideoUrl, therapist.name)} 
-                                    className="glass-card backdrop-blur-sm hover:backdrop-blur-md text-cwcp-blue rounded-full p-4 shadow-sophisticated hover:shadow-floating transition-all duration-300 hover:scale-110"
-                                  >
+                            {videoId ? <>
+                                <img src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} alt={`${therapist.name} video thumbnail`} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <Button onClick={() => handlePlayVideo(therapist.introVideoUrl, therapist.name)} className="bg-white bg-opacity-90 hover:bg-opacity-100 text-cwcp-blue rounded-full p-4 shadow-sophisticated">
                                     <Play size={24} />
                                   </Button>
                                 </div>
-                              </>
-                            ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-gray-200/80 to-gray-300/60 backdrop-blur-sm flex items-center justify-center">
+                              </> : <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <p className="text-gray-500 text-sm">Video not available</p>
-                              </div>
-                            )}
+                              </div>}
                           </div>
                           
                           <div className="text-center">
@@ -100,26 +78,17 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
                         </div>
                       </div>
                     </div>
-                  </CarouselItem>
-                );
-              })}
+                  </CarouselItem>;
+            })}
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex glass-light backdrop-blur-sm border-white/30 hover:bg-white/20" />
-            <CarouselNext className="hidden md:flex glass-light backdrop-blur-sm border-white/30 hover:bg-white/20" />
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
           </Carousel>
         </div>
       </div>
 
       {/* Floating Video Player */}
-      {playingVideo && (
-        <FloatingVideoPlayer 
-          videoId={playingVideo.videoId} 
-          therapistName={playingVideo.therapistName} 
-          onClose={() => setPlayingVideo(null)} 
-        />
-      )}
-    </>
-  );
+      {playingVideo && <FloatingVideoPlayer videoId={playingVideo.videoId} therapistName={playingVideo.therapistName} onClose={() => setPlayingVideo(null)} />}
+    </>;
 };
-
 export default CliniciansVideoCarousel;

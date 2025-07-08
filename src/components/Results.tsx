@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Therapist, QuizAnswers } from "@/types";
@@ -46,7 +45,7 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
           <Button 
             onClick={onRestartQuiz} 
             variant="outline" 
-            className="border-cwcp-blue/60 text-cwcp-blue hover:bg-blue-50/80 hover:text-cwcp-blue glass-light backdrop-blur-sm rounded-2xl shadow-elegant transition-all duration-300 hover:shadow-sophisticated"
+            className="border-cwcp-blue text-cwcp-blue hover:bg-blue-50 hover:text-cwcp-blue glass-light rounded-2xl shadow-elegant"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Start Over
@@ -71,7 +70,7 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
         </div>
       ) : (
         <div className="mb-12">
-          <div className="text-center p-8 glass-card backdrop-blur-sm rounded-3xl border border-cwcp-gray/50 shadow-sophisticated">
+          <div className="text-center p-8 glass-card rounded-3xl border border-cwcp-gray shadow-sophisticated">
             <h3 className="text-xl font-medium text-cwcp-blue mb-3">No Perfect Matches Found</h3>
             <p className="text-cwcp-darkgray mb-4">
               {noMatchesMessage}
@@ -98,7 +97,7 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onRestartQuiz }
       )}
 
       {bestMatches.length === 0 && otherMatches.length === 0 && (
-        <div className="text-center p-12 glass-card backdrop-blur-sm rounded-3xl border border-cwcp-gray/50 shadow-sophisticated">
+        <div className="text-center p-12 glass-card rounded-3xl border border-cwcp-gray shadow-sophisticated">
           <h3 className="text-xl font-medium text-cwcp-blue mb-3">No Therapists Found</h3>
           <p className="text-cwcp-darkgray mb-6">
             We couldn't find any therapists at this time. Please contact us directly for assistance.
