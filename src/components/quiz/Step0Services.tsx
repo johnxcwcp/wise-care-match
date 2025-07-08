@@ -50,16 +50,16 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
         {serviceCards.map((serviceCard) => (
           <Card 
             key={serviceCard.id}
-            className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 rounded-2xl ${
+            className={`cursor-pointer transition-all duration-300 hover:shadow-floating border-2 rounded-2xl glass-card backdrop-blur-sm ${
               selectedServices.includes(serviceCard.service_value) 
-                ? 'border-cwcp-blue bg-blue-50' 
-                : 'border-cwcp-gray hover:border-cwcp-blue'
+                ? 'border-cwcp-blue bg-blue-50/80 shadow-elegant' 
+                : 'border-cwcp-gray/50 hover:border-cwcp-blue/60 hover:bg-white/90'
             }`}
             onClick={() => handleServiceToggle(serviceCard.service_value)}
           >
             <CardContent className="p-0">
               {/* Illustration section with 16:9 aspect ratio */}
-              <div className="w-full aspect-video bg-gray-100 rounded-t-2xl overflow-hidden">
+              <div className="w-full aspect-video bg-gradient-to-br from-gray-100/80 to-gray-200/60 backdrop-blur-sm rounded-t-2xl overflow-hidden">
                 {serviceCard.illustration_url ? (
                   <img 
                     src={serviceCard.illustration_url} 
@@ -67,14 +67,14 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cwcp-lightgray to-gray-200">
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cwcp-lightgray/80 to-gray-200/60 backdrop-blur-sm">
                     <div className="text-cwcp-darkgray text-sm">No image</div>
                   </div>
                 )}
               </div>
               
               {/* Content section */}
-              <div className="p-6 bg-zinc-50 rounded-b-2xl">
+              <div className="p-6 glass-light rounded-b-2xl">
                 <h4 className="text-lg font-medium text-cwcp-blue mb-2">
                   {serviceCard.service_title}
                 </h4>
@@ -92,17 +92,17 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
         {serviceCards.map((serviceCard) => (
           <Card 
             key={serviceCard.id}
-            className={`cursor-pointer transition-all duration-200 border-2 rounded-2xl ${
+            className={`cursor-pointer transition-all duration-300 border-2 rounded-2xl glass-card backdrop-blur-sm ${
               selectedServices.includes(serviceCard.service_value) 
-                ? 'border-cwcp-blue bg-blue-50' 
-                : 'border-cwcp-gray hover:border-cwcp-blue'
+                ? 'border-cwcp-blue bg-blue-50/80 shadow-elegant' 
+                : 'border-cwcp-gray/50 hover:border-cwcp-blue/60 hover:bg-white/90'
             }`}
             onClick={() => handleServiceToggle(serviceCard.service_value)}
           >
             <CardContent className="p-4">
               <div className="flex items-start space-x-3">
                 {/* Small thumbnail */}
-                <div className="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                <div className="w-16 h-12 bg-gradient-to-br from-gray-100/80 to-gray-200/60 backdrop-blur-sm rounded-lg overflow-hidden flex-shrink-0">
                   {serviceCard.illustration_url ? (
                     <img 
                       src={serviceCard.illustration_url} 
@@ -110,7 +110,7 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-cwcp-lightgray to-gray-200"></div>
+                    <div className="w-full h-full bg-gradient-to-br from-cwcp-lightgray/80 to-gray-200/60 backdrop-blur-sm"></div>
                   )}
                 </div>
                 
@@ -126,10 +126,10 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
                 
                 {/* Selection indicator */}
                 <div className="flex-shrink-0">
-                  <div className={`w-5 h-5 rounded-full border-2 ${
+                  <div className={`w-5 h-5 rounded-full border-2 backdrop-blur-sm ${
                     selectedServices.includes(serviceCard.service_value) 
-                      ? 'border-cwcp-blue bg-cwcp-blue' 
-                      : 'border-gray-300'
+                      ? 'border-cwcp-blue bg-cwcp-blue/90' 
+                      : 'border-gray-300/70 bg-white/50'
                   }`}>
                     {selectedServices.includes(serviceCard.service_value) && (
                       <div className="w-full h-full flex items-center justify-center">
