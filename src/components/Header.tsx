@@ -1,9 +1,7 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { UserCog } from "lucide-react";
-import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import SocialMediaLinks from "./SocialMediaLinks";
 
 const Header: React.FC = () => {
   return (
@@ -33,12 +31,7 @@ const Header: React.FC = () => {
               </a>
             </li>
             <li>
-              <Link to="/admin">
-                <Button variant="outline" size="sm" className="flex items-center gap-1">
-                  <UserCog size={16} />
-                  <span className="hidden sm:inline">Admin</span>
-                </Button>
-              </Link>
+              <SocialMediaLinks />
             </li>
           </ul>
         </nav>

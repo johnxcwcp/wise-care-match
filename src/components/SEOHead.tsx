@@ -20,21 +20,22 @@ const SEOHead: React.FC = () => {
     if (siteSettings) {
       const seoTitle = siteSettings.find(setting => setting.setting_key === 'seo_title')?.setting_value;
       const seoDescription = siteSettings.find(setting => setting.setting_key === 'seo_description')?.setting_value;
+      const metaDescription = siteSettings.find(setting => setting.setting_key === 'meta_description')?.setting_value;
       const seoImageUrl = siteSettings.find(setting => setting.setting_key === 'seo_image_url')?.setting_value;
 
-      // Update document title
-      if (seoTitle) {
-        document.title = seoTitle;
-      }
+      // Update document title - use seo_title if available, otherwise use default
+      const pageTitle = seoTitle || 'CWCP Therapist Matching Quiz';
+      document.title = pageTitle;
 
-      // Update or create meta description
-      let metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
-      if (!metaDescription) {
-        metaDescription = document.createElement('meta');
-        metaDescription.setAttribute('name', 'description');
-        document.head.appendChild(metaDescription);
+      // Update or create meta description - use meta_description if available, otherwise fallback
+      let metaDescriptionElement = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+      if (!metaDescriptionElement) {
+        metaDescriptionElement = document.createElement('meta');
+        metaDescriptionElement.setAttribute('name', 'description');
+        document.head.appendChild(metaDescriptionElement);
       }
-      metaDescription.setAttribute('content', seoDescription || 'Find your perfect therapist with our matching quiz');
+      const descriptionContent = metaDescription || seoDescription || 'Find your perfect therapist with our matching quiz';
+      metaDescriptionElement.setAttribute('content', descriptionContent);
 
       // Update Open Graph meta tags
       const updateOrCreateMeta = (property: string, content: string, attribute: string = 'property') => {
@@ -47,14 +48,14 @@ const SEOHead: React.FC = () => {
         meta.setAttribute('content', content);
       };
 
-      if (seoTitle) {
-        updateOrCreateMeta('og:title', seoTitle);
-        updateOrCreateMeta('twitter:title', seoTitle, 'name');
+      if (pageTitle) {
+        updateOrCreateMeta('og:title', pageTitle);
+        updateOrCreateMeta('twitter:title', pageTitle, 'name');
       }
 
-      if (seoDescription) {
-        updateOrCreateMeta('og:description', seoDescription);
-        updateOrCreateMeta('twitter:description', seoDescription, 'name');
+      if (descriptionContent) {
+        updateOrCreateMeta('og:description', descriptionContent);
+        updateOrCreateMeta('twitter:description', descriptionContent, 'name');
       }
 
       if (seoImageUrl) {
@@ -66,6 +67,9 @@ const SEOHead: React.FC = () => {
       updateOrCreateMeta('og:type', 'website');
       updateOrCreateMeta('og:url', window.location.href);
       updateOrCreateMeta('twitter:card', 'summary_large_image', 'name');
+    } else {
+      // Set default title if no settings are loaded yet
+      document.title = 'CWCP Therapist Matching Quiz';
     }
   }, [siteSettings]);
 
