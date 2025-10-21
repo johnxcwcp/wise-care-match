@@ -74,6 +74,14 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
                             <div className="text-sm text-cwcp-darkgray mb-3">
                               {therapist.pronouns} • {therapist.designation}
                             </div>
+                            {therapist.bookingLink && (
+                              <Button
+                                onClick={() => window.open(therapist.bookingLink, '_blank')}
+                                className="w-full mt-3"
+                              >
+                                Book Appointment
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </div>
