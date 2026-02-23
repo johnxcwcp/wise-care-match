@@ -12,8 +12,8 @@ const Header: React.FC = () => {
             src="https://ukapxotdkjkqgarwehva.supabase.co/storage/v1/object/public/assets/cwcp_logo.png"
             className="h-12 w-auto" 
           />
-          <a href="/" className="text-2xl font-medium text-cwcp-blue flex items-center">
-            <span className="mr-2">CWCP</span>
+          <a href="/" className="text-2xl font-medium flex items-center">
+            <span className="mr-2 text-cwcp-green">CWCP</span>
             {/* Hide the subtitle on mobile screens */}
             <span className="text-cwcp-darkgray text-lg hidden md:block">Therapist Matching Quiz</span>
           </a>
