@@ -96,7 +96,7 @@ const Index: React.FC = () => {
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {!quizCompleted ? <div className="mb-8 text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl font-semibold text-cwcp-blue mb-4" style={{
+              <h1 className="text-4xl font-semibold text-cwcp-green mb-4" style={{
             fontFamily: 'Jost, sans-serif',
             fontWeight: 600
           }}>

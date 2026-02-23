@@ -28,8 +28,10 @@ export default {
         background: '#F4FFE9',
         foreground: 'hsl(var(--foreground))',
         cwcp: {
-          blue: '#7BC242',
-          lightblue: '#8CD553',
+          blue: '#000000',
+          lightblue: '#333333',
+          green: '#7BC242',
+          lightgreen: '#8CD553',
           text: '#333333',
           lightgray: '#F4FFE9',
           gray: '#EBEBEB',
