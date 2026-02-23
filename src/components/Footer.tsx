@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
@@ -45,12 +46,12 @@ const Footer: React.FC = () => {
             >
               Privacy Policy
             </Button>
-            <a 
-              href="/admin"
+            <Link 
+              to="/admin"
               className="text-cwcp-darkgray hover:text-cwcp-blue transition-colors text-sm inline-flex items-center underline-offset-4 hover:underline"
             >
               Admin
-            </a>
+            </Link>
           </div>
           <p className="text-cwcp-darkgray text-sm mt-4">
             © 2025 CWCP. All rights reserved.
