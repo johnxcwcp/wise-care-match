@@ -45,6 +45,12 @@ const Footer: React.FC = () => {
             >
               Privacy Policy
             </Button>
+            <a 
+              href="/admin"
+              className="text-cwcp-darkgray hover:text-cwcp-blue transition-colors text-sm inline-flex items-center underline-offset-4 hover:underline"
+            >
+              Admin
+            </a>
           </div>
           <p className="text-cwcp-darkgray text-sm mt-4">
             © 2025 CWCP. All rights reserved.
