@@ -108,7 +108,7 @@ const Index: React.FC = () => {
         </div>
 
         {/* Clinicians Video Carousel - only show when quiz is not completed */}
-        {!quizCompleted && <div className="border-t border-cwcp-gray bg-gray-900">
+        {!quizCompleted && <div className="border-t border-cwcp-gray bg-white">
             <CliniciansVideoCarousel therapists={therapists} />
           </div>}
       </main>

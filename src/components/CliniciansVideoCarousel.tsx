@@ -37,8 +37,8 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
     }
   };
   return <>
-      <div className="w-full max-w-7xl mx-auto py-12 px-0 bg-gray-900">
-        <h2 className="text-3xl font-normal mb-8 text-center text-neutral-50">Meet Our Clinicians</h2>
+      <div className="w-full max-w-7xl mx-auto py-12 px-0 bg-white">
+        <h2 className="text-3xl font-normal mb-8 text-center text-cwcp-text">Meet Our Clinicians</h2>
         
         {/* Increased padding significantly to prevent shadow clipping */}
         <div className="gap-x-12 space-x-16 px-0">
@@ -51,7 +51,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({
               const videoId = getYouTubeVideoId(therapist.introVideoUrl);
               return <CarouselItem key={therapist.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                     <div className="bg-card rounded-xl overflow-hidden border border-cwcp-gray/30 transition-colors duration-300 glass-light">
-                      <div className="p-6 bg-zinc-50 px-[20px] rounded-none mx-0">
+                      <div className="p-6 bg-white px-[20px] rounded-none mx-0">
                         <div className="flex flex-col">
                           {/* Video thumbnail with play button */}
                           <div className="w-full aspect-video rounded-lg overflow-hidden mb-4 relative group border border-cwcp-gray/30">
