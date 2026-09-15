@@ -36,7 +36,7 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
 
   return (
     <div>
-      <h3 className="text-2xl font-medium text-cwcp-blue mb-2">
+      <h3 className="text-2xl font-normal text-cwcp-blue mb-2">
         {question.title}
       </h3>
       {question.description && (
@@ -50,16 +50,16 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
         {serviceCards.map((serviceCard) => (
           <Card 
             key={serviceCard.id}
-            className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 rounded-2xl ${
+            className={`cursor-pointer overflow-hidden transition-colors duration-200 border rounded-xl ${
               selectedServices.includes(serviceCard.service_value) 
-                ? 'border-cwcp-blue bg-blue-50' 
+                ? 'border-cwcp-blue bg-secondary' 
                 : 'border-cwcp-gray hover:border-cwcp-blue'
             }`}
             onClick={() => handleServiceToggle(serviceCard.service_value)}
           >
             <CardContent className="p-0">
               {/* Illustration section with 16:9 aspect ratio */}
-              <div className="w-full aspect-video bg-gray-100 rounded-t-2xl overflow-hidden">
+              <div className="w-full aspect-video bg-muted overflow-hidden">
                 {serviceCard.illustration_url ? (
                   <img 
                     src={serviceCard.illustration_url} 
@@ -74,8 +74,8 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
               </div>
               
               {/* Content section */}
-              <div className="p-6 bg-zinc-50 rounded-b-2xl">
-                <h4 className="text-lg font-medium text-cwcp-blue mb-2">
+              <div className="p-6 bg-card border-t border-border/60">
+                <h4 className="text-lg font-normal text-cwcp-blue mb-2">
                   {serviceCard.service_title}
                 </h4>
                 <p className="text-sm text-cwcp-darkgray leading-relaxed">
@@ -92,9 +92,9 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
         {serviceCards.map((serviceCard) => (
           <Card 
             key={serviceCard.id}
-            className={`cursor-pointer transition-all duration-200 border-2 rounded-2xl ${
+            className={`cursor-pointer transition-colors duration-200 border rounded-xl ${
               selectedServices.includes(serviceCard.service_value) 
-                ? 'border-cwcp-blue bg-blue-50' 
+                ? 'border-cwcp-blue bg-secondary' 
                 : 'border-cwcp-gray hover:border-cwcp-blue'
             }`}
             onClick={() => handleServiceToggle(serviceCard.service_value)}
@@ -116,7 +116,7 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
                 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-base font-medium text-cwcp-blue mb-1">
+                  <h4 className="text-base font-normal text-cwcp-blue mb-1">
                     {serviceCard.service_title}
                   </h4>
                   <p className="text-sm text-cwcp-darkgray line-clamp-2">
@@ -126,14 +126,14 @@ const Step0Services: React.FC<Step0ServicesProps> = ({
                 
                 {/* Selection indicator */}
                 <div className="flex-shrink-0">
-                  <div className={`w-5 h-5 rounded-full border-2 ${
+                  <div className={`w-5 h-5 rounded-full border ${
                     selectedServices.includes(serviceCard.service_value) 
                       ? 'border-cwcp-blue bg-cwcp-blue' 
                       : 'border-gray-300'
                   }`}>
                     {selectedServices.includes(serviceCard.service_value) && (
                       <div className="w-full h-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                        <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>
                       </div>
                     )}
                   </div>
