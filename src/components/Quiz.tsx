@@ -184,7 +184,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     <div className="max-w-3xl mx-auto px-4 py-8 quiz-container">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className={`glass-card p-8 rounded-3xl shadow-sophisticated transition-all duration-300 ${
+      <div className={`glass-card p-8 rounded-2xl shadow-elegant transition-all duration-300 ${
         isTransitioning ? 'opacity-70 scale-[0.98]' : 'opacity-100 scale-100 animate-smooth-scroll'
       }`}>
         {/* Question content */}
@@ -193,12 +193,12 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
         </div>
 
         {/* Navigation buttons at bottom */}
-        <div className="flex justify-between pt-6 border-t border-gray-100">
+        <div className="flex justify-between pt-6 border-t border-border/70">
           <Button 
             onClick={prevStep} 
             disabled={currentStep === 1 || isTransitioning}
             variant="outline"
-            className="border-cwcp-blue/30 text-cwcp-blue hover:text-cwcp-blue hover:bg-blue-50/80 backdrop-blur-sm rounded-2xl px-6 py-3 shadow-elegant"
+            className="border-cwcp-blue/25 text-cwcp-blue hover:text-cwcp-blue hover:bg-secondary rounded-xl px-6 py-3"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Previous
@@ -207,7 +207,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
           <Button 
             onClick={nextStep}
             disabled={isNextDisabled() || isTransitioning}
-            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white rounded-2xl px-6 py-3 shadow-sophisticated"
+            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-primary-foreground rounded-xl px-6 py-3"
           >
             {currentStep === totalSteps ? (
               "Find Therapists"

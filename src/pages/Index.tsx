@@ -89,17 +89,14 @@ const Index: React.FC = () => {
       behavior: 'smooth'
     });
   };
-  return <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
+  return <div className="min-h-screen flex flex-col bg-background">
       <SEOHead />
       <Header />
       
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {!quizCompleted ? <div className="mb-8 text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl font-semibold text-cwcp-green mb-4" style={{
-            fontFamily: 'Jost, sans-serif',
-            fontWeight: 600
-          }}>
+              <h1 className="text-4xl font-normal text-cwcp-green mb-4">
                 Explore Therapist Options With Ease
               </h1>
               <p className="text-cwcp-darkgray text-lg mb-8">
@@ -111,7 +108,7 @@ const Index: React.FC = () => {
         </div>
 
         {/* Clinicians Video Carousel - only show when quiz is not completed */}
-        {!quizCompleted && <div className="backdrop-blur-sm border-t border-cwcp-gray bg-gray-900">
+        {!quizCompleted && <div className="border-t border-cwcp-gray bg-gray-900">
             <CliniciansVideoCarousel therapists={therapists} />
           </div>}
       </main>

@@ -21,6 +21,12 @@ export default {
       fontFamily: {
         jost: ['Jost', 'sans-serif'],
       },
+      fontWeight: {
+        normal: '400',
+        medium: '400',
+        semibold: '400',
+        bold: '400',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

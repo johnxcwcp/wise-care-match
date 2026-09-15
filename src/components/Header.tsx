@@ -5,14 +5,14 @@ import SocialMediaLinks from "./SocialMediaLinks";
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-white border-b border-cwcp-gray">
+    <header className="bg-card/95 border-b border-cwcp-gray/70 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Logo 
             src="https://ukapxotdkjkqgarwehva.supabase.co/storage/v1/object/public/assets/cwcp_logo.png"
             className="h-12 w-auto" 
           />
-          <a href="/" className="text-2xl font-medium flex items-center">
+          <a href="/" className="text-2xl font-normal flex items-center">
             <span className="mr-2 text-cwcp-green">CWCP</span>
             {/* Hide the subtitle on mobile screens */}
             <span className="text-cwcp-darkgray text-lg hidden md:block">Therapist Matching Quiz</span>

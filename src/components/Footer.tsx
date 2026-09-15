@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <footer className="bg-white/90 backdrop-blur-sm border-t border-cwcp-gray/30 py-8 mt-12">
+      <footer className="bg-card/95 backdrop-blur-sm border-t border-cwcp-gray/50 py-8 mt-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex justify-center gap-6">
             <Button 
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
 
       {/* Terms of Use Modal */}
       <Dialog open={termsOpen} onOpenChange={setTermsOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-floating border-0 glass-light backdrop-blur-xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-card shadow-elegant border border-border glass-light backdrop-blur-xl">
           <Button
             onClick={() => setTermsOpen(false)}
             variant="ghost"
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
           </Button>
           
           <DialogHeader className="pr-12">
-            <DialogTitle className="text-2xl font-medium text-cwcp-blue">
+            <DialogTitle className="text-2xl font-normal text-cwcp-blue">
               Terms of Use
             </DialogTitle>
           </DialogHeader>
@@ -86,7 +86,7 @@ const Footer: React.FC = () => {
 
       {/* Privacy Policy Modal */}
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-floating border-0 glass-light backdrop-blur-xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl bg-card shadow-elegant border border-border glass-light backdrop-blur-xl">
           <Button
             onClick={() => setPrivacyOpen(false)}
             variant="ghost"
@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
           </Button>
           
           <DialogHeader className="pr-12">
-            <DialogTitle className="text-2xl font-medium text-cwcp-blue">
+            <DialogTitle className="text-2xl font-normal text-cwcp-blue">
               Privacy Policy
             </DialogTitle>
           </DialogHeader>
