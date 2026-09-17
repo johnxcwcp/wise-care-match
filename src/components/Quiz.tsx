@@ -198,7 +198,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
             onClick={prevStep} 
             disabled={currentStep === 1 || isTransitioning}
             variant="outline"
-            className="border-cwcp-blue/25 text-cwcp-blue hover:text-cwcp-blue hover:bg-secondary rounded-xl px-6 py-3"
+            className="border-cwcp-blue/25 text-cwcp-blue hover:text-cwcp-blue hover:bg-secondary rounded-full px-6 py-3"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Previous
@@ -207,7 +207,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
           <Button 
             onClick={nextStep}
             disabled={isNextDisabled() || isTransitioning}
-            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-primary-foreground rounded-xl px-6 py-3"
+            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-primary-foreground rounded-full px-6 py-3"
           >
             {currentStep === totalSteps ? (
               "Find Therapists"

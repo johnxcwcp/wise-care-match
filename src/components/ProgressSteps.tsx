@@ -7,18 +7,18 @@ interface ProgressStepsProps {
 }
 
 const ProgressSteps: React.FC<ProgressStepsProps> = ({ currentStep, totalSteps }) => {
+  const progress = Math.min(100, Math.max(0, (currentStep / totalSteps) * 100));
+
   return (
-    <div className="flex justify-center items-center gap-2 mb-8">
-      {Array.from({ length: totalSteps }, (_, index) => (
+    <div className="max-w-md mx-auto mb-8">
+      <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-border/60">
         <div
-          key={index}
-          className={`w-8 h-2 rounded-full transition-colors duration-300 ${
-            index < currentStep 
-              ? 'bg-cwcp-blue' 
-              : 'bg-gray-200'
-          }`}
-        />
-      ))}
+          className="progress-fill relative h-full rounded-full bg-cwcp-blue transition-[width] duration-500 ease-out"
+          style={{ width: `${progress}%` }}
+        >
+          <span className="progress-sheen pointer-events-none absolute inset-y-0 right-0 w-10 rounded-full bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+        </div>
+      </div>
     </div>
   );
 };
