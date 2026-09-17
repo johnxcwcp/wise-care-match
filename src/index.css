@@ -108,6 +108,29 @@
   animation: smooth-scroll 0.4s ease-out;
 }
 
+/* Progress bar sheen */
+@keyframes progress-sheen {
+  0% {
+    transform: translateX(-160%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(240%);
+    opacity: 0;
+  }
+}
+
+.progress-sheen {
+  animation: progress-sheen 2.8s ease-in-out infinite;
+}
+
+.progress-fill {
+  box-shadow: 0 0 6px hsl(var(--foreground) / 0.06);
+}
+
 /* Glassmorphism utilities */
 .glass-card {
   background: hsl(var(--card) / 0.94);

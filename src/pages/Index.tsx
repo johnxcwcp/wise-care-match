@@ -89,7 +89,7 @@ const Index: React.FC = () => {
       behavior: 'smooth'
     });
   };
-  return <div className="min-h-screen flex flex-col bg-background">
+  return <div className="min-h-screen flex flex-col bg-muted/50">
       <SEOHead />
       <Header />
       
