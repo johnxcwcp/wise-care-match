@@ -8,6 +8,7 @@ import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { mapLocationFields, locationDbFields } from "@/lib/clinicLocations";
 import { toast } from "sonner";
 const Index: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
@@ -57,7 +58,8 @@ const Index: React.FC = () => {
         languages: therapist.therapist_languages?.map((l: any) => l.language) || [],
         sessionType: therapist.therapist_session_types?.map((st: any) => st.session_type) || [],
         clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || [],
-        services: therapist.therapist_services?.map((s: any) => s.service) || []
+        services: therapist.therapist_services?.map((s: any) => s.service) || [],
+        ...mapLocationFields(therapist)
       }));
     }
   });

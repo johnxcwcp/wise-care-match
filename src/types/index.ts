@@ -18,9 +18,14 @@ export interface Therapist {
   customMessage?: string;
   extendedBio?: string;
   introVideoUrl?: string;
+  homeClinic?: string;
+  inPersonLocations?: string[];
+  onlineLocations?: string[];
+  locationVerified?: boolean;
 }
 
 export interface QuizAnswers {
+  location: string;
   specialties: string[];
   gender: string[];
   modalities: string[];
