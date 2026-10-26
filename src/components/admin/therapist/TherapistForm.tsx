@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Therapist } from "@/types";
+import { CLINIC_LOCATIONS } from "@/lib/clinicLocations";
 
 interface TherapistFormProps {
   therapist: Therapist;
@@ -220,6 +221,41 @@ const TherapistForm: React.FC<TherapistFormProps> = ({
         </div>
       </div>
       
+      <div className="rounded-lg border border-border p-4 space-y-4">
+        <p className="text-sm text-muted-foreground">Clinic locations — the quiz only recommends this clinician where it is checked below. Leave unchecked if not confirmed.</p>
+        <div>
+          <Label className="mb-2 block">Home Clinic</Label>
+          <div className="flex flex-wrap gap-4">
+            {CLINIC_LOCATIONS.map(l => (
+              <div key={l.value} className="flex items-center gap-2">
+                <input type="radio" id={`home-${l.value}`} checked={therapist.homeClinic === l.value}
+                  onChange={() => setTherapist({...therapist, homeClinic: l.value})} />
+                <Label htmlFor={`home-${l.value}`}>{l.label}</Label>
+              </div>
+            ))}
+          </div>
+        </div>
+        {([['inPersonLocations','Sees clients in person at'],['onlineLocations','Offers online sessions to clients of']] as const).map(([field, title]) => (
+          <div key={field}>
+            <Label className="mb-2 block">{title}</Label>
+            <div className="flex flex-wrap gap-4">
+              {CLINIC_LOCATIONS.map(l => (
+                <div key={l.value} className="flex items-center gap-2">
+                  <Checkbox id={`${field}-${l.value}`} checked={(therapist[field] || []).includes(l.value)}
+                    onCheckedChange={() => setTherapist({...therapist, [field]: toggleArrayItem(therapist[field] || [], l.value)})} />
+                  <Label htmlFor={`${field}-${l.value}`}>{l.label}</Label>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div className="flex items-center gap-2">
+          <Checkbox id="locationVerified" checked={!!therapist.locationVerified}
+            onCheckedChange={(v) => setTherapist({...therapist, locationVerified: !!v})} />
+          <Label htmlFor="locationVerified">Location and session details verified</Label>
+        </div>
+      </div>
+
       <div>
         <Label className="mb-2 block">Session Types</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">

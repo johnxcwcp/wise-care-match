@@ -27,7 +27,7 @@ const TherapistCard: React.FC<TherapistCardProps> = ({
       </Avatar>
       <div className="flex-1">
         <div className="flex justify-between">
-          <h3 className="text-xl font-medium text-cwcp-blue">{therapist.name}</h3>
+          <h3 className="text-xl font-medium text-cwcp-blue">{therapist.name}{!therapist.locationVerified && <Badge variant="outline" className="ml-2 align-middle">Location needs verification</Badge>}</h3>
           <div className="space-x-2">
             <Button 
               variant="outline" 

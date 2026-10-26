@@ -8,7 +8,7 @@ import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { mapLocationFields, locationDbFields } from "@/lib/clinicLocations";
+import { mapLocationFields } from "@/lib/clinicLocations";
 import { toast } from "sonner";
 const Index: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
