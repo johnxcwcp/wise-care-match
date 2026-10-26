@@ -321,9 +321,13 @@ export type Database = {
           designation: string | null
           extended_bio: string | null
           gender: string | null
+          home_clinic: string | null
           id: string
+          in_person_locations: string[]
           intro_video_url: string | null
+          location_verified: boolean
           name: string
+          online_locations: string[]
           photo: string | null
           pronouns: string | null
           updated_at: string | null
@@ -336,9 +340,13 @@ export type Database = {
           designation?: string | null
           extended_bio?: string | null
           gender?: string | null
+          home_clinic?: string | null
           id?: string
+          in_person_locations?: string[]
           intro_video_url?: string | null
+          location_verified?: boolean
           name: string
+          online_locations?: string[]
           photo?: string | null
           pronouns?: string | null
           updated_at?: string | null
@@ -351,9 +359,13 @@ export type Database = {
           designation?: string | null
           extended_bio?: string | null
           gender?: string | null
+          home_clinic?: string | null
           id?: string
+          in_person_locations?: string[]
           intro_video_url?: string | null
+          location_verified?: boolean
           name?: string
+          online_locations?: string[]
           photo?: string | null
           pronouns?: string | null
           updated_at?: string | null
