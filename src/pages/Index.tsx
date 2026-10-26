@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { trackEvent } from "@/lib/analytics";
 import Header from "@/components/Header";
 import Quiz from "@/components/Quiz";
 import Results from "@/components/Results";
@@ -8,13 +9,10 @@ import { QuizAnswers, Therapist } from "@/types";
 import { matchTherapists, MatchResult } from "@/utils/matchTherapists";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { mapLocationFields } from "@/lib/clinicLocations";
 import { toast } from "sonner";
 const Index: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [matchResult, setMatchResult] = useState<MatchResult>({
-    bestMatches: [],
-    otherMatches: []
-  });
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers | null>(null);
   const {
     data: therapists = []
@@ -57,37 +55,26 @@ const Index: React.FC = () => {
         languages: therapist.therapist_languages?.map((l: any) => l.language) || [],
         sessionType: therapist.therapist_session_types?.map((st: any) => st.session_type) || [],
         clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || [],
-        services: therapist.therapist_services?.map((s: any) => s.service) || []
+        services: therapist.therapist_services?.map((s: any) => s.service) || [],
+        ...mapLocationFields(therapist)
       }));
     }
   });
+  const matchResult: MatchResult = useMemo(
+    () => (quizAnswers ? matchTherapists(therapists, quizAnswers) : { bestMatches: [], otherMatches: [], modes: {} }),
+    [therapists, quizAnswers]
+  );
   const handleQuizComplete = (answers: QuizAnswers) => {
-    console.log('Quiz answers:', answers);
-    const matches = matchTherapists(therapists, answers);
-    console.log('Matched therapists:', matches);
-    setMatchResult(matches);
+    const result = matchTherapists(therapists, answers);
+    trackEvent("quiz_completed", { perfect_match: result.bestMatches.length > 0 });
     setQuizAnswers(answers);
     setQuizCompleted(true);
-
-    // Smooth scroll to top with animation
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const handleRestartQuiz = () => {
     setQuizCompleted(false);
-    setMatchResult({
-      bestMatches: [],
-      otherMatches: []
-    });
     setQuizAnswers(null);
-
-    // Smooth scroll to top
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
   return <div className="min-h-screen flex flex-col bg-muted/50">
       <SEOHead />
@@ -104,7 +91,7 @@ const Index: React.FC = () => {
               </p>
             </div> : null}
           
-          {quizCompleted && quizAnswers ? <Results matchResult={matchResult} answers={quizAnswers} onRestartQuiz={handleRestartQuiz} /> : <Quiz onComplete={handleQuizComplete} />}
+          {quizCompleted && quizAnswers ? <Results matchResult={matchResult} answers={quizAnswers} onAnswersChange={setQuizAnswers} onRestartQuiz={handleRestartQuiz} /> : <Quiz onComplete={handleQuizComplete} />}
         </div>
 
         {/* Clinicians Video Carousel - only show when quiz is not completed */}

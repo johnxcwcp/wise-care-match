@@ -10,9 +10,11 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface TherapistCardProps {
   therapist: Therapist;
+  modes?: string[];
+  locationName?: string;
 }
 
-const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
+const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, modes, locationName }) => {
   const [isBioModalOpen, setIsBioModalOpen] = useState(false);
   const [showAllSpecialties, setShowAllSpecialties] = useState(false);
   
@@ -131,8 +133,8 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist }) => {
                     {therapist.languages.join(", ")}
                   </div>
                   <div>
-                    <span className="font-medium text-cwcp-blue">Session Type:</span>{" "}
-                    {therapist.sessionType.join(", ")}
+                    <span className="font-medium text-cwcp-blue">{locationName ? `Available for ${locationName}:` : "Session Type:"}</span>{" "}
+                    {modes ? modes.join(", ") : therapist.sessionType.join(", ")}
                   </div>
                 </div>
               </div>

@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import QuizHeader from "./QuizHeader";
 import Step0Services from "./quiz/Step0Services";
+import StepLocation from "./quiz/StepLocation";
+import { withLocationQuestion } from "@/lib/clinicLocations";
+import { trackEvent } from "@/lib/analytics";
 import Step1Specialties from "./quiz/Step1Specialties";
 import Step2Gender from "./quiz/Step2Gender";
 import Step3Modalities from "./quiz/Step3Modalities";
@@ -19,12 +22,14 @@ interface QuizProps {
 }
 
 const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
-  const [questions] = useLocalStorage<QuizQuestion[]>("quizQuestions", defaultQuestions);
+  const [storedQuestions] = useLocalStorage<QuizQuestion[]>("quizQuestions", defaultQuestions);
+  const questions = React.useMemo(() => withLocationQuestion(storedQuestions), [storedQuestions]);
   const [currentStep, setCurrentStep] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const totalSteps = questions.length;
   
   // State for answers
+  const [location, setLocation] = useState<string>("");
   const [services, setServices] = useState<string[]>([]);
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [gender, setGender] = useState<string[]>([]);
@@ -73,7 +78,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
         smoothScrollToTop();
       }, 200);
     } else {
+      trackEvent("quiz_location_selected", { location });
+      trackEvent("quiz_modality_selected", { modality: sessionType });
       const answers: QuizAnswers = {
+        location,
         services,
         specialties,
         gender,
@@ -101,6 +109,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     const currentQuestion = questions[currentStep - 1];
     if (!currentQuestion) return false;
     
+    if (currentQuestion.fieldName === 'location') {
+      return !location;
+    }
     if (currentQuestion.fieldName === 'services') {
       return services.length === 0;
     }
@@ -119,6 +130,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     if (!currentQuestion) return null;
 
     switch (currentQuestion.fieldName) {
+      case 'location':
+        return (
+          <StepLocation selectedLocation={location} setSelectedLocation={setLocation} question={currentQuestion} />
+        );
       case 'services':
         return (
           <Step0Services 

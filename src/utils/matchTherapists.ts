@@ -1,160 +1,67 @@
-
 import { Therapist, QuizAnswers } from "@/types";
+
+export type ServiceMode = "In-person" | "Online";
 
 export interface MatchResult {
   bestMatches: Therapist[];
   otherMatches: Therapist[];
+  /** Modes each recommended clinician actually offers at the selected location, keyed by id. */
+  modes: Record<string, ServiceMode[]>;
 }
 
+const ALL_MODALITIES = [
+  "Acceptance and Commitment (ACT)", "Adlerian", "Attachment-Based",
+  "Cognitive Behavioural Therapy (CBT)", "Dialectical Behavioural Therapy (DBT)",
+  "Emotion Focused", "Existential", "Gestalt", "Gottman",
+  "Internal Family Systems (IFS)", "Jungian", "Mindfulness", "Narrative",
+  "Person-Centred", "Psychodynamic", "Psychospiritual Care",
+  "Solution-Focused", "Somatic",
+];
+
+/**
+ * Hard eligibility: the modes a clinician is explicitly configured to offer at the
+ * selected location, limited to what the user accepts. Empty = not eligible.
+ */
+export const eligibleModes = (therapist: Therapist, location: string, sessionType: string): ServiceMode[] => {
+  if (!location) return [];
+  const modes: ServiceMode[] = [];
+  const wantsInPerson = sessionType !== "Virtually";
+  const wantsOnline = sessionType !== "In-person";
+  if (wantsInPerson && (therapist.inPersonLocations || []).includes(location)) modes.push("In-person");
+  if (wantsOnline && (therapist.onlineLocations || []).includes(location)) modes.push("Online");
+  return modes;
+};
+
 export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): MatchResult => {
-  console.log("Matching therapists with answers:", answers);
-  
   const bestMatches: Therapist[] = [];
   const otherMatches: Therapist[] = [];
+  const modes: Record<string, ServiceMode[]> = {};
 
-  // Define all possible modalities except "Not sure"
-  const allModalities = [
-    "Acceptance and Commitment (ACT)", "Adlerian", "Attachment-Based",
-    "Cognitive Behavioural Therapy (CBT)", "Dialectical Behavioural Therapy (DBT)",
-    "Emotion Focused", "Existential", "Gestalt", "Gottman",
-    "Internal Family Systems (IFS)", "Jungian", "Mindfulness", "Narrative", 
-    "Person-Centred", "Psychodynamic", "Psychospiritual Care", 
-    "Solution-Focused", "Somatic"
-  ];
+  const processedModalities =
+    answers.modalities.includes("Not sure") || answers.modalities.length === 0 ? ALL_MODALITIES : answers.modalities;
+  const processedGender =
+    answers.gender.length === 0 || answers.gender.includes("No Preference") ? ["Man", "Woman", "Non-Binary"] : answers.gender;
 
-  // Process modalities - if "Not sure" is selected or empty, include all modalities
-  let processedModalities = answers.modalities;
-  if (answers.modalities.includes("Not sure") || answers.modalities.length === 0) {
-    processedModalities = allModalities;
-  }
+  therapists.forEach((therapist) => {
+    // 1. Mandatory filters: location + modality. Scores never override these.
+    const available = eligibleModes(therapist, answers.location, answers.sessionType);
+    if (available.length === 0) return;
 
-  // Process gender - if empty, include all genders
-  let processedGender = answers.gender;
-  if (answers.gender.length === 0 || answers.gender.includes("No Preference")) {
-    processedGender = ["Man", "Woman", "Non-Binary"];
-  }
+    // 2. Existing criteria (soft): any miss moves the clinician to "other matches".
+    const checks = [
+      answers.services.length === 0 || answers.services.some((s) => therapist.services.includes(s)),
+      answers.specialties.length === 0 || answers.specialties.some((s) => therapist.specialties.includes(s)),
+      processedGender.includes(therapist.gender),
+      processedModalities.some((m) => therapist.modalities.includes(m)),
+      answers.availability.length === 0 || answers.availability.some((a) => therapist.availability.includes(a)),
+      !answers.clientType || therapist.clientTypes.includes(answers.clientType),
+    ];
+    const score = checks.filter(Boolean).length;
 
-  therapists.forEach(therapist => {
-    let score = 0;
-    let maxScore = 0;
-    let isExactMatch = true;
-
-    // Check services (required match if selected)
-    if (answers.services.length > 0) {
-      maxScore += 1;
-      const hasService = answers.services.some(service => 
-        therapist.services.includes(service)
-      );
-      if (hasService) {
-        score += 1;
-      } else {
-        isExactMatch = false;
-      }
-    } else {
-      // If no services selected, consider it a match
-      maxScore += 1;
-      score += 1;
-    }
-
-    // Check specialties (required match)
-    if (answers.specialties.length > 0) {
-      maxScore += 1;
-      const hasSpecialty = answers.specialties.some(specialty => 
-        therapist.specialties.includes(specialty)
-      );
-      if (hasSpecialty) {
-        score += 1;
-      } else {
-        isExactMatch = false;
-      }
-    } else {
-      // If no specialties selected, consider it a match
-      maxScore += 1;
-      score += 1;
-    }
-
-    // Check gender (using processed gender)
-    maxScore += 1;
-    const hasGender = processedGender.includes(therapist.gender);
-    if (hasGender) {
-      score += 1;
-    } else {
-      isExactMatch = false;
-    }
-
-    // Check modalities (using processed modalities)
-    maxScore += 1;
-    const hasModality = processedModalities.some(modality => 
-      therapist.modalities.includes(modality)
-    );
-    if (hasModality) {
-      score += 1;
-    } else {
-      isExactMatch = false;
-    }
-
-    // Check availability (required match)
-    if (answers.availability.length > 0) {
-      maxScore += 1;
-      const hasAvailability = answers.availability.some(availability => 
-        therapist.availability.includes(availability)
-      );
-      if (hasAvailability) {
-        score += 1;
-      } else {
-        isExactMatch = false;
-      }
-    } else {
-      // If no availability selected, consider it a match
-      maxScore += 1;
-      score += 1;
-    }
-
-    // Check session type (if not "No Preference")
-    if (answers.sessionType !== "No Preference") {
-      maxScore += 1;
-      const hasSessionType = therapist.sessionType.includes(answers.sessionType);
-      if (hasSessionType) {
-        score += 1;
-      } else {
-        isExactMatch = false;
-      }
-    } else {
-      // If "No Preference" selected, consider it a match
-      maxScore += 1;
-      score += 1;
-    }
-
-    // Check client type
-    if (answers.clientType) {
-      maxScore += 1;
-      const hasClientType = therapist.clientTypes.includes(answers.clientType);
-      if (hasClientType) {
-        score += 1;
-      } else {
-        isExactMatch = false;
-      }
-    } else {
-      // If no client type selected, consider it a match
-      maxScore += 1;
-      score += 1;
-    }
-
-    console.log(`Therapist ${therapist.name}: score ${score}/${maxScore}, exact match: ${isExactMatch}`);
-
-    // If exact match on all criteria, add to best matches
-    if (isExactMatch && maxScore > 0) {
-      bestMatches.push(therapist);
-    } else if (score > 0) {
-      // If partial match, add to other matches
-      otherMatches.push(therapist);
-    }
+    modes[therapist.id] = available;
+    if (score === checks.length) bestMatches.push(therapist);
+    else if (score > 0) otherMatches.push(therapist);
   });
 
-  console.log(`Found ${bestMatches.length} best matches and ${otherMatches.length} other matches`);
-
-  return {
-    bestMatches,
-    otherMatches
-  };
+  return { bestMatches, otherMatches, modes };
 };

@@ -6,6 +6,7 @@ import { Therapist } from "@/types";
 import { toast } from "sonner";
 import { Plus, Download, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { mapLocationFields, locationDbFields } from "@/lib/clinicLocations";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TherapistForm from "./therapist/TherapistForm";
 import TherapistCard from "./therapist/TherapistCard";
@@ -78,7 +79,8 @@ const TherapistManager: React.FC = () => {
         languages: therapist.therapist_languages?.map((l: any) => l.language) || [],
         sessionType: therapist.therapist_session_types?.map((st: any) => st.session_type) || [],
         clientTypes: therapist.therapist_client_types?.map((ct: any) => ct.client_type) || [],
-        services: therapist.therapist_services?.map((s: any) => s.service) || []
+        services: therapist.therapist_services?.map((s: any) => s.service) || [],
+        ...mapLocationFields(therapist)
       }));
     }
   });
@@ -99,7 +101,8 @@ const TherapistManager: React.FC = () => {
           booking_link: therapist.bookingLink,
           custom_message: therapist.customMessage,
           extended_bio: therapist.extendedBio,
-          intro_video_url: therapist.introVideoUrl
+          intro_video_url: therapist.introVideoUrl,
+          ...locationDbFields(therapist)
         })
         .select()
         .single();
@@ -183,7 +186,8 @@ const TherapistManager: React.FC = () => {
           booking_link: therapist.bookingLink,
           custom_message: therapist.customMessage,
           extended_bio: therapist.extendedBio,
-          intro_video_url: therapist.introVideoUrl
+          intro_video_url: therapist.introVideoUrl,
+          ...locationDbFields(therapist)
         })
         .eq('id', therapist.id);
 
