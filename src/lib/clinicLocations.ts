@@ -2,7 +2,7 @@ import { QuizQuestion } from "@/types";
 
 /** Canonical clinic locations. `value` is what is stored on clinician records and quiz answers. */
 export const CLINIC_LOCATIONS = [
-  { value: "Toronto", label: "Toronto (CWCP)", clinic: "CWCP", description: "Centre for Wellness and Counselling Psychotherapy" },
+  { value: "Toronto", label: "Toronto (CWCP)", clinic: "CWCP", description: "Church Wellesley Counselling and Psychotherapy" },
   { value: "Picton", label: "Picton (PECCP)", clinic: "PECCP", description: "Prince Edward County, Ontario" },
   { value: "Yukon", label: "Yukon (YukonCP)", clinic: "YukonCP", description: "Serving clients in the Yukon" },
 ] as const;
