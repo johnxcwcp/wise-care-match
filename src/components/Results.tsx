@@ -67,8 +67,6 @@ const Results: React.FC<ResultsProps> = ({ matchResult, answers, onAnswersChange
   const apply = (patch: Partial<QuizAnswers>, action: string) => {
     const next = { ...answers, ...patch };
     onAnswersChange(next);
-    // Matching is synchronous; recompute here only to report the outcome.
-    import("@/utils/matchTherapists").then(() => undefined);
     trackEvent("quiz_fallback_adjustment", { action });
     setFeedback("Your results have been updated.");
   };
