@@ -1,0 +1,1 @@
+UPDATE public.therapists SET home_clinic = 'Toronto', in_person_locations = ARRAY['Toronto']::text[], online_locations = ARRAY['Toronto']::text[], location_verified = true, updated_at = now() WHERE name NOT IN ('Adam Terpstra', 'Maria Aurora Zimmerling', 'Marian Moon', 'Penelope Park');
