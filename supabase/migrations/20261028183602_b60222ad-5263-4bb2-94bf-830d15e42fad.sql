@@ -1,0 +1,2 @@
+UPDATE public.therapists SET online_locations = ARRAY['Toronto', 'Picton']::text[], in_person_locations = ARRAY[]::text[], location_verified = true, updated_at = now() WHERE id = '4f25f4b0-8e8c-4037-a5cb-301be2422a7e';
+UPDATE public.therapists SET home_clinic = 'Picton', online_locations = ARRAY['Toronto', 'Yukon']::text[], in_person_locations = ARRAY['Picton']::text[], location_verified = true, updated_at = now() WHERE id IN ('7366594a-ce1b-4b4c-a95c-7a03667d9b06', '56b48bd8-f210-4131-a07a-93d3c90d2cfa', '3499c97c-b2fd-4e15-ac76-d3bdb39d0370');
