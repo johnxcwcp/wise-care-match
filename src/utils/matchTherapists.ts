@@ -24,6 +24,9 @@ const ALL_MODALITIES = [
  */
 export const eligibleModes = (therapist: Therapist, location: string, sessionType: string): ServiceMode[] => {
   if (!location) return [];
+  if (location === "Online") {
+    return therapist.locationVerified && (therapist.onlineLocations || []).length > 0 ? ["Online"] : [];
+  }
   const modes: ServiceMode[] = [];
   const wantsInPerson = sessionType !== "Virtually";
   const wantsOnline = sessionType !== "In-person";

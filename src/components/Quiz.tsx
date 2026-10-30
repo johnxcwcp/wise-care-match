@@ -23,10 +23,8 @@ interface QuizProps {
 
 const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [storedQuestions] = useLocalStorage<QuizQuestion[]>("quizQuestions", defaultQuestions);
-  const questions = React.useMemo(() => withLocationQuestion(storedQuestions), [storedQuestions]);
   const [currentStep, setCurrentStep] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const totalSteps = questions.length;
   
   // State for answers
   const [location, setLocation] = useState<string>("");
@@ -37,6 +35,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [availability, setAvailability] = useState<string[]>([]);
   const [sessionType, setSessionType] = useState<string>("No Preference");
   const [ageRange, setAgeRange] = useState<string>("Adults (18-65)");
+  const questions = React.useMemo(() => withLocationQuestion(storedQuestions).filter(
+    question => location !== "Online" || question.fieldName !== "sessionType"
+  ), [storedQuestions, location]);
+  const totalSteps = questions.length;
 
   // Initialize default options from the first question for each type
   useEffect(() => {
@@ -87,7 +89,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
         gender,
         modalities,
         availability,
-        sessionType,
+        sessionType: location === "Online" ? "Virtually" : sessionType,
         clientType: ageRange,
       };
       onComplete(answers);
@@ -196,10 +198,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 quiz-container">
+    <div className="max-w-3xl mx-auto px-0 sm:px-4 py-4 quiz-container">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className={`glass-card p-8 rounded-2xl shadow-elegant transition-all duration-300 ${
+      <div className={`bg-card border border-border/70 p-5 sm:p-8 rounded-2xl shadow-elegant transition-all duration-300 ${
         isTransitioning ? 'opacity-70 scale-[0.98]' : 'opacity-100 scale-100 animate-smooth-scroll'
       }`}>
         {/* Question content */}

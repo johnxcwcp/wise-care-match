@@ -9,16 +9,22 @@ export const CLINIC_LOCATIONS = [
 
 export type ClinicLocation = (typeof CLINIC_LOCATIONS)[number]["value"];
 
+/** Appointment choices are separate from the regional coverage stored on clinicians. */
+export const LOCATION_OPTIONS = [
+  ...CLINIC_LOCATIONS,
+  { value: "Online", label: "Online", clinic: "Online", description: "Meet with your clinician virtually" },
+] as const;
+
 export const locationLabel = (value?: string) =>
-  CLINIC_LOCATIONS.find((l) => l.value === value)?.label ?? value ?? "";
+  LOCATION_OPTIONS.find((l) => l.value === value)?.label ?? value ?? "";
 
 export const LOCATION_QUESTION: QuizQuestion = {
   id: "location",
-  title: "Where would you prefer to receive counselling?",
-  description: "We'll only show clinicians who are confirmed to serve this location.",
+  title: "Preferred Location",
+  description: 'You can schedule in-person appointments with our clinicians based on your location preference. Select "Online" if you prefer to meet with your clinician virtually.',
   type: "single",
   fieldName: "location",
-  options: CLINIC_LOCATIONS.map((l) => ({ id: `loc-${l.value}`, label: l.label, value: l.value })),
+  options: LOCATION_OPTIONS.map((l) => ({ id: `loc-${l.value}`, label: l.label, value: l.value })),
 };
 
 /** Ensures the location question is always the first step, even for questions cached in the browser. */
