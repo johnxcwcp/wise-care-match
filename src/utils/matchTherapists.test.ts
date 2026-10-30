@@ -23,6 +23,18 @@ const all = [torontoInPersonOnlineElsewhere, pictonInPerson, yukonOnline, unconf
 const names = (r: ReturnType<typeof matchTherapists>) => [...r.bestMatches, ...r.otherMatches].map((t) => t.name).sort();
 
 describe("location and modality eligibility", () => {
+  it("Online includes verified virtual clinicians across configured regions only", () => {
+    const onlineClinicians = [
+      base({ name: "Toronto virtual", locationVerified: true, onlineLocations: ["Toronto"] }),
+      base({ name: "Yukon virtual", locationVerified: true, onlineLocations: ["Yukon"] }),
+      base({ name: "In person only", locationVerified: true, inPersonLocations: ["Picton"] }),
+      base({ name: "Unconfirmed", locationVerified: false, onlineLocations: ["Toronto"] }),
+    ];
+    const result = matchTherapists(onlineClinicians, answers({ location: "Online", sessionType: "Virtually" }));
+    expect(names(result)).toEqual(["Toronto virtual", "Yukon virtual"]);
+    expect(result.modes["Toronto virtual"]).toEqual(["Online"]);
+    expect(result.modes["Yukon virtual"]).toEqual(["Online"]);
+  });
   it("Toronto in-person returns only Toronto in-person clinicians", () => {
     expect(names(matchTherapists(all, answers({ location: "Toronto", sessionType: "In-person" })))).toEqual(["A"]);
   });
@@ -66,6 +78,22 @@ describe("soft preferences and fallback adjustments", () => {
 });
 
 describe("confirmed clinician location records", () => {
+  it("all 17 confirmed online clinicians have virtual appointment records", async () => {
+    const url = import.meta.env.VITE_SUPABASE_URL;
+    const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (!url || !key) throw new Error("Supabase connection required");
+    const response = await fetch(`${url}/rest/v1/therapists?select=name,online_locations,location_verified,therapist_session_types(session_type)`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    });
+    expect(response.ok).toBe(true);
+    const rows = await response.json();
+    expect(rows).toHaveLength(17);
+    for (const row of rows) {
+      expect(row.location_verified).toBe(true);
+      expect(row.online_locations.length).toBeGreaterThan(0);
+      expect(row.therapist_session_types.map((s: { session_type: string }) => s.session_type)).toContain("Virtually");
+    }
+  });
   const loadClinicians = async (): Promise<Therapist[]> => {
     const url = import.meta.env.VITE_SUPABASE_URL;
     const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;

@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import TherapistBioModal from "./TherapistBioModal";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { CalendarDays, Languages, Video, MapPin, Heart, ArrowUpRight, UserRound, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 interface TherapistCardProps {
   therapist: Therapist;
@@ -39,22 +40,22 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, modes, locatio
 
   return (
     <>
-      <div className="glass-card rounded-3xl shadow-sophisticated overflow-hidden border border-white/20 hover:shadow-floating transition-all duration-300 hover:scale-[1.01]">
-        <div className="p-8 bg-gradient-to-br from-white/90 via-white/80 to-blue-50/20 backdrop-blur-sm">
+      <div className="bg-card rounded-2xl shadow-elegant overflow-hidden border border-border transition-colors duration-300 hover:border-foreground/30">
+        <div className="p-5 sm:p-7">
           <div className="flex flex-col sm:flex-row gap-6">
             <div className="flex-shrink-0">
               <Avatar className="w-32 h-32 rounded-2xl shadow-elegant">
                 <AvatarImage src={therapist.photo} alt={therapist.name} className="object-cover" />
-                <AvatarFallback className="bg-cwcp-blue text-white text-2xl font-medium rounded-2xl">
+                <AvatarFallback className="bg-secondary text-foreground text-2xl font-normal rounded-2xl">
                   {initials}
                 </AvatarFallback>
               </Avatar>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
                 <div>
                   <h3 className="text-xl font-medium text-cwcp-blue">{therapist.name}</h3>
-                  <div className="flex items-center gap-2 mt-1 text-cwcp-darkgray">
+                  <div className="flex flex-wrap items-center gap-2 mt-1 text-muted-foreground text-sm">
                     <span>{therapist.pronouns}</span>
                     <span>•</span>
                     <span>{therapist.designation}</span>
@@ -63,39 +64,40 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, modes, locatio
                 <div className="flex flex-col gap-2 mt-3 sm:mt-0">
                   <Button 
                     asChild 
-                    className="bg-cwcp-blue hover:bg-cwcp-lightblue text-white rounded-2xl shadow-elegant hover:shadow-floating transition-all duration-300"
+                    className="rounded-full"
                   >
                     <a href={therapist.bookingLink} target="_blank" rel="noopener noreferrer">
-                      Book Appointment
+                      Book Appointment <ArrowUpRight aria-hidden="true" />
                     </a>
                   </Button>
                   <Button 
                     variant="outline" 
                     onClick={() => setIsBioModalOpen(true)} 
-                    className="border-cwcp-blue text-cwcp-blue hover:bg-blue-50/80 backdrop-blur-sm rounded-2xl shadow-elegant"
+                    className="rounded-full"
                   >
-                    Read Bio
+                    <UserRound aria-hidden="true" /> Read Bio
                   </Button>
                 </div>
               </div>
               
               {/* Custom Message */}
               {therapist.customMessage && (
-                <div className="mb-4 p-4 bg-blue-50/60 border border-blue-200/50 rounded-2xl backdrop-blur-sm">
-                  <p className="text-sm text-blue-800">{therapist.customMessage}</p>
+                <div className="mb-4 flex items-start gap-2 border-l border-border pl-3">
+                  <MessageCircle className="h-4 w-4 mt-1 shrink-0 text-muted-foreground" aria-hidden="true" />
+                  <p className="text-sm text-muted-foreground">{therapist.customMessage}</p>
                 </div>
               )}
               
-              <p className="mb-4 text-cwcp-text">{therapist.bio}</p>
+              <p className="mb-5 text-muted-foreground leading-relaxed">{therapist.bio}</p>
               
               <div className="space-y-3">
                 <div>
-                  <h4 className="font-medium text-cwcp-blue mb-2">Specialties</h4>
+                  <h4 className="flex items-center gap-2 font-normal text-foreground mb-2"><Heart className="h-4 w-4 text-muted-foreground" aria-hidden="true" />Specialties</h4>
                   <div className="flex flex-wrap gap-2">
                     {displayedSpecialties.map(specialty => (
                       <Badge 
                         key={specialty} 
-                        className="bg-cwcp-lightgray/80 text-cwcp-text hover:bg-cwcp-gray font-normal rounded-xl px-3 py-1 backdrop-blur-sm"
+                        className="bg-secondary text-foreground hover:bg-muted border-transparent font-normal rounded-full px-3 py-1"
                       >
                         {specialty}
                       </Badge>
@@ -107,7 +109,7 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, modes, locatio
                         onClick={() => setShowAllSpecialties(true)} 
                         className="text-cwcp-blue hover:text-cwcp-lightblue px-3 py-1 h-auto text-xs rounded-xl"
                       >
-                        Expand (+{therapist.specialties.length - specialtiesDisplayCount} more)
+                        <ChevronDown aria-hidden="true" /> {therapist.specialties.length - specialtiesDisplayCount} more
                       </Button>
                     )}
                     {showAllSpecialties && therapist.specialties.length > specialtiesDisplayCount && (
@@ -117,23 +119,26 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, modes, locatio
                         onClick={() => setShowAllSpecialties(false)} 
                         className="text-cwcp-blue hover:text-cwcp-lightblue px-3 py-1 h-auto text-xs rounded-xl"
                       >
-                        Collapse
+                        <ChevronUp aria-hidden="true" /> Less
                       </Button>
                     )}
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-                  <div>
-                    <span className="font-medium text-cwcp-blue">Available:</span>{" "}
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm border-t border-border pt-4 text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    <span className="sr-only">Available:</span>{" "}
                     {therapist.availability.join(", ")}
                   </div>
-                  <div>
-                    <span className="font-medium text-cwcp-blue">Languages:</span>{" "}
+                  <div className="flex items-center gap-2">
+                    <Languages className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    <span className="sr-only">Languages:</span>{" "}
                     {therapist.languages.join(", ")}
                   </div>
-                  <div>
-                    <span className="font-medium text-cwcp-blue">{locationName ? `Available for ${locationName}:` : "Session Type:"}</span>{" "}
+                  <div className="flex items-center gap-2">
+                    {modes?.includes("Online") ? <Video className="h-4 w-4 shrink-0" aria-hidden="true" /> : <MapPin className="h-4 w-4 shrink-0" aria-hidden="true" />}
+                    <span className="sr-only">{locationName ? `Available for ${locationName}:` : "Session Type:"}</span>{" "}
                     {modes ? modes.join(", ") : therapist.sessionType.join(", ")}
                   </div>
                 </div>
