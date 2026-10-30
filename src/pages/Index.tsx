@@ -76,7 +76,7 @@ const Index: React.FC = () => {
     setQuizAnswers(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  return <div className="min-h-screen flex flex-col bg-muted/50">
+  return <div className="min-h-screen flex flex-col bg-background">
       <SEOHead />
       <Header />
       
@@ -95,7 +95,7 @@ const Index: React.FC = () => {
         </div>
 
         {/* Clinicians Video Carousel - only show when quiz is not completed */}
-        {!quizCompleted && <div className="border-t border-cwcp-gray bg-white">
+        {!quizCompleted && <div className="border-t border-border bg-card">
             <CliniciansVideoCarousel therapists={therapists} />
           </div>}
       </main>
