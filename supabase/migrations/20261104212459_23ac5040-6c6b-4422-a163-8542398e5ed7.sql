@@ -1,0 +1,20 @@
+INSERT INTO public.site_settings (setting_key, setting_value) VALUES
+('location_question_title', 'Preferred Location'),
+('location_question_description', 'You can schedule in-person appointments with our clinicians based on your location preference. Select "Online" if you prefer to meet with your clinician virtually.'),
+('location_toronto_label', 'Toronto (CWCP)'),
+('location_toronto_description', 'Church Wellesley Counselling and Psychotherapy'),
+('location_toronto_logo_alt', 'CWCP logo'),
+('clinic_logo_toronto', ''),
+('location_picton_label', 'Picton (PECCP)'),
+('location_picton_description', 'Prince Edward County, Ontario'),
+('location_picton_logo_alt', 'PECCP logo'),
+('clinic_logo_picton', ''),
+('location_yukon_label', 'Yukon (YukonCP)'),
+('location_yukon_description', 'Serving clients in the Yukon'),
+('location_yukon_logo_alt', 'YukonCP logo'),
+('clinic_logo_yukon', ''),
+('location_online_label', 'Online'),
+('location_online_description', 'Meet with your clinician virtually'),
+('location_online_logo_alt', 'Online logo'),
+('clinic_logo_online', '')
+ON CONFLICT (setting_key) DO NOTHING;

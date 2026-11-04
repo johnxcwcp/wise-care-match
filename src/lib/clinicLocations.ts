@@ -27,6 +27,26 @@ export const LOCATION_QUESTION: QuizQuestion = {
   options: LOCATION_OPTIONS.map((l) => ({ id: `loc-${l.value}`, label: l.label, value: l.value })),
 };
 
+/** Editable display content never changes the canonical values used for matching. */
+export const getLocationContent = (settings: { setting_key: string; setting_value: string | null }[] = []) => {
+  const read = (key: string, fallback: string) =>
+    settings.find(setting => setting.setting_key === key)?.setting_value ?? fallback;
+  return {
+    title: read("location_question_title", LOCATION_QUESTION.title),
+    description: read("location_question_description", LOCATION_QUESTION.description ?? ""),
+    options: LOCATION_OPTIONS.map(option => {
+      const prefix = `location_${option.value.toLowerCase()}`;
+      return {
+        ...option,
+        label: read(`${prefix}_label`, option.label),
+        description: read(`${prefix}_description`, option.description),
+        logo: read(`clinic_logo_${option.value.toLowerCase()}`, ""),
+        logoAlt: read(`${prefix}_logo_alt`, `${option.clinic} logo`),
+      };
+    }),
+  };
+};
+
 /** Ensures the location question is always the first step, even for questions cached in the browser. */
 export const withLocationQuestion = (questions: QuizQuestion[]): QuizQuestion[] => [
   LOCATION_QUESTION,
