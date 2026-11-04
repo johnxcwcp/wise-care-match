@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { CLINIC_LOCATIONS } from "@/lib/clinicLocations";
+import { LOCATION_OPTIONS } from "@/lib/clinicLocations";
 
 const SiteSettingsManager: React.FC = () => {
   const [termsOfUse, setTermsOfUse] = useState("");
@@ -40,7 +40,7 @@ const SiteSettingsManager: React.FC = () => {
 
   useEffect(() => {
     if (siteSettings) {
-      setClinicLogos(Object.fromEntries(CLINIC_LOCATIONS.map(loc => [loc.value,
+      setClinicLogos(Object.fromEntries(LOCATION_OPTIONS.map(loc => [loc.value,
         siteSettings.find(s => s.setting_key === `clinic_logo_${loc.value.toLowerCase()}`)?.setting_value || ""
       ])));
       const terms = siteSettings.find(setting => setting.setting_key === 'terms_of_use');
@@ -161,7 +161,7 @@ const SiteSettingsManager: React.FC = () => {
         <Card>
           <CardHeader><CardTitle>Clinic Logos</CardTitle></CardHeader>
           <CardContent className="space-y-5">
-            {CLINIC_LOCATIONS.map(loc => (
+            {LOCATION_OPTIONS.map(loc => (
               <div key={loc.value} className="space-y-2">
                 <Label htmlFor={`logo-${loc.value}`}>{loc.label} logo URL</Label>
                 <Input id={`logo-${loc.value}`} type="url" value={clinicLogos[loc.value] || ""}
@@ -170,7 +170,7 @@ const SiteSettingsManager: React.FC = () => {
                 {clinicLogos[loc.value] && <img src={clinicLogos[loc.value]} alt={`${loc.clinic} logo preview`} className="h-16 max-w-48 object-contain" />}
                 <Button disabled={updateSettingMutation.isPending} onClick={() => updateSettingMutation.mutate({
                   key: `clinic_logo_${loc.value.toLowerCase()}`, value: clinicLogos[loc.value] || ""
-                })}>Save {loc.clinic} logo</Button>
+                })}>Save {loc.label} logo</Button>
               </div>
             ))}
           </CardContent>
