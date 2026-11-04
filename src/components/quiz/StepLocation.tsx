@@ -2,7 +2,7 @@ import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { QuizQuestion } from "@/types";
-import { LOCATION_OPTIONS } from "@/lib/clinicLocations";
+import { getLocationContent } from "@/lib/clinicLocations";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -21,13 +21,14 @@ const StepLocation: React.FC<Props> = ({ selectedLocation, setSelectedLocation, 
       return data;
     },
   });
+  const content = getLocationContent(settings);
   return (
   <div className="animate-fade-in">
-    <h2 className="text-2xl font-normal text-foreground mb-3">{question.title}</h2>
-    {question.description && <p className="mb-6 text-muted-foreground leading-relaxed">{question.description}</p>}
-    <RadioGroup value={selectedLocation} onValueChange={setSelectedLocation} className="grid grid-cols-2 gap-3 sm:gap-4" aria-label={question.title}>
-      {LOCATION_OPTIONS.map((loc) => {
-        const logo = settings?.find(s => s.setting_key === `clinic_logo_${loc.value.toLowerCase()}`)?.setting_value;
+    <h2 className="text-2xl font-normal text-foreground mb-3 break-words">{content.title}</h2>
+    {content.description && <p className="mb-6 text-muted-foreground leading-relaxed break-words">{content.description}</p>}
+    <RadioGroup value={selectedLocation} onValueChange={setSelectedLocation} className="grid grid-cols-2 gap-3 sm:gap-4" aria-label={content.title || question.title}>
+      {content.options.map((loc) => {
+        const logo = loc.logo;
         return (
         <Label
           key={loc.value}
@@ -36,12 +37,12 @@ const StepLocation: React.FC<Props> = ({ selectedLocation, setSelectedLocation, 
         >
           <span className="flex items-start justify-between gap-3">
             <span className="flex h-12 sm:h-16 min-w-0 flex-1 items-center">
-              {logo && <img key={logo} src={logo} alt={`${loc.label} logo`} className="max-h-full max-w-full object-contain" onError={e => { e.currentTarget.hidden = true; }} />}
+              {logo && <img key={logo} src={logo} alt={loc.logoAlt} className="max-h-full max-w-full object-contain" onError={e => { e.currentTarget.hidden = true; }} />}
             </span>
             <RadioGroupItem id={`location-${loc.value}`} value={loc.value} className="mt-1 h-5 w-5" />
           </span>
-          <span className="font-normal text-base text-foreground">{loc.label}</span>
-          <span className="text-sm text-muted-foreground font-normal leading-snug">{loc.description}</span>
+          <span className="font-normal text-base text-foreground break-words">{loc.label}</span>
+          <span className="text-sm text-muted-foreground font-normal leading-snug break-words">{loc.description}</span>
         </Label>
       ); })}
     </RadioGroup>
