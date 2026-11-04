@@ -3,7 +3,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { QuizQuestion } from "@/types";
 import { LOCATION_OPTIONS } from "@/lib/clinicLocations";
-import { Building2, MapPin, Video } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -29,7 +28,6 @@ const StepLocation: React.FC<Props> = ({ selectedLocation, setSelectedLocation, 
     <RadioGroup value={selectedLocation} onValueChange={setSelectedLocation} className="grid grid-cols-2 gap-3 sm:gap-4" aria-label={question.title}>
       {LOCATION_OPTIONS.map((loc) => {
         const logo = settings?.find(s => s.setting_key === `clinic_logo_${loc.value.toLowerCase()}`)?.setting_value;
-        const Glyph = loc.value === "Online" ? Video : loc.value === "Toronto" ? Building2 : MapPin;
         return (
         <Label
           key={loc.value}
@@ -38,7 +36,7 @@ const StepLocation: React.FC<Props> = ({ selectedLocation, setSelectedLocation, 
         >
           <span className="flex items-start justify-between gap-3">
             <span className="flex h-12 sm:h-16 min-w-0 flex-1 items-center">
-              {logo ? <img src={logo} alt={`${loc.clinic} logo`} className="max-h-full max-w-full object-contain" onError={e => { e.currentTarget.style.display = "none"; }} /> : <Glyph className="h-8 w-8 text-foreground" strokeWidth={1.25} aria-hidden="true" />}
+              {logo && <img key={logo} src={logo} alt={`${loc.label} logo`} className="max-h-full max-w-full object-contain" onError={e => { e.currentTarget.hidden = true; }} />}
             </span>
             <RadioGroupItem id={`location-${loc.value}`} value={loc.value} className="mt-1 h-5 w-5" />
           </span>
