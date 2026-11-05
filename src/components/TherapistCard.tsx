@@ -36,7 +36,8 @@ const TherapistCard: React.FC<TherapistCardProps> = ({ therapist, modes, locatio
 
   const specialtiesDisplayCount = parseInt(getSettingValue('specialties_display_count', '3'));
   const initials = therapist.name.split(" ").map(n => n[0]).join("");
-  const displayedSpecialties = showAllSpecialties ? therapist.specialties : therapist.specialties.slice(0, specialtiesDisplayCount);
+  const sortedSpecialties = [...therapist.specialties].sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+  const displayedSpecialties = showAllSpecialties ? sortedSpecialties : sortedSpecialties.slice(0, specialtiesDisplayCount);
 
   return (
     <>
