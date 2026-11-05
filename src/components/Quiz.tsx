@@ -77,8 +77,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       setTimeout(() => {
         setCurrentStep(currentStep + 1);
         setIsTransitioning(false);
-        smoothScrollToTop();
-      }, 200);
+      }, 180);
     } else {
       trackEvent("quiz_location_selected", { location });
       trackEvent("quiz_modality_selected", { modality: sessionType });
@@ -102,8 +101,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
       setTimeout(() => {
         setCurrentStep(currentStep - 1);
         setIsTransitioning(false);
-        smoothScrollToTop();
-      }, 200);
+      }, 180);
     }
   };
 
@@ -201,11 +199,12 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     <div className="max-w-3xl mx-auto px-0 sm:px-4 py-4 quiz-container">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className={`bg-card border border-border/70 p-5 sm:p-8 rounded-2xl shadow-elegant transition-all duration-300 ${
-        isTransitioning ? 'opacity-70 scale-[0.98]' : 'opacity-100 scale-100 animate-smooth-scroll'
-      }`}>
+      <div className="bg-card border border-border/70 p-5 sm:p-8 rounded-2xl shadow-elegant">
         {/* Question content */}
-        <div className="mb-8">
+        <div
+          key={currentStep}
+          className={`mb-8 transition-opacity duration-200 ease-out ${isTransitioning ? 'opacity-0' : 'opacity-100 animate-question-in'}`}
+        >
           {renderQuestion()}
         </div>
 
