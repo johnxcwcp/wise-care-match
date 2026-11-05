@@ -143,3 +143,13 @@ describe("confirmed clinician location records", () => {
     });
   }
 });
+
+import { describe as d2, it as i2, expect as e2 } from "vitest";
+import { matchTherapists as mt2 } from "./matchTherapists";
+d2("Not sure modality", () => {
+  i2("keeps a clinician with no modalities listed as a best match", () => {
+    const t: any = { id: "dm", name: "D", gender: "Man", services: ["Individual"], specialties: ["Addiction"], modalities: [], availability: ["Weekdays"], clientTypes: ["Adults (18-65)"], sessionType: ["In-person"], inPersonLocations: ["Toronto"], onlineLocations: [], locationVerified: true };
+    const r = mt2([t], { location: "Toronto", services: ["Individual"], specialties: ["Addiction"], gender: ["Man"], modalities: ["Not sure"], availability: ["Weekdays"], sessionType: "In-person", clientType: "Adults (18-65)" } as any);
+    e2(r.bestMatches.map(x => x.id)).toEqual(["dm"]);
+  });
+});

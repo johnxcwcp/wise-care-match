@@ -40,8 +40,8 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
   const otherMatches: Therapist[] = [];
   const modes: Record<string, ServiceMode[]> = {};
 
-  const processedModalities =
-    answers.modalities.includes("Not sure") || answers.modalities.length === 0 ? ALL_MODALITIES : answers.modalities;
+  // "Not sure" / empty means modality is not a criterion, even for clinicians with no modalities listed.
+  const anyModality = answers.modalities.includes("Not sure") || answers.modalities.length === 0;
   const processedGender =
     answers.gender.length === 0 || answers.gender.includes("No Preference") ? ["Man", "Woman", "Non-Binary"] : answers.gender;
 
@@ -55,7 +55,7 @@ export const matchTherapists = (therapists: Therapist[], answers: QuizAnswers): 
       answers.services.length === 0 || answers.services.some((s) => therapist.services.includes(s)),
       answers.specialties.length === 0 || answers.specialties.some((s) => therapist.specialties.includes(s)),
       processedGender.includes(therapist.gender),
-      processedModalities.some((m) => therapist.modalities.includes(m)),
+      anyModality || answers.modalities.some((m) => therapist.modalities.includes(m)),
       answers.availability.length === 0 || answers.availability.some((a) => therapist.availability.includes(a)),
       !answers.clientType || therapist.clientTypes.includes(answers.clientType),
     ];
