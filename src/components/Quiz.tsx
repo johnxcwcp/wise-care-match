@@ -25,6 +25,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   const [storedQuestions] = useLocalStorage<QuizQuestion[]>("quizQuestions", defaultQuestions);
   const [currentStep, setCurrentStep] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
   
   // State for answers
   const [location, setLocation] = useState<string>("");
@@ -71,13 +72,23 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     }
   };
 
+  const scrollToTitleIfNeeded = () => {
+    if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const goTo = (step: number, dir: "forward" | "back") => {
+    setDirection(dir);
+    setIsTransitioning(true);
+    if (dir === "forward") scrollToTitleIfNeeded();
+    setTimeout(() => {
+      setCurrentStep(step);
+      setIsTransitioning(false);
+    }, 160);
+  };
+
   const nextStep = () => {
     if (currentStep < totalSteps) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentStep(currentStep + 1);
-        setIsTransitioning(false);
-      }, 180);
+      goTo(currentStep + 1, "forward");
     } else {
       trackEvent("quiz_location_selected", { location });
       trackEvent("quiz_modality_selected", { modality: sessionType });
@@ -96,13 +107,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
   };
 
   const prevStep = () => {
-    if (currentStep > 1) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentStep(currentStep - 1);
-        setIsTransitioning(false);
-      }, 180);
-    }
+    if (currentStep > 1) goTo(currentStep - 1, "back");
   };
 
   const isNextDisabled = () => {
@@ -199,41 +204,46 @@ const Quiz: React.FC<QuizProps> = ({ onComplete }) => {
     <div className="max-w-3xl mx-auto px-0 sm:px-4 py-4 quiz-container">
       <QuizHeader currentStep={currentStep} totalSteps={totalSteps} />
       
-      <div className="bg-card border border-border/70 p-5 sm:p-8 rounded-2xl shadow-elegant">
-        {/* Question content */}
-        <div
-          key={currentStep}
-          className={`mb-8 transition-opacity duration-200 ease-out ${isTransitioning ? 'opacity-0' : 'opacity-100 animate-question-in'}`}
-        >
-          {renderQuestion()}
-        </div>
-
-        {/* Navigation buttons at bottom */}
-        <div className="flex justify-between pt-6 border-t border-border/70">
-          <Button 
-            onClick={prevStep} 
+      <div className="bg-card border border-border/70 p-5 sm:p-8 rounded-2xl shadow-elegant overflow-hidden">
+        {/* Navigation buttons, top right */}
+        <div className="flex justify-end gap-2 mb-4">
+          <Button
+            onClick={prevStep}
             disabled={currentStep === 1 || isTransitioning}
             variant="outline"
-            className="border-cwcp-blue/25 text-cwcp-blue hover:text-cwcp-blue hover:bg-secondary rounded-full px-6 py-3"
+            size="sm"
+            className="border-cwcp-blue/25 text-cwcp-blue hover:text-cwcp-blue hover:bg-secondary rounded-full px-4"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="mr-1.5 h-4 w-4" />
             Previous
           </Button>
-          
-          <Button 
+          <Button
             onClick={nextStep}
             disabled={isNextDisabled() || isTransitioning}
-            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-primary-foreground rounded-full px-6 py-3"
+            size="sm"
+            className="bg-cwcp-blue hover:bg-cwcp-lightblue text-primary-foreground rounded-full px-4"
           >
             {currentStep === totalSteps ? (
               "Find Therapists"
             ) : (
               <>
                 Next
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-1.5 h-4 w-4" />
               </>
             )}
           </Button>
+        </div>
+
+        {/* Question content */}
+        <div
+          key={currentStep}
+          className={`quiz-slide ${
+            isTransitioning
+              ? direction === "forward" ? "quiz-slide-out-left" : "quiz-slide-out-right"
+              : direction === "forward" ? "quiz-slide-in-right" : "quiz-slide-in-left"
+          }`}
+        >
+          {renderQuestion()}
         </div>
       </div>
     </div>

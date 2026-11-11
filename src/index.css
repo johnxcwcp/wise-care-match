@@ -186,3 +186,17 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Quiz question slide transitions */
+.quiz-slide { will-change: transform, opacity; backface-visibility: hidden; }
+.quiz-slide-in-right { animation: quiz-in-right 0.38s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.quiz-slide-in-left { animation: quiz-in-left 0.38s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.quiz-slide-out-left { animation: quiz-out-left 0.16s cubic-bezier(0.4, 0, 1, 1) both; }
+.quiz-slide-out-right { animation: quiz-out-right 0.16s cubic-bezier(0.4, 0, 1, 1) both; }
+@keyframes quiz-in-right { from { opacity: 0; transform: translate3d(32px,0,0); } to { opacity: 1; transform: translate3d(0,0,0); } }
+@keyframes quiz-in-left { from { opacity: 0; transform: translate3d(-32px,0,0); } to { opacity: 1; transform: translate3d(0,0,0); } }
+@keyframes quiz-out-left { from { opacity: 1; transform: translate3d(0,0,0); } to { opacity: 0; transform: translate3d(-24px,0,0); } }
+@keyframes quiz-out-right { from { opacity: 1; transform: translate3d(0,0,0); } to { opacity: 0; transform: translate3d(24px,0,0); } }
+@media (prefers-reduced-motion: reduce) {
+  .quiz-slide-in-right, .quiz-slide-in-left, .quiz-slide-out-left, .quiz-slide-out-right { animation-duration: 0.01s; }
+}
