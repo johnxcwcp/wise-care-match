@@ -86,7 +86,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
   return (
     <>
       <section className="w-full max-w-7xl mx-auto py-14 bg-background">
-        <div className="flex items-end justify-between gap-4 mb-6 px-1">
+        <div className="flex items-end justify-between gap-4 mb-6 px-4">
           <div>
             <h2 className="text-3xl font-normal text-foreground">Meet Our Clinicians</h2>
             <p className="text-muted-foreground mt-1 text-sm sm:text-base">
