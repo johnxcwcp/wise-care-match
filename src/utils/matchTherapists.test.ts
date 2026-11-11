@@ -117,15 +117,17 @@ describe("confirmed clinician location records", () => {
     }
   });
 
-  it("Adam offers online Toronto and Picton, with no confirmed Yukon in-person sessions", async () => {
+  it("Adam offers only online sessions in Toronto, Picton, and Yukon", async () => {
     const adam = (await loadClinicians()).find(t => t.name === "Adam Terpstra");
     expect(adam).toBeDefined();
     if (!adam) throw new Error("Adam's record is missing");
-    expect(adam.onlineLocations).toEqual(["Toronto", "Picton"]);
+    expect(adam.onlineLocations).toEqual(["Toronto", "Picton", "Yukon"]);
     expect(adam.inPersonLocations).toEqual([]);
-    expect(eligibleModes(adam, "Toronto", "No Preference")).toEqual(["Online"]);
-    expect(eligibleModes(adam, "Picton", "No Preference")).toEqual(["Online"]);
-    expect(eligibleModes(adam, "Yukon", "In-person")).toEqual([]);
+    for (const location of ["Toronto", "Picton", "Yukon"]) {
+      expect(eligibleModes(adam, location, "No Preference")).toEqual(["Online"]);
+      expect(eligibleModes(adam, location, "In-person")).toEqual([]);
+    }
+    expect(eligibleModes(adam, "Online", "Virtually")).toEqual(["Online"]);
   });
 
   for (const name of ["Maria Aurora Zimmerling", "Marian Moon", "Penelope Park"]) {
