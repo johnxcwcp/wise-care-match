@@ -38,7 +38,6 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
         const d = Math.max(-1, Math.min(1, (c - center) / (el.clientWidth / 1.6)));
         const a = Math.abs(d);
         card.style.transform = `perspective(1200px) rotateY(${-d * 18}deg) scale(${1 - a * 0.12})`;
-        card.style.opacity = `${1 - a * 0.35}`;
         card.style.zIndex = `${Math.round(100 - a * 100)}`;
       });
     };
@@ -113,11 +112,10 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
           onTouchEnd={() => resume(2500)}
           onWheel={() => { pause(); resume(2000); }}
           className="relative flex gap-5 overflow-x-auto py-6 px-[8%] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}
         >
           {loop.map((t, i) => {
             const videoId = getYouTubeVideoId(t.introVideoUrl);
-            const image = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : t.photo;
+            const image = t.photo;
             const locations = Array.from(new Set([...(t.inPersonLocations ?? [])]));
             const isOnline = (t.onlineLocations ?? []).length > 0;
             return (
