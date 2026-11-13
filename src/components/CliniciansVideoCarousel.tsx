@@ -28,7 +28,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
     stopOnFocusIn: true,
     playOnInit: !reducedMotion,
   }), [reducedMotion]);
-  const [viewportRef, carousel] = useEmblaCarousel({ loop: true, align: "center", watchSlides: true }, [autoScroll]);
+  const [viewportRef, carousel] = useEmblaCarousel({ loop: true, align: "center", watchSlides: true }, reducedMotion ? [] : [autoScroll]);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReducedMotion(media.matches);
