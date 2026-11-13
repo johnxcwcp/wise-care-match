@@ -99,7 +99,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
           aria-label="Clinicians"
           className="overflow-hidden touch-pan-y"
         >
-          <div className="flex py-6 -ml-5 [backface-visibility:hidden] will-change-transform">
+          <div className="relative flex py-6 [backface-visibility:hidden] will-change-transform">
           {list.map((t) => {
             const videoId = getYouTubeVideoId(t.introVideoUrl);
             const image = t.photo;
@@ -108,7 +108,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
             return (
               <article
                 key={t.id}
-                className="shrink-0 grow-0 basis-[280px] sm:basis-[320px] min-w-0 pl-5"
+                className="relative shrink-0 grow-0 basis-[280px] sm:basis-[320px] min-w-0 overflow-hidden px-2.5"
               >
                 <div data-cf className="will-change-transform [backface-visibility:hidden]">
                 <Button asChild variant="ghost"
