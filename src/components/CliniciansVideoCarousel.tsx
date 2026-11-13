@@ -1,4 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import AutoScroll from "embla-carousel-auto-scroll";
+import { Button } from "@/components/ui/button";
 import { Play, UserRound, MapPin, Video, CalendarCheck, ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { Therapist } from "@/types";
 import FloatingVideoPlayer from "./FloatingVideoPlayer";
@@ -13,67 +16,52 @@ const getYouTubeVideoId = (url?: string) => {
   return match && match[2].length === 11 ? match[2] : null;
 };
 
-const SPEED = 0.35; // px per frame
-
 const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ therapists }) => {
   const [playingVideo, setPlayingVideo] = useState<{ videoId: string; therapistName: string } | null>(null);
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const pausedRef = useRef(false);
-  const resumeTimer = useRef<number>();
-
-  const list = therapists.filter(t => t.name);
-  const loop = [...list, ...list];
-
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const list = useMemo(() => therapists.filter(t => t.name), [therapists]);
+  const autoScroll = useMemo(() => AutoScroll({
+    speed: 0.35,
+    startDelay: 1500,
+    stopOnInteraction: false,
+    stopOnMouseEnter: true,
+    stopOnFocusIn: true,
+    playOnInit: !reducedMotion,
+  }), [reducedMotion]);
+  const [viewportRef, carousel] = useEmblaCarousel({ loop: true, align: "center", watchSlides: true }, reducedMotion ? [] : [autoScroll]);
   useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el || list.length === 0) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let raf = 0;
-    let pos = el.scrollLeft;
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
-    const style = () => {
-      const center = el.scrollLeft + el.clientWidth / 2;
-      el.querySelectorAll<HTMLElement>("[data-cf]").forEach(card => {
-        const c = card.offsetLeft + card.offsetWidth / 2;
-        const d = Math.max(-1, Math.min(1, (c - center) / (el.clientWidth / 1.6)));
-        const a = Math.abs(d);
-        card.style.transform = `perspective(1200px) rotateY(${-d * 18}deg) scale(${1 - a * 0.12})`;
-        card.style.zIndex = `${Math.round(100 - a * 100)}`;
-      });
-    };
-
-    const tick = () => {
-      const half = el.scrollWidth / 2;
-      if (!pausedRef.current && !reduce) {
-        pos += SPEED;
-        if (pos >= half) pos -= half;
-        el.scrollLeft = pos;
-      } else {
-        pos = el.scrollLeft;
-        if (pos >= half) { pos -= half; el.scrollLeft = pos; }
-      }
-      style();
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [list.length]);
-
-  if (list.length === 0) return null;
-
-  const pause = () => { window.clearTimeout(resumeTimer.current); pausedRef.current = true; };
-  const resume = (delay = 1500) => {
-    window.clearTimeout(resumeTimer.current);
-    resumeTimer.current = window.setTimeout(() => { pausedRef.current = false; }, delay);
-  };
-
+  const updateCoverflow = useCallback(() => {
+    if (!carousel) return;
+    const engine = carousel.internalEngine();
+    const width = engine.containerRect.width;
+    const position = engine.location.get();
+    carousel.slideNodes().forEach((slide, index) => {
+      const face = slide.querySelector<HTMLElement>("[data-cf]");
+      const rect = engine.slideRects[index];
+      if (!face || !rect) return;
+      const loopOffset = engine.slideLooper.loopPoints.find(point => point.index === index)?.target() ?? 0;
+      const center = rect.left - engine.containerRect.left + rect.width / 2 + position + loopOffset;
+      const distance = Math.max(-1, Math.min(1, (center - width / 2) / (width / 1.6)));
+      face.style.transform = reducedMotion ? "none" : `perspective(1200px) rotateY(${-distance * 18}deg) scale(${1 - Math.abs(distance) * 0.12})`;
+    });
+  }, [carousel, reducedMotion]);
+  useEffect(() => {
+    if (!carousel) return;
+    updateCoverflow();
+    carousel.on("scroll", updateCoverflow).on("reInit", updateCoverflow);
+    return () => { carousel.off("scroll", updateCoverflow).off("reInit", updateCoverflow); };
+  }, [carousel, updateCoverflow]);
   const nudge = (dir: 1 | -1) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    pause();
-    const card = el.querySelector<HTMLElement>("[data-cf]");
-    el.scrollBy({ left: dir * ((card?.offsetWidth ?? 300) + 20), behavior: "smooth" });
-    resume(3000);
+    if (!carousel) return;
+    autoScroll.stop();
+    if (dir === 1) carousel.scrollNext();
+    else carousel.scrollPrev();
   };
 
   const openClinician = (t: Therapist) => {
@@ -82,55 +70,53 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
     else if (t.bookingLink) window.open(t.bookingLink, "_blank", "noopener,noreferrer");
   };
 
+  if (list.length === 0) return null;
+
   return (
     <>
       <section className="w-full max-w-7xl mx-auto py-14 bg-background">
-        <div className="flex items-end justify-between gap-4 mb-6 px-4">
-          <div>
+        <div className="relative mb-6 px-4 text-center">
+          <div className="sm:px-24">
             <h2 className="text-3xl font-normal text-foreground">Meet Our Clinicians</h2>
             <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Watch a short introduction or visit a clinician's profile.
             </p>
           </div>
-          <div className="hidden sm:flex gap-2">
-            <button aria-label="Previous clinicians" onClick={() => nudge(-1)}
-              className="h-9 w-9 rounded-full border border-border bg-card flex items-center justify-center hover:bg-secondary transition-colors">
+          <div className="hidden sm:flex gap-2 absolute right-4 bottom-0">
+            <Button variant="outline" size="icon" aria-label="Previous clinicians" title="Previous clinicians" onClick={() => nudge(-1)}
+              className="h-9 w-9 rounded-full">
               <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button aria-label="More clinicians" onClick={() => nudge(1)}
-              className="h-9 w-9 rounded-full border border-border bg-card flex items-center justify-center hover:bg-secondary transition-colors">
+            </Button>
+            <Button variant="outline" size="icon" aria-label="More clinicians" title="More clinicians" onClick={() => nudge(1)}
+              className="h-9 w-9 rounded-full">
               <ChevronRight className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
 
         <div
-          ref={scrollerRef}
-          onMouseEnter={pause}
-          onMouseLeave={() => resume(600)}
-          onTouchStart={pause}
-          onTouchEnd={() => resume(2500)}
-          onWheel={() => { pause(); resume(2000); }}
-          className="relative flex gap-5 overflow-x-auto py-6 px-[8%] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          ref={viewportRef}
+          aria-label="Clinicians"
+          className="overflow-hidden touch-pan-y"
         >
-          {loop.map((t, i) => {
+          <div className="flex py-6 -ml-5 [backface-visibility:hidden] will-change-transform">
+          {list.map((t) => {
             const videoId = getYouTubeVideoId(t.introVideoUrl);
             const image = t.photo;
             const locations = Array.from(new Set([...(t.inPersonLocations ?? [])]));
             const isOnline = (t.onlineLocations ?? []).length > 0;
             return (
               <article
-                key={`${t.id}-${i}`}
-                data-cf
-                aria-hidden={i >= list.length}
-                className="shrink-0 w-[260px] sm:w-[300px] will-change-transform"
+                key={t.id}
+                className="shrink-0 grow-0 basis-[280px] sm:basis-[320px] min-w-0 pl-5"
               >
-                <button
+                <div data-cf className="will-change-transform [backface-visibility:hidden]">
+                <Button asChild variant="ghost"
                   onClick={() => openClinician(t)}
-                  tabIndex={i >= list.length ? -1 : 0}
                   aria-label={videoId ? `Play ${t.name}'s introduction video` : `Open ${t.name}'s profile`}
-                  className="group block w-full text-left"
+                  className="group block h-auto w-full p-0 text-left whitespace-normal hover:bg-transparent"
                 >
+                  <button type="button">
                   <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-secondary border border-border/60">
                     {image ? (
                       <img src={image} alt={t.name} loading="lazy"
@@ -162,16 +148,19 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
                       )}
                     </div>
                   </div>
-                </button>
+                  </button>
+                </Button>
                 {t.bookingLink && (
-                  <a href={t.bookingLink} target="_blank" rel="noopener noreferrer" tabIndex={i >= list.length ? -1 : 0}
+                  <a href={t.bookingLink} target="_blank" rel="noopener noreferrer"
                     className="mt-3 mx-1 inline-flex items-center gap-1.5 text-sm text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground">
                     <CalendarCheck className="h-4 w-4" /> Book appointment
                   </a>
                 )}
+                </div>
               </article>
             );
           })}
+          </div>
         </div>
       </section>
 
