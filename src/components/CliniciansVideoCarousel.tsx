@@ -48,7 +48,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
       const loopOffset = engine.slideLooper.loopPoints.find(point => point.index === index)?.target() ?? 0;
       const center = rect.left - engine.containerRect.left + rect.width / 2 + position + loopOffset;
       const distance = Math.max(-1, Math.min(1, (center - width / 2) / (width / 1.6)));
-      face.style.transform = reducedMotion ? "none" : `perspective(1200px) rotateY(${-distance * 18}deg) scale(${1 - Math.abs(distance) * 0.12})`;
+      face.style.transform = reducedMotion ? "none" : `perspective(1200px) rotateY(${-distance * 14}deg) scale(${1 - Math.abs(distance) * 0.14})`;
     });
   }, [carousel, reducedMotion]);
   useEffect(() => {
@@ -108,7 +108,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
             return (
               <article
                 key={t.id}
-                className="relative shrink-0 grow-0 basis-[280px] sm:basis-[320px] min-w-0 overflow-hidden px-2.5"
+                className="relative isolate shrink-0 grow-0 basis-[280px] sm:basis-[320px] min-w-0 overflow-hidden px-2.5 [clip-path:inset(0)] [contain:paint] [transform-style:flat]"
               >
                 <div data-cf className="will-change-transform [backface-visibility:hidden]">
                 <Button asChild variant="ghost"
