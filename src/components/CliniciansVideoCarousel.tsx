@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { Button } from "@/components/ui/button";
@@ -36,27 +36,6 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
     return () => media.removeEventListener("change", update);
   }, []);
 
-  const updateCoverflow = useCallback(() => {
-    if (!carousel) return;
-    const engine = carousel.internalEngine();
-    const width = engine.containerRect.width;
-    const position = engine.location.get();
-    carousel.slideNodes().forEach((slide, index) => {
-      const face = slide.querySelector<HTMLElement>("[data-cf]");
-      const rect = engine.slideRects[index];
-      if (!face || !rect) return;
-      const loopOffset = engine.slideLooper.loopPoints.find(point => point.index === index)?.target() ?? 0;
-      const center = rect.left - engine.containerRect.left + rect.width / 2 + position + loopOffset;
-      const distance = Math.max(-1, Math.min(1, (center - width / 2) / (width / 1.6)));
-      face.style.transform = reducedMotion ? "none" : `perspective(1200px) rotateY(${-distance * 14}deg) scale(${1 - Math.abs(distance) * 0.14})`;
-    });
-  }, [carousel, reducedMotion]);
-  useEffect(() => {
-    if (!carousel) return;
-    updateCoverflow();
-    carousel.on("scroll", updateCoverflow).on("reInit", updateCoverflow);
-    return () => { carousel.off("scroll", updateCoverflow).off("reInit", updateCoverflow); };
-  }, [carousel, updateCoverflow]);
   const nudge = (dir: 1 | -1) => {
     if (!carousel) return;
     autoScroll.stop();
@@ -99,7 +78,7 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
           aria-label="Clinicians"
           className="overflow-hidden touch-pan-y"
         >
-          <div className="relative flex py-6 [backface-visibility:hidden] will-change-transform">
+          <div className="flex py-6">
           {list.map((t) => {
             const videoId = getYouTubeVideoId(t.introVideoUrl);
             const image = t.photo;
@@ -108,9 +87,9 @@ const CliniciansVideoCarousel: React.FC<CliniciansVideoCarouselProps> = ({ thera
             return (
               <article
                 key={t.id}
-                className="relative isolate shrink-0 grow-0 basis-[280px] sm:basis-[320px] min-w-0 overflow-hidden px-2.5 [clip-path:inset(0)] [contain:paint] [transform-style:flat]"
+                className="shrink-0 grow-0 basis-[280px] sm:basis-[320px] min-w-0 px-2.5"
               >
-                <div data-cf className="will-change-transform [backface-visibility:hidden]">
+                <div>
                 <Button asChild variant="ghost"
                   onClick={() => openClinician(t)}
                   aria-label={videoId ? `Play ${t.name}'s introduction video` : `Open ${t.name}'s profile`}
